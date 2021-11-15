@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="10dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tvNamaProduk"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="8dp"
+            android:text="Nama Produk"
+            android:textAlignment="center"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/imgFoto"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_below="@+id/tvKategori"
+            android:scaleType="centerCrop"
+            android:src="@drawable/photo" />
+
+        <TextView
+            android:id="@+id/imgStokHabis"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_below="@id/tvKategori"
+            android:layout_alignEnd="@id/imgFoto"
+            android:background="@drawable/ic_label"
+            android:gravity="center"
+            android:paddingBottom="15dp"
+            android:text="HABIS"
+            android:textColor="@android:color/white"
+            android:textSize="12sp"
+            android:visibility="invisible"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvKategori"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvNamaProduk"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="0dp"
+            android:text="Kategori"
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/tvHargaProduk"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imgFoto"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="Harga"
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/tvStok"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvHargaProduk"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="Stok"
+            android:textAlignment="center" />
+
+
+    </RelativeLayout>
+
+</com.google.android.material.card.MaterialCardView>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBiru"
+    android:fillViewport="true"
+    android:orientation="vertical"
+    tools:context=".Activities.DashboardActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:nestedScrollingEnabled="true"
+        android:paddingBottom="16dp">
+
+
+        <RelativeLayout
+            android:id="@+id/lLlogo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            tools:ignore="MissingConstraints">
+
+
+            <ImageView
+                android:id="@+id/imgLogo"
+                android:layout_width="@dimen/_35sdp"
+                android:layout_height="@dimen/_35sdp"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:src="@drawable/logo" />
+
+
+            <TextView
+                android:id="@+id/tvNamaCafe"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_toRightOf="@id/imgLogo"
+                android:text="@string/nama_toko"
+                android:textColor="#ffffff"
+                android:textSize="21sp"
+                android:textStyle="bold"
+
+
+                />
+
+            <TextView
+                android:id="@+id/tvAlamatCafe"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tvNamaCafe"
+                android:layout_toRightOf="@id/imgLogo"
+                android:text="@string/alamat_toko"
+                android:textAlignment="textStart"
+                android:textColor="#ffffff"
+                android:textSize="8sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/btnEditProfile"
+                android:layout_width="@dimen/_30sdp"
+                android:layout_height="@dimen/_30sdp"
+                android:layout_alignParentRight="true"
+                android:layout_margin="@dimen/_5sdp"
+                app:cardCornerRadius="25dp"
+                app:cardElevation="7dp">
+
+                <ImageView
+                    android:id="@+id/imgEditProfile"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="6dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/edit"
+                    android:tint="@color/primary" />
+            </com.google.android.material.card.MaterialCardView>
+
+
+        </RelativeLayout>
+
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_slider"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_100sdp"
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginRight="@dimen/_10sdp"
+            app:cardCornerRadius="25dp"
+            app:cardElevation="7dp"
+            app:layout_constraintTop_toBottomOf="@id/lLlogo">
+
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/vp_slider"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_100sdp" />
+        </com.google.android.material.card.MaterialCardView>
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rclv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_10sdp"
+            android:nestedScrollingEnabled="true"
+            android:overScrollMode="never"
+            app:layout_constraintStart_toStartOf="@id/card_slider"
+            app:layout_constraintTop_toBottomOf="@id/card_slider"
+            tools:listitem="@layout/layout_item_menu" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

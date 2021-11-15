@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.svtech.dhuwit">
+
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application xmlns:tools="http://schemas.android.com/tools"
+        android:name="com.orm.SugarApp"
+        android:allowBackup="true"
+        android:icon="@drawable/logo"
+        android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
+        android:roundIcon="@drawable/logo"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        tools:replace="android:icon">
+        <activity android:name=".Activities.RegisterActivity">
+
+        </activity>
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/title_activity_main"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".Activities.DetailLaporanHarianActivity" />
+        <activity android:name=".Activities.LaporanHarianActivity" />
+        <activity android:name=".Activities.LaporanActivity" />
+        <activity android:name=".Activities.LaporanStokActivity" />
+
+        <meta-data
+            android:name="com.google.android.actions"
+            android:resource="@xml/provider_path" />
+
+        <activity android:name=".Activities.DetailLaporanPenjualanActivity" />
+        <activity android:name=".Activities.MenuTambahPegawaiActivity" />
+        <activity android:name=".Activities.LaporanPenjualanActivity" />
+        <activity android:name=".Activities.AddKaryawanActivity" />
+        <activity android:name=".Activities.SplashScreenActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".Activities.LoginActivity" />
+        <activity android:name=".Activities.BluetoothDeviceListActivity" />
+        <activity
+            android:name=".Activities.CheckoutActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".Activities.AddKategoriActivity" />
+        <activity
+            android:name=".Activities.AddProdukActivity"
+            android:windowSoftInputMode="adjustPan" />
+
+        <meta-data
+            android:name="DATABASE"
+            android:value="db_cafe.db" />
+        <meta-data
+            android:name="VERSION"
+            android:value="4" />
+        <meta-data
+            android:name="QUERY_LOG"
+            android:value="false" />
+        <meta-data
+            android:name="DOMAIN_PACKAGE_NAME"
+            android:value="com.svtech.dhuwit" />
+
+        <activity android:name=".Activities.MenuTambahProdukActivity" />
+        <activity android:name=".Activities.MenuTambahKategoriActivity" />
+        <activity
+            android:name=".Activities.MenuKeranjangActivity"
+            android:configChanges="keyboardHidden|layoutDirection|screenLayout"
+            android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".Activities.MenuPembelianActivity" />
+        <activity android:name=".Activities.EditProfileActivity" />
+        <activity android:name=".Activities.DashboardActivity" />
+    </application>
+
+</manifest>

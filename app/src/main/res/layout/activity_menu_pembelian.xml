@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    tools:context=".Activities.MenuTambahKategoriActivity">
+
+    <include
+        android:id="@+id/include2"
+        layout="@layout/layout_toolbar_with_back"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvEmpty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Belum ada item produk!"
+        android:typeface="serif"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/rclv"
+        app:layout_constraintEnd_toEndOf="@+id/rclv"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/include2" />
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/edtPencarian"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/background_search"
+        android:drawableStart="@drawable/ic_search_24"
+        android:drawablePadding="10dp"
+        android:hint="Cari..."
+        android:inputType="textCapSentences"
+        android:paddingStart="10dp"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toStartOf="@+id/guideline6"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/include2" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSort"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/background_search"
+        android:text="Urutkan Berdasar "
+        android:textAllCaps="false"
+        android:textSize="10sp"
+        app:cornerRadius="50dp"
+        app:icon="@drawable/ic_arrow_upward_24"
+        app:iconGravity="end"
+        app:iconPadding="1dp"
+        app:iconSize="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/guideline6"
+        app:layout_constraintTop_toBottomOf="@+id/include2" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rclv"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:padding="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnSort" />
+
+    <com.andremion.counterfab.CounterFab
+        android:id="@+id/btnKeranjang"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/shopping_bag"
+        app:backgroundTint="@color/primary"
+        app:badgeBackgroundColor="@android:color/holo_red_dark"
+        app:badgePosition="RightTop"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toBottomOf="@+id/rclv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:maxImageSize="30dp"
+        app:tint="@android:color/white" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+</androidx.constraintlayout.widget.ConstraintLayout>
