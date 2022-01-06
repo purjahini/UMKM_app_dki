@@ -22,8 +22,8 @@ class EditProfileActivity : AppCompatActivity() {
         setContentView(R.layout.activity_edit_profile)
         setToolbar(this, "Ubah Profil")
         /*Setting data profile*/
-        val userId = com.svtech.dhuwit.Utils.getPreferences(this).getString(MyConstant.CURRENT_USER,"")!!
-        val user = SugarRecord.find(User::class.java,"id = ?",userId).firstOrNull()
+        val username = com.svtech.dhuwit.Utils.getPreferences(this).getString(MyConstant.CURRENT_USER,"")!!
+        val user = SugarRecord.find(User::class.java,"USERNAME = ?",username).firstOrNull()
         initProfile(user)
 
 
@@ -35,6 +35,14 @@ class EditProfileActivity : AppCompatActivity() {
         /*Logout*/
         btnLogOut.setOnClickListener {
             savePreferences(this,MyConstant.CURRENT_USER,"")
+            val users = SugarRecord.find(User::class.java, "USERNAME =?",username).firstOrNull()
+            See.log("respon user ${users}")
+            users?.delete()
+
+            val profil = SugarRecord.find(Profile::class.java,"USERNAME=?",username).firstOrNull()
+            See.log("respon profil ${profil}")
+            profil?.delete()
+
             startActivity(Intent(this,LoginActivity::class.java))
             finishAffinity()
             finish()

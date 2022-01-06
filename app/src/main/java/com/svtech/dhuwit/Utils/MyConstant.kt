@@ -8,4 +8,14 @@ object MyConstant{
     const val CURRENT_USER = "CurrentUser"
     const val FIRST_START = "FirstStart"
     const val REQUEST_OPEN_FILE = 9999
+    const val SECRET = "02aaf476543b67ecfd745cfb22b501b8"
+    const val API_STATUS = "api_status"
+    const val API_MESSAGE = "api_message"
+    const val url = "http://203.210.87.97/umkm_core/public/api"
+
+    const val urlToko = "$url/registertoko"
+    const val urlUser = "$url/register_user"
+    const val TOKENS = "$url/get-token"
+    const val UrlLoginToko = "$url/login_toko"
+    const val UrlLoginUser = "$url/login_user"
 }

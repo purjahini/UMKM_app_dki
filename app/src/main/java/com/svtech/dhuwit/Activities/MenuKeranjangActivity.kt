@@ -4,12 +4,14 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.orm.SugarRecord
 import com.svtech.dhuwit.Adapter.RclvItemTransaksi
@@ -22,6 +24,7 @@ import com.svtech.dhuwit.Utils.numberToCurrency
 import com.svtech.dhuwit.Utils.setToolbar
 import kotlinx.android.synthetic.main.activity_menu_keranjang.*
 import kotlinx.android.synthetic.main.layout_input_dialog.view.*
+import kotlinx.android.synthetic.main.sheet.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -45,7 +48,27 @@ class MenuKeranjangActivity : AppCompatActivity() {
                         .toString()
                 transaksi.save()
             }
+
+
+            Log.d("total", transaksi?.totalPembayaran.toString())
+
+            val btnSheet = layoutInflater.inflate(R.layout.sheet, null)
+            val dialog = BottomSheetDialog(this)
+            val btnCash = btnSheet.btnCash
+            val btnCashless = btnSheet.btnCashless
+            btnCash.setOnClickListener {
             startActivity(Intent(this, CheckoutActivity::class.java))
+            }
+            btnCashless.setOnClickListener {
+            val intent = Intent(this, CashActivity::class.java)
+            intent.putExtra("Total", transaksi?.totalPembayaran)
+            startActivity(intent)
+            }
+            dialog.setContentView(btnSheet)
+            dialog.show()
+
+
+
         }
 
         /*Setting nama pembeli*/

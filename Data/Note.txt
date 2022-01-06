@@ -1,2 +1,0 @@
-username : cvfun
-password : teknologi

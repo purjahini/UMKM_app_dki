@@ -21,6 +21,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="transparan">#00000000</color>
+    <color name="orange">#EC430E</color>
 
     <color name="colorPrimary">#1e2153</color>
     <color name="colorPrimaryDark">#16183c</color>
@@ -35,4 +36,7 @@
     <color name="colorWhiteTransparent">#d1ffffff</color>
     <color name="colorBlack">#000000</color>
     <color name="notWhiteAtAll">#E6E6E6</color>
+
+
+
 </resources>

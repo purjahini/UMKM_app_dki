@@ -33,8 +33,8 @@ class DashboardActivity : AppCompatActivity() {
         vpSlider.adapter = adapterSlider
 
         /*Setting menu*/
-        val userId = com.svtech.dhuwit.Utils.getPreferences(this).getString(MyConstant.CURRENT_USER,"")
-        val user = SugarRecord.find(User::class.java,"id = ?",userId).firstOrNull()
+        val username = com.svtech.dhuwit.Utils.getPreferences(this).getString(MyConstant.CURRENT_USER,"")
+        val user = SugarRecord.find(User::class.java,"USERNAME = ?",username).firstOrNull()
         if(user != null){
             initMenu(user)
         }

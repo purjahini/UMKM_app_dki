@@ -265,24 +265,24 @@ class CheckoutActivity : AppCompatActivity() {
             try {
                 val outputStream = mBluetoothSocket.outputStream
                 val printer = BluetoothPrinterUtils(outputStream)
-                printer.setFontStyle(BluetoothPrinterUtils.f1)
+                printer.setFontStyle(BluetoothPrinterUtils.f2)
                 printer.printText(profile?.namaToko!!, BluetoothPrinterUtils.ALIGN_CENTER)
                 printer.printText(profile.alamatToko!!, BluetoothPrinterUtils.ALIGN_CENTER)
                 printer.printNewLine()
                 printer.printText(transaksi?.tanggalTrasaksi!!, BluetoothPrinterUtils.ALIGN_RIGHT)
                 printer.printLine()
-                val item = java.lang.String.format(
-                    "%1$-12s %2$-12s %3$-5s %4$-12s",
-                    "Nama",
-                    "Harga",
-                    "Jumlah",
-                    "Total"
-                )
-                printer.printText(item, BluetoothPrinterUtils.ALIGN_LEFT)
-                printer.printText(item, BluetoothPrinterUtils.ALIGN_CENTER)
+//                val item = java.lang.String.format(
+//                    "%1$-12s %2$-12s %3$-5s %4$-12s",
+//                    "Nama",
+//                    "Harga",
+//                    "Jumlah",
+//                    "Total"
+//                )
+//                printer.printText(item, BluetoothPrinterUtils.ALIGN_LEFT)
+//                printer.printText(item, BluetoothPrinterUtils.ALIGN_CENTER)
                 for (it in itemsTrasaksi) {
                     val item = java.lang.String.format(
-                        "%1$-12s %2$-12s %3$-5s %4$-12s",
+                        "%1s \n %2s X %3s %4s",
                         if (it.namaProduk.toString().length >= 10) it.namaProduk?.substring(
                             0,
                             10
@@ -291,7 +291,7 @@ class CheckoutActivity : AppCompatActivity() {
                         it.jumlah.toString(),
                         numberToCurrency(it.jumlah?.times(it.hargaProduk!!)!!).removePrefix("Rp. ")
                     )
-                    printer.printText(item)
+                    printer.printText(item, BluetoothPrinterUtils.ALIGN_LEFT)
                 }
                 printer.printLine()
                 var str = java.lang.String.format(
@@ -302,14 +302,14 @@ class CheckoutActivity : AppCompatActivity() {
                 )
                 printer.printString(str, BluetoothPrinterUtils.ALIGN_LEFT)
                 str = java.lang.String.format(
-                    "%1$-10s %2$-12s %3$-18s",
+                    "%1s %2s %3s",
                     " ",
                     "Bayar",
                     numberToCurrency(transaksi.bayar!!)
                 )
                 printer.printString(str, BluetoothPrinterUtils.ALIGN_RIGHT)
                 str = java.lang.String.format(
-                    "%1$-10s %2$-12s %3$-18s",
+                    "%1s %2s %3s",
                     "",
                     "Kembalian",
                     numberToCurrency(transaksi.bayar!!.minus(transaksi.totalPembayaran!!))

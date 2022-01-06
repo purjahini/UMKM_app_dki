@@ -12,28 +12,38 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.drawToBitmap
+import com.androidnetworking.AndroidNetworking
+import com.androidnetworking.common.Priority
+import com.androidnetworking.error.ANError
+import com.androidnetworking.interfaces.JSONObjectRequestListener
+import com.androidnetworking.interfaces.ParsedRequestListener
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.google.gson.Gson
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
+import com.svtech.dhuwit.Models.TokenModel
 import kotlinx.android.synthetic.main.layout_toolbar_with_back.*
+import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.text.NumberFormat
 import java.util.*
+
 
 fun ImageViewToByteArray(imageView: ImageView): ByteArray {
     val bitmap = imageView.drawToBitmap()
@@ -48,8 +58,53 @@ fun numberToCurrency(number: Long): String {
         .let { it.substring(0, it.length - 3) }
 }
 
+
+fun getToken() : Array<Any> {
+   var tokens = ""
+    AndroidNetworking.post("http://203.210.87.97/umkm_core/public/api/get-token")
+        .addBodyParameter("secret","3aaf171c4562e878be5d6fd795b6809d")
+        .setPriority(Priority.HIGH)
+        .build()
+        .getAsJSONObject(object : JSONObjectRequestListener{
+            override fun onResponse(response: JSONObject?) {
+                val respon = response?.toString()
+                Log.d("respon", respon.toString())
+                val json = JSONObject(respon)
+                val apiStatus = json.getInt("api_status")
+                if (apiStatus.equals(1)){
+                    val data = Gson().fromJson(respon, TokenModel::class.java)
+                    val list = data.data
+                    tokens = list.access_token
+                    Log.d("respon", "token in : $tokens")
+
+
+                }
+                else {
+                    Log.d("respon", "api status 0 : "+respon.toString())
+                }
+
+
+
+
+            }
+
+            override fun onError(anError: ANError?) {
+
+            }
+
+        })
+    Log.d("respon", "token out: $tokens")
+            return arrayOf(tokens)
+}
+
+
+
 /*Fungsi untuk mengconvert ke format uang*/
 fun numberToCurrency(number: Double): String {
+    return NumberFormat.getCurrencyInstance(Locale("id", "ID")).format(number).toString()
+        .removeSuffix(",00").replace("Rp", "Rp. ")
+}
+fun numberToCurrency(number: Int): String {
     return NumberFormat.getCurrencyInstance(Locale("id", "ID")).format(number).toString()
         .removeSuffix(",00").replace("Rp", "Rp. ")
 }

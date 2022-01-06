@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">UMKM ver 0.0.5</string>
+    <string name="app_name">UMKM ver 0.0.7</string>
     <string name="nama_toko">svtech Pos</string>
     <string name="alamat_toko">www.svtech.com</string>
     <string name="title_activity_main">MainActivity</string>
@@ -9,8 +9,14 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
+    <string name="instruction">Letakkan kartu dibelakang perangkat</string>
+    <string name="numberCard">**** **** **** ****</string>
+    <string name="saldo">Saldo Anda</string>
+    <string name="default_balance">Rp.0,00</string>
+    <string name="default_card_number">**** **** **** ****</string>
 
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
+    <string name="pilihbayar">Pilih Pembayaran</string>
 </resources>
