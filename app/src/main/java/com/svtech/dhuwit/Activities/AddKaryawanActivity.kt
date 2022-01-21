@@ -11,6 +11,7 @@ import com.svtech.dhuwit.Models.User
 import com.svtech.dhuwit.R
 import com.svtech.dhuwit.Utils.*
 import kotlinx.android.synthetic.main.activity_add_karyawan.*
+import java.util.*
 
 class AddKaryawanActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,7 +23,7 @@ class AddKaryawanActivity : AppCompatActivity() {
 
         btnLoadImage.setOnClickListener {
             /*Membuka galeri*/
-            pickImage(this, imgFoto)
+            pickImage(this, imgFoto,"Pegawai")
         }
 
         val update = intent.getBooleanExtra("update", false)
@@ -57,6 +58,7 @@ class AddKaryawanActivity : AppCompatActivity() {
     }
 
     private fun insertKaryawan() {
+
         val byteArray = ImageViewToByteArray(imgFoto)
         val checkUser = SugarRecord.find(User::class.java, "username = ?", textInputUsernameAdmin.editText?.text.toString()).firstOrNull()
         if (checkUser == null) {

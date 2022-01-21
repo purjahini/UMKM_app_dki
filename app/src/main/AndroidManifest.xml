@@ -91,6 +91,11 @@
         <activity android:name=".Activities.DashboardActivity" />
 
         <service android:name="org.eclipse.paho.android.service.MqttService" />
+        <service
+            android:name="com.pattra.pattracardsdk.Service.SyncService"
+            android:enabled="true"
+            android:exported="true"
+            android:stopWithTask="false" />
     </application>
 
 </manifest>

@@ -13,18 +13,25 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.provider.MediaStore
+import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.androidnetworking.AndroidNetworking
+import com.androidnetworking.common.Priority
+import com.androidnetworking.error.ANError
+import com.androidnetworking.interfaces.JSONObjectRequestListener
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.orm.SugarRecord
 import com.svtech.dhuwit.Models.*
 import com.svtech.dhuwit.R
 import com.svtech.dhuwit.Utils.*
+import kotlinx.android.synthetic.main.activity_add_kategori.*
 import kotlinx.android.synthetic.main.activity_checkout.*
 import kotlinx.android.synthetic.main.layout_table_row.view.*
+import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -39,9 +46,23 @@ class CheckoutActivity : AppCompatActivity() {
     var mBluetoothDevice: BluetoothDevice? = null
     var deviceName: String? = null
 
+    var token = ""
+    var username = ""
+    var progressDialog : ProgressDialog? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_checkout)
+        token = com.svtech.dhuwit.Utils.getPreferences(this).getString(MyConstant.TOKEN, "").toString()
+        username = com.svtech.dhuwit.Utils.getPreferences(this).getString(MyConstant.CURRENT_USER, "").toString()
+        See.log("token login :  $token")
+        progressDialog = ProgressDialog(this)
+        progressDialog!!.setTitle("Proses")
+        progressDialog!!.setMessage("Mohon Menunggu...")
+        progressDialog!!.setProgressStyle(ProgressDialog.STYLE_SPINNER)
+        progressDialog!!.setCancelable(false)
+        progressDialog!!.isIndeterminate = true
+
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
         /*Setting toolbar*/
         setToolbar(this, "Checkout")
@@ -100,6 +121,47 @@ class CheckoutActivity : AppCompatActivity() {
                         SugarRecord.find(Transaksi::class.java, "status = ?", "1").firstOrNull()
                     if (transaksi != null) {
                         transaksi.status = false
+
+                        AndroidNetworking.post(MyConstant.UrlInputTransaksi)
+                            .addHeaders("Authorization", "Bearer$token")
+                            .addBodyParameter("BAYAR",transaksi?.bayar.toString().trim() )
+                            .addBodyParameter("DISKON",transaksi?.diskon.toString().trim())
+                            .addBodyParameter("NAMA_PEMBELI",transaksi?.namaPembeli.toString().trim() )
+                            .addBodyParameter("STATUS",0.toString().trim() )
+                            .addBodyParameter("TANGGAL_TRANSAKSI",transaksi?.tanggalTrasaksi.toString().trim() )
+                            .addBodyParameter("TOTAL_PEMBAYARAN",transaksi?.totalPembayaran.toString().trim() )
+                            .addBodyParameter("USERNAME", username.trim())
+                            .setPriority(Priority.MEDIUM)
+                            .build()
+                            .getAsJSONObject(object : JSONObjectRequestListener {
+                                override fun onResponse(response: JSONObject?) {
+                                    val respon = response?.toString()
+                                    See.log("respon transaksi : $respon")
+                                    val json = JSONObject(respon)
+                                    val apiStatus = json.getInt(MyConstant.API_STATUS)
+                                    val apiMessage = json.getString(MyConstant.API_MESSAGE)
+                                    if (apiStatus.equals(1)) {
+                                        progressDialog!!.dismiss()
+
+                                        See.toast(this@CheckoutActivity, "Upload Trx to Server $apiMessage")
+                                        finish()
+                                    } else {
+                                        progressDialog!!.dismiss()
+                                        See.toast(this@CheckoutActivity, "Upload Trx to Server $apiMessage")
+
+                                    }
+
+                                }
+
+                                override fun onError(anError: ANError?) {
+                                    progressDialog?.dismiss()
+                                    See.log("onError errorCode trx : ${anError?.errorCode}")
+                                    See.log("onError errorBody trx: ${anError?.errorBody}")
+                                    See.log("onError errorDetail trx: ${anError?.errorDetail}")
+                                }
+
+                            })
+
                         transaksi.save()
                         kurangiStok(transaksi.id);
                         finish()

@@ -3,6 +3,7 @@ package com.svtech.dhuwit.Models
 import com.orm.SugarRecord
 
 data class User (
+    var id :Int? = 0,
     var nama:String? = null,
     var kontak:String? = null,
     var username:String? = null,

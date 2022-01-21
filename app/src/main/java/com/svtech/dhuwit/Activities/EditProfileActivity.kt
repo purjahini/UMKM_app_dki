@@ -14,6 +14,7 @@ import com.svtech.dhuwit.Models.User
 import com.svtech.dhuwit.R
 import com.svtech.dhuwit.Utils.*
 import kotlinx.android.synthetic.main.activity_edit_profile.*
+import java.util.*
 
 
 class EditProfileActivity : AppCompatActivity() {
@@ -29,7 +30,7 @@ class EditProfileActivity : AppCompatActivity() {
 
         btnLoadImage.setOnClickListener {
             /*Membuka galeri*/
-            pickImage(this, imgFoto)
+            pickImage(this, imgFoto,"Profil")
         }
 
         /*Logout*/

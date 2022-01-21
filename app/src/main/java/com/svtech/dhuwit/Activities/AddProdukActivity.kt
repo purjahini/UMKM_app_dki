@@ -1,5 +1,7 @@
 package com.svtech.dhuwit.Activities
 
+import android.app.ProgressDialog
+import android.content.Intent
 import android.os.Bundle
 import android.util.Base64
 import android.view.MotionEvent
@@ -7,7 +9,13 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import com.androidnetworking.AndroidNetworking
+import com.androidnetworking.common.Priority
+import com.androidnetworking.error.ANError
+import com.androidnetworking.interfaces.JSONObjectRequestListener
 import com.bumptech.glide.Glide
+import com.google.android.material.snackbar.Snackbar
 import com.orm.SugarRecord
 import com.svtech.dhuwit.Models.Kategori
 import com.svtech.dhuwit.Models.Produk
@@ -15,6 +23,8 @@ import com.svtech.dhuwit.Models.Stok
 import com.svtech.dhuwit.R
 import com.svtech.dhuwit.Utils.*
 import kotlinx.android.synthetic.main.activity_add_produk.*
+import kotlinx.android.synthetic.main.activity_register.*
+import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -22,9 +32,20 @@ lateinit var adapterSpinner: ArrayAdapter<Kategori>
 lateinit var adapterSpinnerSatuan: ArrayAdapter<String>
 
 class AddProdukActivity : AppCompatActivity() {
+    var token = ""
+    var progressDialog: ProgressDialog? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_produk)
+        token = com.svtech.dhuwit.Utils.getPreferences(this).getString(MyConstant.TOKEN, "").toString()
+        See.log("token addProduk : $token")
+        progressDialog = ProgressDialog(this)
+        progressDialog!!.setTitle("Proses")
+        progressDialog!!.setMessage("Mohon Menunggu...")
+        progressDialog!!.setProgressStyle(ProgressDialog.STYLE_SPINNER)
+        progressDialog!!.setCancelable(false)
+        progressDialog!!.isIndeterminate = true
+
         /*Setting tombol back dan title*/
         setToolbar(this, "Tambah Produk")
         /*Setting adapter spinner*/
@@ -49,7 +70,7 @@ class AddProdukActivity : AppCompatActivity() {
 
         btnLoadImage.setOnClickListener {
             /*Membuka galeri*/
-            pickImage(this, imgFoto)
+            pickImage(this, imgFoto,"Produk")
         }
         val update = intent.getBooleanExtra("update", false)
         val produkId = intent.getLongExtra("produk", -1)
@@ -125,6 +146,52 @@ class AddProdukActivity : AppCompatActivity() {
         val produk: Produk
         /*insert dengan diskon*/
         if (cbDiskon.isChecked) {
+            AndroidNetworking.post(MyConstant.urlToko)
+                .addHeaders("Authorization", "Bearer$token")
+                .addBodyParameter("NAMA_TOKO", textInputNamaToko.editText?.text.toString().trim())
+                .addBodyParameter("ALAMAT_TOKO", textInputAlamatToko.editText?.text.toString().trim())
+                .addBodyParameter("USERNAME", textInputUsername.editText?.text.toString().trim())
+
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(object : JSONObjectRequestListener {
+                    override fun onResponse(response: JSONObject?) {
+                        val respon = response?.toString()
+                        val json = JSONObject(respon)
+                        val apiStatus = json.getInt(MyConstant.API_STATUS)
+                        val apiMessage = json.getString(MyConstant.API_MESSAGE)
+                        if (apiStatus.equals(1)) {
+                            progressDialog!!.dismiss()
+
+                            val intent = Intent(applicationContext, LoginActivity::class.java)
+                            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                            startActivity(intent)
+                        } else {
+                            progressDialog!!.dismiss()
+                            val snackbar = Snackbar.make(
+                                findViewById(android.R.id.content),
+                                apiMessage,
+                                Snackbar.LENGTH_SHORT
+                            )
+                            snackbar.view.setBackgroundColor(
+                                ContextCompat.getColor(
+                                    applicationContext,
+                                    R.color.primary
+                                )
+                            )
+                            snackbar.show()
+                        }
+
+                    }
+
+                    override fun onError(anError: ANError?) {
+                        progressDialog?.dismiss()
+                        See.log("onError errorCode register toko : ${anError?.errorCode}")
+                        See.log("onError errorBody register toko: ${anError?.errorBody}")
+                        See.log("onError errorDetail register toko: ${anError?.errorDetail}")
+                    }
+
+                })
             produk = Produk(
                 nama = textInputNamaProduk.editText?.text.toString(),
                 harga = textInputHargaProduk.editText?.text.toString().toDouble(),

@@ -25,13 +25,14 @@ import java.util.*
 
 class RegisterActivity : AppCompatActivity() {
     var progressDialog: ProgressDialog? = null
-    var tokenUser = ""
-    var tokenToko = ""
+    var token = ""
     var randomUUID = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
+        token = com.svtech.dhuwit.Utils.getPreferences(this).getString(MyConstant.TOKEN, "").toString()
+        See.log("token Register : $token")
         progressDialog = ProgressDialog(this)
         progressDialog!!.setTitle("Proses")
         progressDialog!!.setMessage("Mohon Menunggu...")
@@ -48,76 +49,34 @@ class RegisterActivity : AppCompatActivity() {
 
         btnDaftar.setOnClickListener {
             progressDialog!!.show()
-            ProsesDaftarUserToken()
+            if (textInputPassword.editText?.text.toString().length != 5) {
+                progressDialog!!.dismiss()
+
+                Toast.makeText(this, "Password Harus 5 Karakter", Toast.LENGTH_SHORT).show();
+                return@setOnClickListener
+            }
+
+            if (textInputPassword.editText?.text.toString().length == 5 && checkInput(textInputNamaToko) && checkInput(
+                    textInputAlamatToko
+                )
+                && checkInput(textInputNamaPengguna) && checkInput(textInputUsername) && checkInput(
+                    textInputPassword
+                )
+            ) {
+
+                ProsesDaftarUser()
+
+            }
+
+
         }
-    }
-
-
-    private fun ProsesDaftarUserToken() {
-
-
-        if (textInputPassword.editText?.text.toString().length != 5) {
-            progressDialog!!.dismiss()
-
-            Toast.makeText(this, "Password Harus 5 Karakter", Toast.LENGTH_SHORT).show();
-            return
-        }
-
-        if (textInputPassword.editText?.text.toString().length == 5 && checkInput(textInputNamaToko) && checkInput(
-                textInputAlamatToko
-            )
-            && checkInput(textInputNamaPengguna) && checkInput(textInputUsername) && checkInput(
-                textInputPassword
-            )
-        ) {
-
-            progressDialog!!.dismiss()
-//            pbLoadingRegister.visibility = View.GONE
-        }
-//        See.log("token Register User : $token, USERNAME :${textInputUsername.editText?.text.toString()}")
-
-
-        AndroidNetworking.post(MyConstant.TOKENS)
-            .addBodyParameter("secret", MyConstant.SECRET)
-            .setPriority(Priority.HIGH)
-            .build()
-            .getAsJSONObject(object : JSONObjectRequestListener {
-                override fun onResponse(response: JSONObject?) {
-                    val respon = response?.toString()
-                    Log.d("respon", "getTokenS $respon")
-                    val json = JSONObject(respon)
-                    val apiStatus = json.getInt("api_status")
-                    if (apiStatus.equals(1)) {
-                        val data = Gson().fromJson(respon, TokenModel::class.java)
-                        val list = data.data
-                        tokenUser = list.access_token
-                        ProsesDaftarUser()
-                        progressDialog?.dismiss()
-                        See.log("token ProsesDaftarUser : $tokenUser")
-
-                    } else {
-                        progressDialog?.dismiss()
-                        See.log("respon token ProsesDaftarUser  : " + respon.toString())
-                    }
-                }
-
-                override fun onError(anError: ANError?) {
-                    progressDialog?.dismiss()
-                    See.log("onError token ProsesDaftarUser errorCode : ${anError?.errorCode}")
-                    See.log("onError token ProsesDaftarUser errorBody : ${anError?.errorBody}")
-                    See.log("onError token ProsesDaftarUser errorDetail : ${anError?.errorDetail}")
-                }
-
-            })
-
-
     }
 
     private fun ProsesDaftarUser() {
         progressDialog?.show()
-        See.log("token ProsesDaftarUser  post : $tokenUser")
+        See.log("token ProsesDaftarUser  post : $token")
         AndroidNetworking.post(MyConstant.urlUser)
-            .addHeaders("Authorization", "Bearer$tokenUser")
+            .addHeaders("Authorization", "Bearer$token")
             .addBodyParameter("NAMA", textInputNamaPengguna.editText?.text.toString().trim())
             .addBodyParameter("USERNAME", textInputUsername.editText?.text.toString().trim())
             .addBodyParameter("PASSWORD", textInputPassword.editText?.text.toString().trim())
@@ -134,7 +93,7 @@ class RegisterActivity : AppCompatActivity() {
                     val apiMessage = json.getString(MyConstant.API_MESSAGE)
                     if (apiStatus.equals(1)) {
                         progressDialog?.dismiss()
-                        RegisterTokenToko()
+                        RegisterToko()
                         See.log("response  Register User  : $apiStatus, $apiMessage")
 
                     } else {
@@ -167,49 +126,12 @@ class RegisterActivity : AppCompatActivity() {
 
     }
 
-    private fun RegisterTokenToko() {
-        progressDialog!!.show()
-        AndroidNetworking.post(MyConstant.TOKENS)
-            .addBodyParameter("secret", MyConstant.SECRET)
-            .setPriority(Priority.HIGH)
-            .build()
-            .getAsJSONObject(object : JSONObjectRequestListener {
-                override fun onResponse(response: JSONObject?) {
-                    val respon = response?.toString()
-                    Log.d("respon", "getTokenS $respon")
-                    val json = JSONObject(respon)
-                    val apiStatus = json.getInt(MyConstant.API_STATUS)
-                    if (apiStatus.equals(1)) {
-                        val data = Gson().fromJson(respon, TokenModel::class.java)
-                        val list = data.data
-                        tokenToko = list.access_token
-                        progressDialog?.dismiss()
-                        RegisterToko()
-                        See.log(" Register Toko token: $tokenToko")
-
-                    } else {
-                        progressDialog?.dismiss()
-                        See.log("respon  Register toko token  : " + respon.toString())
-                    }
-                }
-
-                override fun onError(anError: ANError?) {
-                    progressDialog?.dismiss()
-                    See.log("onError RegisterToko token errorCode : ${anError?.errorCode}")
-                    See.log("onError RegisterToko token errorBody : ${anError?.errorBody}")
-                    See.log("onError RegisterToko token errorDetail : ${anError?.errorDetail}")
-                }
-
-            })
-
-
-    }
 
     private fun RegisterToko() {
         progressDialog?.show()
-        See.log("token Register Toko: $tokenToko, USERNAME :${textInputUsername.editText?.text.toString()}")
+        See.log("token Register Toko: $token, USERNAME :${textInputUsername.editText?.text.toString()}")
         AndroidNetworking.post(MyConstant.urlToko)
-            .addHeaders("Authorization", "Bearer$tokenToko")
+            .addHeaders("Authorization", "Bearer$token")
             .addBodyParameter("NAMA_TOKO", textInputNamaToko.editText?.text.toString().trim())
             .addBodyParameter("ALAMAT_TOKO", textInputAlamatToko.editText?.text.toString().trim())
             .addBodyParameter("USERNAME", textInputUsername.editText?.text.toString().trim())

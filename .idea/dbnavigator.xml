@@ -24,10 +24,14 @@
     <autoscroll-to-editor value="false" />
     <autoscroll-from-editor value="true" />
     <show-object-properties value="true" />
-    <loaded-nodes />
+    <loaded-nodes>
+      <connection connection-id="f1d59cd7-c340-4755-92f0-a6af7b99526a">
+        <schema name="main" object-types="table, view, constraint, index, column, dataset trigger" />
+      </connection>
+    </loaded-nodes>
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
-    <connection id="d3d53b76-5f14-45a8-80ee-b0e689799779">
+    <connection id="f1d59cd7-c340-4755-92f0-a6af7b99526a">
       <console name="Connection" type="STANDARD" schema="" session="Main" />
     </connection>
   </component>
@@ -35,7 +39,12 @@
     <open-files />
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
-    <connection id="d3d53b76-5f14-45a8-80ee-b0e689799779" />
+    <connection id="f1d59cd7-c340-4755-92f0-a6af7b99526a" />
+  </component>
+  <component name="DBNavigator.Project.DatasetFilterManager">
+    <filter-actions connection-id="f1d59cd7-c340-4755-92f0-a6af7b99526a" dataset="main.ITEM_TRANSAKSI" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="f1d59cd7-c340-4755-92f0-a6af7b99526a" dataset="main.USER" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="f1d59cd7-c340-4755-92f0-a6af7b99526a" dataset="main.TRANSAKSI" active-filter-id="EMPTY_FILTER" />
   </component>
   <component name="DBNavigator.Project.EditorStateManager">
     <last-used-providers />
@@ -66,7 +75,7 @@
   </component>
   <component name="DBNavigator.Project.Settings">
     <connections>
-      <connection id="d3d53b76-5f14-45a8-80ee-b0e689799779" active="true">
+      <connection id="f1d59cd7-c340-4755-92f0-a6af7b99526a" active="true">
         <database>
           <name value="Connection" />
           <description value="" />
@@ -81,7 +90,7 @@
           <port value="" />
           <database value="" />
           <files>
-            <file path="sqlite.db" schema="main" />
+            <file path="$USER_HOME$/db_cafe.db" schema="main" />
           </files>
           <type value="NONE" />
           <user value="" />
