@@ -117,11 +117,11 @@ class AddProdukActivity : AppCompatActivity() {
         }
 
         if (produk != null) {
-            Glide.with(this).load(Base64.decode(produk.foto, Base64.DEFAULT)).fitCenter()
+            Glide.with(this).load(produk.foto).fitCenter()
                 .into(imgFoto)
             textInputNamaProduk.editText?.setText(produk.nama)
             textInputHargaProduk.editText?.setText(produk.harga?.toInt().toString())
-            spnKategori.selection = adapterSpinner.getPosition(produk.kategori)
+//            spnKategori.selection = adapterSpinner.getPosition("hello")
             textInputStok.editText?.setText(produk.stok.toString())
             spnSatuan.selection = adapterSpinnerSatuan.getPosition(produk.satuan)
             if (produk.diskon != null) {
@@ -196,8 +196,8 @@ class AddProdukActivity : AppCompatActivity() {
                 nama = textInputNamaProduk.editText?.text.toString(),
                 harga = textInputHargaProduk.editText?.text.toString().toDouble(),
                 foto = Base64.encodeToString(byteArray, Base64.DEFAULT),
-                kategori = spnKategori.selectedItem as Kategori,
-                diskon = textInputDiskon.editText?.text.toString().toDouble(),
+//                kategori = spnKategori.selectedItem as Kategori,
+//                diskon = textInputDiskon.editText?.text.toString().toDouble(),
                 minimalPembelian = textInputMinimalPembelian.editText?.text.toString().toInt(),
                 stok = textInputStok.editText?.text.toString().toInt(),
                 satuan = spnSatuan.selectedItem as String
@@ -208,7 +208,7 @@ class AddProdukActivity : AppCompatActivity() {
                 nama = textInputNamaProduk.editText?.text.toString(),
                 harga = textInputHargaProduk.editText?.text.toString().toDouble(),
                 foto = Base64.encodeToString(byteArray, Base64.DEFAULT),
-                kategori = spnKategori.selectedItem as Kategori,
+//                kategori = spnKategori.selectedItem as Kategori,
                 diskon = null,
                 minimalPembelian = null,
                 stok = textInputStok.editText?.text.toString().toInt(),
@@ -235,12 +235,12 @@ class AddProdukActivity : AppCompatActivity() {
         produk.nama = textInputNamaProduk.editText?.text.toString()
         produk.harga = textInputHargaProduk.editText?.text.toString().toDouble()
         produk.foto = Base64.encodeToString(byteArray, Base64.DEFAULT)
-        produk.kategori = spnKategori.selectedItem as Kategori
+//        produk.kategori = spnKategori.selectedItem as Kategori
         produk.stok = textInputStok.editText?.text.toString().toInt()
         produk.satuan = spnSatuan.selectedItem as String
         /*jika ada diskon*/
         if (cbDiskon.isChecked) {
-            produk.diskon = textInputDiskon.editText?.text.toString().toDouble()
+//            produk.diskon = textInputDiskon.editText?.text.toString().toDouble()
             produk.minimalPembelian = textInputMinimalPembelian.editText?.text.toString().toInt()
         } else {
             produk.diskon = null

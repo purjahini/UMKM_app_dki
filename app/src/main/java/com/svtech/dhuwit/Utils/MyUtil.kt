@@ -95,9 +95,10 @@ fun pickImage(activity: Activity, imageView: ImageView , title: String): Uri? {
                         .saveDir(file)
                         .maxResultSize(1080, 1080)
                         .start { resultCode, data ->
-                          uril = data?.data
+
 
                             if (resultCode == Activity.RESULT_OK) {
+                                uril = data?.data
                                 Glide.with(activity).load(data?.data)
                                     .apply(RequestOptions.bitmapTransform(RoundedCorners(10F.toInt())))
                                     .into(imageView)

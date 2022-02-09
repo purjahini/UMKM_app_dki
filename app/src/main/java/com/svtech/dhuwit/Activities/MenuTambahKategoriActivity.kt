@@ -3,15 +3,9 @@ package com.svtech.dhuwit.Activities
 import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
-import android.util.Base64
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
-import com.androidnetworking.AndroidNetworking
-import com.androidnetworking.common.Priority
-import com.androidnetworking.error.ANError
-import com.androidnetworking.interfaces.JSONObjectRequestListener
-import com.google.gson.Gson
 import com.orm.SugarRecord
 import com.svtech.dhuwit.Adapter.RclvKategori
 import com.svtech.dhuwit.Models.Kategori
@@ -20,22 +14,22 @@ import com.svtech.dhuwit.Utils.MyConstant
 import com.svtech.dhuwit.Utils.See
 import com.svtech.dhuwit.Utils.calculateNoOfColumns
 import com.svtech.dhuwit.Utils.setToolbar
-import com.svtech.dhuwit.modelOl.KategoriModel
-import com.svtech.dhuwit.modelOl.ProfilModel
-import kotlinx.android.synthetic.main.activity_add_kategori.*
 import kotlinx.android.synthetic.main.activity_menu_tambah_kategori.*
-import org.json.JSONObject
 
 
 class MenuTambahKategoriActivity : AppCompatActivity() {
     var token = ""
-    var progressDialog : ProgressDialog? = null
+    var username = ""
+    var progressDialog: ProgressDialog? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_menu_tambah_kategori)
         /*Setting toolbar*/
         setToolbar(this, "Kategori")
-        token = com.svtech.dhuwit.Utils.getPreferences(this).getString(MyConstant.TOKEN,"").toString()
+        token =
+            com.svtech.dhuwit.Utils.getPreferences(this).getString(MyConstant.TOKEN, "").toString()
+        username =
+            com.svtech.dhuwit.Utils.getPreferences(this).getString(MyConstant.CURRENT_USER, "").toString()
         See.log("token Kategori : $token")
         progressDialog = ProgressDialog(this)
         progressDialog!!.setTitle("Proses")
@@ -47,14 +41,14 @@ class MenuTambahKategoriActivity : AppCompatActivity() {
         setToRecyclerView()
 
         btnAdd.setOnClickListener {
-            startActivity(Intent(this,AddKategoriActivity::class.java))
+            startActivity(Intent(this, AddKategoriActivity::class.java))
         }
     }
 
 
     fun setToRecyclerView(): Boolean {
         val listKategori = SugarRecord.listAll(Kategori::class.java)
-        val username = com.svtech.dhuwit.Utils.getPreferences(this).getString(MyConstant.CURRENT_USER,"")
+
         if (listKategori.isEmpty()) {
 //            AndroidNetworking.post(MyConstant.UrlListKategori)
 //                .addHeaders("Authorization", "Bearer$token")
@@ -125,7 +119,7 @@ class MenuTambahKategoriActivity : AppCompatActivity() {
             val rclvadapter = RclvKategori(this, listKategori)
             rclv.apply {
                 adapter = rclvadapter
-                layoutManager = GridLayoutManager(context, calculateNoOfColumns(context,200F))
+                layoutManager = GridLayoutManager(context, 2)
                 setHasFixedSize(true)
             }
         }

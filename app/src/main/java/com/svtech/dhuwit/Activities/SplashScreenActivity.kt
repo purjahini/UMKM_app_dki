@@ -17,7 +17,7 @@ import com.androidnetworking.interfaces.JSONObjectRequestListener
 import com.google.gson.Gson
 import com.orm.SugarRecord
 import com.svtech.dhuwit.Models.Profile
-import com.svtech.dhuwit.Models.TokenModel
+
 import com.svtech.dhuwit.Models.User
 import com.svtech.dhuwit.R
 import com.svtech.dhuwit.Utils.MyConstant
@@ -26,10 +26,7 @@ import com.svtech.dhuwit.Utils.See
 import com.svtech.dhuwit.Utils.savePreferences
 import org.json.JSONObject
 import android.content.SharedPreferences
-
-
-
-
+import com.svtech.dhuwit.modelOnline.TokenModel
 
 
 class SplashScreenActivity : AppCompatActivity() {
@@ -86,13 +83,19 @@ class SplashScreenActivity : AppCompatActivity() {
                     if (apiStatus.equals(1)){
                         val data = Gson().fromJson(respon, TokenModel::class.java)
                         val list = data.data
-                      var  token = list.access_token
-                        time = list.expiry.toLong()
+                        if (list != null) {
+                            var  token = list.access_token
+                            time = list.expiry!!.toLong()
+                            if (token != null) {
+                                savePreferences(this@SplashScreenActivity, MyConstant.TOKEN,token)
+                            }
+                            savePreferences(this@SplashScreenActivity, MyConstant.TIME, time)
+                            See.log("token Splash: $token")
+                        }
 
 
-                        savePreferences(this@SplashScreenActivity, MyConstant.TOKEN,token)
-                        savePreferences(this@SplashScreenActivity, MyConstant.TIME, time)
-                        See.log("token Splash: $token")
+
+
 
                     }
                     else {

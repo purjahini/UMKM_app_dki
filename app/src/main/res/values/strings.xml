@@ -19,4 +19,8 @@
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
     <string name="pilihbayar">Pilih Pembayaran</string>
+    <string name="bayar">Bayar</string>
+    <string name="label_nfc">Tempelkan kartu pada bagian sensor NFC</string>
+    <string name="serverOn">Server Connected</string>
+    <string name="serverOff">Server Disconnected</string>
 </resources>

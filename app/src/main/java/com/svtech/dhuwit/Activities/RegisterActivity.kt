@@ -13,7 +13,7 @@ import com.androidnetworking.error.ANError
 import com.androidnetworking.interfaces.JSONObjectRequestListener
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
-import com.svtech.dhuwit.Models.TokenModel
+
 import com.svtech.dhuwit.Models.User
 import com.svtech.dhuwit.R
 import com.svtech.dhuwit.Utils.MyConstant

@@ -1,9 +1,8 @@
-package com.svtech.dhuwit.Adapter
+package com.svtech.dhuwit.AdapterOnline
 
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
-import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -17,50 +16,57 @@ import com.orm.SugarRecord
 import com.svtech.dhuwit.Activities.AddProdukActivity
 import com.svtech.dhuwit.Activities.MenuPembelianActivity
 import com.svtech.dhuwit.Models.ItemTransaksi
-import com.svtech.dhuwit.Models.Produk
 import com.svtech.dhuwit.Models.Transaksi
 import com.svtech.dhuwit.R
 import com.svtech.dhuwit.Utils.numberToCurrency
+import com.svtech.dhuwit.modelOnline.ProdukOnline
 import kotlinx.android.synthetic.main.layout_item_produk.view.*
 import kotlinx.android.synthetic.main.layout_total_order.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
 /*Adapter recycler view untuk menapilkan item produk*/
-class RclvProduk :
-    RecyclerView.Adapter<RclvProduk.ViewHolder> {
+class RclvProdukOnline :
+    RecyclerView.Adapter<RclvProdukOnline.ViewHolder> {
     val context: Context
-    var listProduk: MutableList<Produk>
+    lateinit var listProduk: MutableList<ProdukOnline.Data?>
     val order: Boolean
-    var saveListProduk: MutableList<Produk>
+    lateinit var saveListProduk: MutableList<ProdukOnline.Data?>
 
     constructor(
         context: Context,
-        listProduk: MutableList<Produk>,
+        listProduk: MutableList<ProdukOnline.Data?>?,
         sort: Boolean,
         order: Boolean
     ) : super() {
         this.context = context
-        this.listProduk =
-            if (sort) listProduk.sortedBy { it.nama } as MutableList<Produk> else listProduk
+        if (listProduk != null) {
+            this.listProduk =
+                if (sort) listProduk.sortedBy { it?.NAMA } as MutableList<ProdukOnline.Data?> else listProduk
+        }
         this.order = order
-        this.saveListProduk = listProduk
+        if (listProduk != null) {
+            this.saveListProduk = listProduk
+        }
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(produk: Produk, context: Context) {
-            Glide.with(context).load(produk.foto).fitCenter()
-                .into(itemView.imgFoto)
-            itemView.tvNamaProduk.text = produk.nama
-            itemView.tvKategori.text = produk.kategori.toString()
-            itemView.tvHargaProduk.text = numberToCurrency(produk.harga!!)
-            itemView.tvStok.text = "Stok : " + produk.stok.toString()
-            /*Tampilkan label stok habis*/
-            if (produk.stok == 0) {
-                itemView.imgStokHabis.visibility = View.VISIBLE
-            } else {
-                itemView.imgStokHabis.visibility = View.INVISIBLE
+        fun bind(produk: ProdukOnline.Data?, context: Context) {
+            if (produk != null){
+                Glide.with(context).load(produk.FOTO).fitCenter()
+                    .into(itemView.imgFoto)
+                itemView.tvNamaProduk.text = produk.NAMA
+                itemView.tvKategori.text = produk.KATEGORI_NAMA
+                itemView.tvHargaProduk.text = numberToCurrency(produk.HARGA!!)
+                itemView.tvStok.text = "Stok : " + produk.STOK.toString()
+                /*Tampilkan label stok habis*/
+                if (produk.STOK == 0) {
+                    itemView.imgStokHabis.visibility = View.VISIBLE
+                } else {
+                    itemView.imgStokHabis.visibility = View.INVISIBLE
+                }
             }
+
         }
     }
 
@@ -74,11 +80,13 @@ class RclvProduk :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val produk = listProduk[position]
+        if (produk != null) {
+
         holder.bind(produk, context)
         holder.itemView.setOnClickListener {
             if (order) {
                 /*return jika stok habis*/
-                if (produk.stok == 0) {
+                if (produk?.STOK == 0) {
                     Toast.makeText(context, "STOK HABIS :(", Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
                 }
@@ -105,7 +113,7 @@ class RclvProduk :
                         if (itemTransaksi != null) {
                             if (itemTransaksi.jumlah?.plus(
                                     view.tvJumlah.text.toString().toInt()
-                                )!! > produk.stok!!
+                                )!! > produk.STOK!!
                             ) {
                                 Toast.makeText(
                                     context,
@@ -127,15 +135,15 @@ class RclvProduk :
                             transaksi.save()
                             val item = ItemTransaksi(
                                 jumlah = view.tvJumlah.text.toString().toInt(),
-                                namaProduk = produk.nama,
-                                hargaProduk = produk.harga,
-                                fotoProduk = produk.foto,
-                                kategori = produk.kategori.toString(),
-                                minimalPembelianProduk = produk.minimalPembelian,
-                                diskonProduk = produk.diskon?.toDouble(),
-                                stokProduk = produk.stok,
-                                satuan = produk.satuan,
-                                produkId = produk.id,
+                                namaProduk = produk.NAMA,
+                                hargaProduk = produk.HARGA?.toDouble(),
+                                fotoProduk = produk.FOTO,
+                                kategori = produk.KATEGORI_NAMA,
+                                minimalPembelianProduk = produk.MINIMAL_PEMBELIAN,
+                                diskonProduk = produk.DISKON?.toDouble(),
+                                stokProduk = produk.STOK,
+                                satuan = produk.SATUAN,
+                                produkId = produk.id?.toLong(),
                                 idTransaksi = transaksi.id
                             )
                             item.save()
@@ -183,15 +191,15 @@ class RclvProduk :
                                 val item = ItemTransaksi(
                                     jumlah = view.tvJumlah.text.toString().toInt(),
                                     idTransaksi = transaksi.id,
-                                    namaProduk = produk.nama,
-                                    hargaProduk = produk.harga,
-                                    fotoProduk = produk.foto,
-                                    minimalPembelianProduk = produk.minimalPembelian,
-                                    diskonProduk = produk.diskon?.toDouble(),
-                                    stokProduk = produk.stok,
-                                    satuan = produk.satuan,
-                                    produkId = produk.id,
-                                    kategori = produk.kategori.toString()
+                                    namaProduk = produk.NAMA,
+                                    hargaProduk = produk.HARGA?.toDouble(),
+                                    fotoProduk = produk.FOTO,
+                                    minimalPembelianProduk = produk.MINIMAL_PEMBELIAN,
+                                    diskonProduk = produk.DISKON?.toDouble(),
+                                    stokProduk = produk.STOK,
+                                    satuan = produk.SATUAN,
+                                    produkId = produk.id?.toLong(),
+                                    kategori = produk.KATEGORI_NAMA
                                 )
                                 item.save()
                                 transaksi.totalPembayaran =
@@ -218,7 +226,7 @@ class RclvProduk :
                     Log.d("jumlah", jumlahTotal.toString())
 
                     /*Cek apakah sudah mencapai stok maksimum*/
-                    if (jumlahTotal!! < produk.stok!!) {
+                    if (jumlahTotal!! < produk.STOK!!) {
                         view.tvJumlah.text = (view.tvJumlah.text.toString().toInt() + 1).toString()
                     } else {
                         Toast.makeText(
@@ -249,13 +257,14 @@ class RclvProduk :
             }
         }
     }
+    }
 
-    private fun hapusItem(produk: Produk) {
+    private fun hapusItem(produk: ProdukOnline.Data?) {
         MaterialAlertDialogBuilder(context).setTitle("Hapus")
             .setMessage("Apakah anda yakin ingin menghapus?")
             .setPositiveButton("Hapus", DialogInterface.OnClickListener { dialogInterface, i ->
                 listProduk.removeAt(listProduk.indexOf(produk))
-                produk.delete()
+               // produk.delete()
                 notifyDataSetChanged()
             })
             .setNegativeButton(
@@ -265,9 +274,11 @@ class RclvProduk :
 
     }
 
-    private fun editItem(produk: Produk) {
+    private fun editItem(produk: ProdukOnline.Data?) {
         val intent = Intent(context, AddProdukActivity::class.java)
-        intent.putExtra("produk", produk.id)
+        if (produk != null) {
+            intent.putExtra("produk", produk.id)
+        }
         intent.putExtra("update", true)
         context.startActivity(intent)
     }
@@ -275,11 +286,11 @@ class RclvProduk :
     fun sortItem(sort: String) {
         when (sort) {
             "Asc" -> {
-                listProduk.sortBy { it.nama }
+                listProduk.sortBy { it?.NAMA }
                 notifyDataSetChanged()
             }
             "Dsc" -> {
-                listProduk.sortBy { it.nama }
+                listProduk.sortBy { it?.NAMA }
                 listProduk.reverse()
                 notifyDataSetChanged()
             }
@@ -289,10 +300,10 @@ class RclvProduk :
     fun searchItem(search: String) {
         if (search.isNotEmpty()) {
             val search = saveListProduk.filter { produk ->
-                produk.nama!!.trim().toLowerCase()
+                produk?.NAMA!!.trim().toLowerCase()
                     .toLowerCase().contains(search.trim().toLowerCase())
             }
-            listProduk = search as MutableList<Produk>
+            listProduk = search as MutableList<ProdukOnline.Data?>
             notifyDataSetChanged()
         } else {
             listProduk = saveListProduk

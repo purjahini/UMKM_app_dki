@@ -1,6 +1,7 @@
 package com.svtech.dhuwit.Utils
 
 object MyConstant{
+
     const val REQUEST_CONNECT_DEVICE = 1
     const val REQUEST_ENABLE_BT = 2
 
@@ -24,5 +25,6 @@ object MyConstant{
     const val UrlInputKategori = "$url/input_kategori"
     const val UrlListKategori = "$url/list_kategori"
     const val UrlInputTransaksi = "$url/input_transaksi"
+    const val UrlGetProduk = "$url/get_produk"
 
 }

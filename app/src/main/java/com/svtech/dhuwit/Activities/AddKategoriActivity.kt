@@ -3,15 +3,12 @@ package com.svtech.dhuwit.Activities
 import android.app.ProgressDialog
 import android.os.Bundle
 import android.util.Base64
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import com.androidnetworking.AndroidNetworking
 import com.androidnetworking.common.Priority
 import com.androidnetworking.error.ANError
 import com.androidnetworking.interfaces.JSONObjectRequestListener
 import com.bumptech.glide.Glide
-import com.google.android.material.snackbar.Snackbar
 import com.orm.SugarRecord
 import com.svtech.dhuwit.Models.Kategori
 import com.svtech.dhuwit.Models.Produk

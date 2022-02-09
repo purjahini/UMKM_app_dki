@@ -1,58 +1,62 @@
 package com.svtech.dhuwit.Activities
 
 import android.Manifest
+import android.app.ProgressDialog
 import android.content.ContentValues
 import android.content.Intent
-import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Base64
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.toBitmap
 import androidx.recyclerview.widget.GridLayoutManager
-import com.orm.SugarRecord
-import com.svtech.dhuwit.Adapter.RclvProduk
-import com.svtech.dhuwit.Models.Kategori
-import com.svtech.dhuwit.Models.Produk
-import com.svtech.dhuwit.Models.Stok
+import com.androidnetworking.AndroidNetworking
+import com.androidnetworking.common.Priority
+import com.androidnetworking.error.ANError
+import com.androidnetworking.interfaces.JSONObjectRequestListener
+import com.google.gson.Gson
+import com.svtech.dhuwit.AdapterOnline.RclvProdukOnline
 import com.svtech.dhuwit.R
-import com.svtech.dhuwit.Utils.PathUtil
-import com.svtech.dhuwit.Utils.calculateNoOfColumns
-import com.svtech.dhuwit.Utils.hideSoftKeyboard
-import com.svtech.dhuwit.Utils.setToolbar
+import com.svtech.dhuwit.Utils.*
+import com.svtech.dhuwit.modelOnline.ProdukOnline
 import kotlinx.android.synthetic.main.activity_menu_pembelian.edtPencarian
 import kotlinx.android.synthetic.main.activity_menu_tambah_kategori.btnAdd
-import kotlinx.android.synthetic.main.activity_menu_tambah_kategori.rclv
 import kotlinx.android.synthetic.main.activity_menu_tambah_kategori.tvEmpty
 import kotlinx.android.synthetic.main.activity_menu_tambah_produk.*
 import org.apache.poi.hssf.usermodel.HSSFDateUtil
 import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.usermodel.FormulaEvaluator
 import org.apache.poi.ss.usermodel.Row
-import org.apache.poi.xssf.usermodel.XSSFPicture
-import org.apache.poi.xssf.usermodel.XSSFWorkbook
-import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.FileInputStream
-import java.io.FileNotFoundException
+import org.json.JSONObject
 import java.text.SimpleDateFormat
-import java.util.*
-import kotlin.collections.ArrayList
 
 
 class MenuTambahProdukActivity : AppCompatActivity() {
     private var isError: Boolean = false
+    var progressDialog: ProgressDialog? = null
+    var token = ""
+    var username = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_menu_tambah_produk)
+        token =
+            com.svtech.dhuwit.Utils.getPreferences(this).getString(MyConstant.TOKEN, "").toString()
+        username =
+            com.svtech.dhuwit.Utils.getPreferences(this).getString(MyConstant.CURRENT_USER, "")
+                .toString()
+        See.log("token addProduk : $token")
+        progressDialog = ProgressDialog(this)
+        progressDialog!!.setTitle("Proses")
+        progressDialog!!.setMessage("Mohon Menunggu...")
+        progressDialog!!.setProgressStyle(ProgressDialog.STYLE_SPINNER)
+        progressDialog!!.setCancelable(false)
+        progressDialog!!.isIndeterminate = true
+
         /*Setting toolbar*/
         setToolbar(this, "Produk")
         /*Setting list item produk*/
@@ -98,7 +102,7 @@ class MenuTambahProdukActivity : AppCompatActivity() {
             //get path
             val path = PathUtil(this).getPath(uri!!)
             Log.d("FILEPATH", path!!)
-            readExcel(path)
+//            readExcel(path)
 
             if (!isError) {
                 Toast.makeText(this, "Upload Berhasil", Toast.LENGTH_SHORT).show()
@@ -108,96 +112,96 @@ class MenuTambahProdukActivity : AppCompatActivity() {
         }
     }
 
-    fun readExcel(path: String?) {
-        try {
-            val inputFile = File(path)
-            val inputStream = FileInputStream(inputFile)
-            val workbook = XSSFWorkbook(inputStream)
-            val sheet = workbook.getSheetAt(0)
-
-            //read excel sheet
-            val formulaEvaluator = workbook.creationHelper.createFormulaEvaluator()
-            val list = ArrayList<String>()
-
-            //get all image and it's positions
-            val byteArrayOfImages = mutableMapOf<Int, ByteArray>()
-            val dp = sheet.createDrawingPatriarch()
-            val shapes = dp.shapes
-            for (i in 0 until shapes.size) {
-                val pict = shapes[i] as XSSFPicture
-                val anchor = pict.clientAnchor
-                val pictData = pict.pictureData
-                val byteArray = pictData.data
-                byteArrayOfImages[anchor.row1] = byteArray
-            }
-
-            //loop through rows
-            val rowCount = sheet.lastRowNum
-            for (r in 1 until rowCount) {
-                val row = sheet.getRow(r)
-                val cellCount = row.lastCellNum
-                /*break jika row kosong*/
-                if (cellCount < 0) break
-                for (c in 0 until cellCount) {
-                    /*Skip for image cell*/
-                    if (c == 3) continue
-                    val value = getCellAsString(row, c, formulaEvaluator).trim()
-                    list.add(value)
-                    Log.d("nilai : ", value)
-                }
-                //end of row
-                var kategori =
-                    SugarRecord.find(Kategori::class.java, "nama = ?", list[1]).firstOrNull()
-                if (kategori == null) {
-                    /*Buat kategori baru*/
-                    val bitmap = ContextCompat.getDrawable(this, R.drawable.photo)?.toBitmap()
-                    val stream = ByteArrayOutputStream()
-                    bitmap?.compress(Bitmap.CompressFormat.PNG, 100, stream)
-                    val byteArray = stream.toByteArray()
-                    kategori = Kategori(
-                        nama = list[1],
-                        gambar = Base64.encodeToString(byteArray, Base64.DEFAULT)
-                    )
-                    kategori.save()
-                }
-                /*Insert produk*/
-                val produk = Produk(
-                    nama = list[0],
-                    kategori = kategori,
-                    harga = list[2].toDouble(),
-                    foto = Base64.encodeToString(byteArrayOfImages[r], Base64.DEFAULT),
-                    diskon = if (list[3] != "-") list[3].toDouble() else null,
-                    minimalPembelian = if (list[4] != "-") list[4].toInt() else null,
-                    stok = list[5].toInt(),
-                    satuan = list[6]
-                )
-                Log.d("Satuan : ", list[6])
-                produk.save()
-                /*Update Stok*/
-                val stok = Stok(
-                    list[5].toInt(),
-                    true,
-                    produk.id,
-                    SimpleDateFormat("dd/MM/yyyy hh:mm:ss").format(
-                        Date().time
-                    )
-                )
-                stok.save()
-
-                //reset list
-                list.clear()
-            }
-            // change error status
-            isError = false
-
-        } catch (e: FileNotFoundException) {
-            isError = true
-            Toast.makeText(this, "File tidak ditemukan!", Toast.LENGTH_LONG).show()
-        } catch (e: Exception) {
-            isError = true
-            Toast.makeText(this, e.message, Toast.LENGTH_LONG).show()
-        }
-    }
+//    fun readExcel(path: String?) {
+//        try {
+//            val inputFile = File(path)
+//            val inputStream = FileInputStream(inputFile)
+//            val workbook = XSSFWorkbook(inputStream)
+//            val sheet = workbook.getSheetAt(0)
+//
+//            //read excel sheet
+//            val formulaEvaluator = workbook.creationHelper.createFormulaEvaluator()
+//            val list = ArrayList<String>()
+//
+//            //get all image and it's positions
+//            val byteArrayOfImages = mutableMapOf<Int, ByteArray>()
+//            val dp = sheet.createDrawingPatriarch()
+//            val shapes = dp.shapes
+//            for (i in 0 until shapes.size) {
+//                val pict = shapes[i] as XSSFPicture
+//                val anchor = pict.clientAnchor
+//                val pictData = pict.pictureData
+//                val byteArray = pictData.data
+//                byteArrayOfImages[anchor.row1] = byteArray
+//            }
+//
+//            //loop through rows
+//            val rowCount = sheet.lastRowNum
+//            for (r in 1 until rowCount) {
+//                val row = sheet.getRow(r)
+//                val cellCount = row.lastCellNum
+//                /*break jika row kosong*/
+//                if (cellCount < 0) break
+//                for (c in 0 until cellCount) {
+//                    /*Skip for image cell*/
+//                    if (c == 3) continue
+//                    val value = getCellAsString(row, c, formulaEvaluator).trim()
+//                    list.add(value)
+//                    Log.d("nilai : ", value)
+//                }
+//                //end of row
+//                var kategori =
+//                    SugarRecord.find(Kategori::class.java, "nama = ?", list[1]).firstOrNull()
+//                if (kategori == null) {
+//                    /*Buat kategori baru*/
+//                    val bitmap = ContextCompat.getDrawable(this, R.drawable.photo)?.toBitmap()
+//                    val stream = ByteArrayOutputStream()
+//                    bitmap?.compress(Bitmap.CompressFormat.PNG, 100, stream)
+//                    val byteArray = stream.toByteArray()
+//                    kategori = Kategori(
+//                        nama = list[1],
+//                        gambar = Base64.encodeToString(byteArray, Base64.DEFAULT)
+//                    )
+//                    kategori.save()
+//                }
+//                /*Insert produk*/
+//                val produk = Produk(
+//                    nama = list[0],
+//                    kategori = kategori.id,
+//                    harga = list[2].toDouble(),
+//                    foto = Base64.encodeToString(byteArrayOfImages[r], Base64.DEFAULT),
+//                    diskon = if (list[3] != "-") list[3] else null,
+//                    minimalPembelian = if (list[4] != "-") list[4].toInt() else null,
+//                    stok = list[5].toInt(),
+//                    satuan = list[6]
+//                )
+//                Log.d("Satuan : ", list[6])
+//                produk.save()
+//                /*Update Stok*/
+//                val stok = Stok(
+//                    list[5].toInt(),
+//                    true,
+//                    produk.id,
+//                    SimpleDateFormat("dd/MM/yyyy hh:mm:ss").format(
+//                        Date().time
+//                    )
+//                )
+//                stok.save()
+//
+//                //reset list
+//                list.clear()
+//            }
+//            // change error status
+//            isError = false
+//
+//        } catch (e: FileNotFoundException) {
+//            isError = true
+//            Toast.makeText(this, "File tidak ditemukan!", Toast.LENGTH_LONG).show()
+//        } catch (e: Exception) {
+//            isError = true
+//            Toast.makeText(this, e.message, Toast.LENGTH_LONG).show()
+//        }
+//    }
 
     private fun getCellAsString(row: Row, c: Int, formulaEvaluator: FormulaEvaluator): String {
         var value = ""
@@ -242,25 +246,61 @@ class MenuTambahProdukActivity : AppCompatActivity() {
 
 
     fun setToRecyclerView(): Boolean {
-        val listProduk = SugarRecord.listAll(Produk::class.java)
-        if (listProduk.isEmpty()) {
-            tvEmpty.visibility = View.VISIBLE
-        } else {
-            tvEmpty.visibility = View.GONE
-            val rclvadapter = RclvProduk(this, listProduk, false, false)
-            rclv.apply {
-                adapter = rclvadapter
-                layoutManager = GridLayoutManager(context, calculateNoOfColumns(context, 180F))
-                setHasFixedSize(true)
-            }
-        }
+//        val listProduk = SugarRecord.listAll(Produk::class.java)
+        progressDialog?.show()
+        AndroidNetworking.post(MyConstant.UrlGetProduk)
+            .addHeaders("Authorization", "Bearer${token}")
+            .addBodyParameter("USERNAME", username)
+            .setPriority(Priority.HIGH)
+            .build()
+            .getAsJSONObject( object: JSONObjectRequestListener {
+                override fun onResponse(response: JSONObject?) {
+                   progressDialog?.dismiss()
+
+                    if (response != null ) {
+                        val respon = response?.toString()
+                        See.log("respon getProduk: \n $respon")
+                        val json = JSONObject(respon)
+                        val apiStatus = json.getInt(MyConstant.API_STATUS)
+                        val apiMessage = json.getString(MyConstant.API_MESSAGE)
+
+                        if (apiStatus.equals(1)) {
+                            val data = Gson().fromJson(respon, ProdukOnline::class.java)
+
+                            val list = data.data
+                            if (list?.isEmpty() == true) {
+                                tvEmpty.visibility = View.VISIBLE
+                            } else {
+                                tvEmpty.visibility = View.GONE
+                                val rclvadapter = RclvProdukOnline(this@MenuTambahProdukActivity,list,false, false)
+                                rclvProduk.apply {
+                                    adapter = rclvadapter
+                                    layoutManager = GridLayoutManager(context, 2)
+                                    setHasFixedSize(true)
+                                }
+                            }
+                        } else {
+                            See.toast(this@MenuTambahProdukActivity, apiMessage)
+                        }
+                    }
+                }
+
+                override fun onError(anError: ANError?) {
+                    progressDialog?.dismiss()
+                    See.log("onError getProduk errorCode : ${anError?.errorCode}")
+                    See.log("onError getProduk errorBody : ${anError?.errorBody}")
+                    See.log("onError getProduk errorDetail : ${anError?.errorDetail}")
+                }
+
+            })
+
         return true
     }
 
     private fun searchItem(search: String) {
-        val adapter = rclv.adapter
+        val adapter = rclvProduk.adapter
         if (adapter != null) {
-            adapter as RclvProduk
+            adapter as RclvProdukOnline
             adapter.searchItem(search)
         }
     }
