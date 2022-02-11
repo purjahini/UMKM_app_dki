@@ -75,11 +75,12 @@ fun calculateNoOfColumns(
 }
 
 /*Fungsi untuk memilih gambar*/
-fun pickImage(activity: Activity, imageView: ImageView , title: String): Uri? {
-    var uril :Uri? = null
+fun pickImage(activity: Activity, imageView: ImageView , title: String):String {
+
     val folder = File(Environment.getExternalStorageDirectory(), "UmkmImage")
     if (!folder.exists()) folder.mkdir()
-    val file = File(folder.absolutePath, title)
+    var file = File(folder.absolutePath, title)
+  var nameImage = ""
     Dexter.withContext(activity)
         .withPermissions(
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -98,10 +99,11 @@ fun pickImage(activity: Activity, imageView: ImageView , title: String): Uri? {
 
 
                             if (resultCode == Activity.RESULT_OK) {
-                                uril = data?.data
                                 Glide.with(activity).load(data?.data)
                                     .apply(RequestOptions.bitmapTransform(RoundedCorners(10F.toInt())))
                                     .into(imageView)
+                            nameImage = File(data?.data?.path).name
+                                See.log("nameImage : ${nameImage}")
                             } else if (resultCode == ImagePicker.RESULT_ERROR) {
                                 Toast.makeText(
                                     activity,
@@ -121,7 +123,7 @@ fun pickImage(activity: Activity, imageView: ImageView , title: String): Uri? {
             }
 
         }).check()
-return uril
+return nameImage
 }
 
 /*Fungsi untuk mengatur tombol kembali dan title di toolbar*/

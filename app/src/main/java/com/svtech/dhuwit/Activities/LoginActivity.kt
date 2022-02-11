@@ -106,7 +106,11 @@ class LoginActivity : AppCompatActivity() {
 
                     override fun onError(anError: ANError?) {
                         progressDialog?.dismiss()
-
+                        Toast.makeText(
+                            applicationContext,
+                            anError?.errorCode!!,
+                            Toast.LENGTH_SHORT
+                        ).show()
                         See.log("anError btnMasuk errorCode : ${anError?.errorCode}")
                         See.log("anError btnMasuk errorBody : ${anError?.errorBody}")
                         See.log("anError btnMasuk errorDetail : ${anError?.errorDetail}")
@@ -149,12 +153,13 @@ class LoginActivity : AppCompatActivity() {
                                     namaToko = list.NAMA_TOKO,
                                     USERNAME = list.USERNAME
                                 ).save()
-                                InsertProduks()
+                                savePreferences(applicationContext, MyConstant.CURRENT_USER, username)
+                                startActivity(Intent(applicationContext, DashboardActivity::class.java))
+                                finish()
+//                                InsertProduks()
                             }
 
-                            savePreferences(applicationContext, MyConstant.CURRENT_USER, username)
-                            startActivity(Intent(applicationContext, DashboardActivity::class.java))
-                            finish()
+
 
 
                         } else {
@@ -176,11 +181,12 @@ class LoginActivity : AppCompatActivity() {
 
                 })
 
-        }
-    }
 
-    private fun InsertProduks() {
-        progressDialog?.show()
+        }
+
+
+//    private fun InsertProduks() {
+//        progressDialog?.show()
 //        val username = textInputUsername.editText?.text.toString().trim()
 //        AndroidNetworking.post(MyConstant.UrlGetProduk)
 //            .addHeaders("Authorization", "Bearer${token}")
@@ -249,6 +255,13 @@ class LoginActivity : AppCompatActivity() {
 //
 //            })
 //
+    }
+
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+        if (currentFocus != null) {
+            hideSoftKeyboard()
+        }
+        return super.dispatchTouchEvent(ev)
     }
 }
 //    private fun InsertProduks() {
@@ -331,5 +344,5 @@ class LoginActivity : AppCompatActivity() {
 //        }
 //        return super.dispatchTouchEvent(ev)
 //    }
-//
-//    }
+
+

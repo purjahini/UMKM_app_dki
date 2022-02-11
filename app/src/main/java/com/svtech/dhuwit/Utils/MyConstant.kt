@@ -13,7 +13,9 @@ object MyConstant{
     const val SECRET = "02aaf476543b67ecfd745cfb22b501b8"
     const val API_STATUS = "api_status"
     const val API_MESSAGE = "api_message"
+    const val AUTHORIZATION ="Authorization"
     const val TOKEN = "token"
+    const val BEARER = "Bearer"
     const val TIME = "time"
     const val url = "http://203.210.87.97/umkm_core/public/api"
 
@@ -23,7 +25,9 @@ object MyConstant{
     const val UrlLoginToko = "$url/login_toko"
     const val UrlLoginUser = "$url/login_user"
     const val UrlInputKategori = "$url/input_kategori"
+    const val UrlHapusKategori = "$url/hapus_kategori"
     const val UrlListKategori = "$url/list_kategori"
+    const val UrlUpdateKategori = "$url/update_kategori"
     const val UrlInputTransaksi = "$url/input_transaksi"
     const val UrlGetProduk = "$url/get_produk"
 
