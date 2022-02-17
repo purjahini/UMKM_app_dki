@@ -11,9 +11,7 @@ import com.androidnetworking.common.Priority
 import com.androidnetworking.error.ANError
 import com.androidnetworking.interfaces.JSONObjectRequestListener
 import com.google.gson.Gson
-import com.orm.SugarRecord
 import com.svtech.dhuwit.AdapterOnline.RclvKategoriOnline
-import com.svtech.dhuwit.Models.Kategori
 import com.svtech.dhuwit.R
 import com.svtech.dhuwit.Utils.MyConstant
 import com.svtech.dhuwit.Utils.See
@@ -53,11 +51,11 @@ class MenuTambahKategoriActivity : AppCompatActivity() {
 
 
     fun setToRecyclerView(): Boolean {
-        val listKategori = SugarRecord.listAll(Kategori::class.java)
+
         progressDialog?.show()
-        AndroidNetworking.post(MyConstant.UrlListKategori)
+        AndroidNetworking.post(MyConstant.UrlKategoriGetData)
             .addHeaders(MyConstant.AUTHORIZATION, MyConstant.BEARER+token)
-            .addBodyParameter("KATEGORI_USERNAME", username)
+            .addBodyParameter("username", username)
             .setPriority(Priority.HIGH)
             .build()
             .getAsJSONObject(object : JSONObjectRequestListener{

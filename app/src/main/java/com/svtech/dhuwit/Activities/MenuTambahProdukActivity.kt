@@ -248,9 +248,9 @@ class MenuTambahProdukActivity : AppCompatActivity() {
     fun setToRecyclerView(): Boolean {
 //        val listProduk = SugarRecord.listAll(Produk::class.java)
         progressDialog?.show()
-        AndroidNetworking.post(MyConstant.UrlGetProduk)
+        AndroidNetworking.post(MyConstant.Urlproduklistdata)
             .addHeaders("Authorization", "Bearer${token}")
-            .addBodyParameter("USERNAME", username)
+            .addBodyParameter("username", username)
             .setPriority(Priority.HIGH)
             .build()
             .getAsJSONObject( object: JSONObjectRequestListener {

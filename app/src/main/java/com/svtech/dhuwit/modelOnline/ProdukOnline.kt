@@ -6,17 +6,17 @@ data class ProdukOnline(
     val `data`: MutableList<Data?>?
 ) {
     data class Data(
-        val DISKON: Int?,
-        val KATEGORI_GAMBAR: String?,
-        val KATEGORI_NAMA: String?,
-        val FOTO: String?,
-        val HARGA: Int?,
-        var KATEGORI: Int?,
-        val MINIMAL_PEMBELIAN: Int?,
-        val NAMA: String?,
-        val SATUAN: String?,
-        val STOK: Int?,
-        val USERNAME: String?,
+        var diskon: Int?,
+        val kategori_gambar: String?,
+        val kategori_nama: String?,
+        var foto: String?,
+        var harga: Int?,
+        var kategori: Int?,
+        var minimal_pembelian: Int?,
+        var nama: String?,
+        var satuan: String?,
+        var stok: Int?,
+        val username: String?,
         val id: Int?
     )
 }

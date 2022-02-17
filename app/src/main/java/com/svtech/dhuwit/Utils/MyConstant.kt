@@ -10,7 +10,7 @@ object MyConstant{
     const val CURRENT_USER = "CurrentUser"
     const val FIRST_START = "FirstStart"
     const val REQUEST_OPEN_FILE = 9999
-    const val SECRET = "02aaf476543b67ecfd745cfb22b501b8"
+    const val SECRET = "350ac8234c7515318253b24fed7aaf5c"
     const val API_STATUS = "api_status"
     const val API_MESSAGE = "api_message"
     const val AUTHORIZATION ="Authorization"
@@ -19,16 +19,21 @@ object MyConstant{
     const val TIME = "time"
     const val url = "http://203.210.87.97/umkm_core/public/api"
 
-    const val urlToko = "$url/registertoko"
-    const val urlUser = "$url/register_user"
+    const val urlToko = "$url/tokoregister"
+    const val urlUser = "$url/userregister"
     const val TOKENS = "$url/get-token"
-    const val UrlLoginToko = "$url/login_toko"
-    const val UrlLoginUser = "$url/login_user"
-    const val UrlInputKategori = "$url/input_kategori"
-    const val UrlHapusKategori = "$url/hapus_kategori"
-    const val UrlListKategori = "$url/list_kategori"
-    const val UrlUpdateKategori = "$url/update_kategori"
+    const val UrlLoginToko = "$url/tokologin"
+    const val UrlLoginUser = "$url/userlogin"
+
+    const val Urlkategoricreate = "$url/kategoricreate"
+    const val Urlkategorihapus = "$url/kategorihapus"
+    const val UrlKategoriGetData = "$url/kategorigetdata"
+    const val Urlkategoriupdate = "$url/kategoriupdate"
+
     const val UrlInputTransaksi = "$url/input_transaksi"
-    const val UrlGetProduk = "$url/get_produk"
+
+    const val Urlprodukhapusid= "$url/produkhapusid"
+    const val Urlproduklistdata = "$url/produklistdata"
+    const val Urlprodukcreate = "$url/produkcreate"
 
 }

@@ -54,21 +54,21 @@ class DashboardActivity : AppCompatActivity() {
         if (user.role.equals(User.userSysAdmin)){
             colSpan = 4
             listMenu = mutableListOf(
-                Menu(R.drawable.icon1,"Pembelian"),
+                Menu(R.drawable.icon1,"Penjualan"),
                 Menu(R.drawable.icon2,"Keranjang"),
-                Menu(R.drawable.icon3,"Tambah Kategori"),
-                Menu(R.drawable.icon4,"Tambah Produk"),
-                Menu(R.drawable.icon5,"Tambah Pegawai"),
+                Menu(R.drawable.icon3,"Kategori"),
+                Menu(R.drawable.icon4,"Produk"),
+                Menu(R.drawable.icon5,"Pegawai"),
                 Menu(R.drawable.icon6,"Laporan")
             )
             imgEditProfile.setImageDrawable(getDrawable(R.drawable.edit))
         }else{
             colSpan = 4
             listMenu = mutableListOf(
-                Menu(R.drawable.icon1,"Pembelian"),
+                Menu(R.drawable.icon1,"Penjualan"),
                 Menu(R.drawable.icon2,"Keranjang"),
-                Menu(R.drawable.icon3,"Tambah Kategori"),
-                Menu(R.drawable.icon4,"Tambah Produk")
+                Menu(R.drawable.icon3,"Kategori"),
+                Menu(R.drawable.icon4,"Produk")
             )
             imgEditProfile.setImageDrawable(getDrawable(R.drawable.off))
         }

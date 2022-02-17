@@ -5,7 +5,6 @@ import android.app.Activity
 import android.app.ProgressDialog
 import android.os.Bundle
 import android.os.Environment
-import android.util.Base64
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.androidnetworking.AndroidNetworking
@@ -21,7 +20,6 @@ import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
-import com.svtech.dhuwit.Models.Kategori
 import com.svtech.dhuwit.R
 import com.svtech.dhuwit.Utils.*
 import kotlinx.android.synthetic.main.activity_add_kategori.*
@@ -151,11 +149,11 @@ class AddKategoriActivity : AppCompatActivity() {
         val NameFile = File(FilePath)
         See.log("file upload : ${NameFile}")
 
-        AndroidNetworking.upload(MyConstant.UrlInputKategori)
+        AndroidNetworking.upload(MyConstant.Urlkategoricreate)
             .addHeaders("Authorization", "Bearer$token")
-            .addMultipartFile("KATEGORI_GAMBAR",NameFile)
-            .addMultipartParameter("KATEGORI_NAMA", textInputNamaKategori.editText?.text.toString().trim())
-            .addMultipartParameter("KATEGORI_USERNAME", username.trim())
+            .addMultipartFile("kategori_gambar",NameFile)
+            .addMultipartParameter("kategori_nama", textInputNamaKategori.editText?.text.toString().trim())
+            .addMultipartParameter("username", username.trim())
             .setPriority(Priority.MEDIUM)
             .build()
             .getAsJSONObject(object : JSONObjectRequestListener {
@@ -196,11 +194,11 @@ class AddKategoriActivity : AppCompatActivity() {
         val NameFile = File(FilePath)
         See.log("file upload : ${NameFile}")
         if (fileName.isNullOrEmpty()){
-            AndroidNetworking.post(MyConstant.UrlUpdateKategori)
+            AndroidNetworking.post(MyConstant.Urlkategoriupdate)
                 .addHeaders("Authorization", "Bearer$token")
-                .addBodyParameter("id", id.toString())
-                .addBodyParameter("KATEGORI_NAMA", textInputNamaKategori.editText?.text.toString().trim())
-                .addBodyParameter("KATEGORI_USERNAME", username.trim())
+                .addBodyParameter("id", id.toString().trim())
+                .addBodyParameter("kategori_nama", textInputNamaKategori.editText?.text.toString().trim())
+                .addBodyParameter("username", username.trim())
                 .setPriority(Priority.MEDIUM)
                 .build()
                 .getAsJSONObject(object : JSONObjectRequestListener {
@@ -233,12 +231,12 @@ class AddKategoriActivity : AppCompatActivity() {
                 })
 
         } else {
-            AndroidNetworking.upload(MyConstant.UrlUpdateKategori)
+            AndroidNetworking.upload(MyConstant.Urlkategoriupdate)
                 .addHeaders("Authorization", "Bearer$token")
-                .addMultipartParameter("id", id.toString())
-                .addMultipartFile("KATEGORI_GAMBAR", NameFile)
-                .addMultipartParameter("KATEGORI_NAMA", textInputNamaKategori.editText?.text.toString().trim())
-                .addMultipartParameter("KATEGORI_USERNAME", username.trim())
+                .addMultipartParameter("id", id.toString().trim())
+                .addMultipartFile("kategori_gambar", NameFile)
+                .addMultipartParameter("kategori_nama", textInputNamaKategori.editText?.text.toString().trim())
+                .addMultipartParameter("username", username.trim())
                 .setPriority(Priority.MEDIUM)
                 .build()
                 .getAsJSONObject(object : JSONObjectRequestListener {

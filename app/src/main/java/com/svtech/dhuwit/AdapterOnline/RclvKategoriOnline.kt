@@ -36,10 +36,10 @@ class RclvKategoriOnline(val context: Context, var listKategori: MutableList<Kat
 
         fun bind(kategori: KategoriOnline.Data?, context: Context){
 
-                Glide.with(context).load(kategori?.KATEGORI_GAMBAR)
+                Glide.with(context).load(kategori?.kategori_gambar)
                     .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                     .placeholder(R.drawable.logo).fitCenter().into(itemView.imgFoto)
-                itemView.tvKategori.text = kategori?.KATEGORI_NAMA
+                itemView.tvKategori.text = kategori?.kategori_nama
 
         }
     }
@@ -79,14 +79,14 @@ class RclvKategoriOnline(val context: Context, var listKategori: MutableList<Kat
         username =
             com.svtech.dhuwit.Utils.getPreferences(context).getString(MyConstant.CURRENT_USER, "")
                 .toString()
-        See.log("token addProduk : $token")
+        See.log("token addProduk : $token id hapus kt : ${kategori?.id}")
         MaterialAlertDialogBuilder(context).setTitle("Hapus").setMessage("Apakah anda yakin ingin menghapus?")
             .setPositiveButton("Hapus", DialogInterface.OnClickListener { dialogInterface, i ->
                 listKategori?.remove(kategori)
-                AndroidNetworking.post(MyConstant.UrlHapusKategori)
+                AndroidNetworking.post(MyConstant.Urlkategorihapus)
                     .addHeaders("Authorization", "Bearer$token")
                     .addBodyParameter("id", kategori?.id.toString().trim())
-                    .addBodyParameter("KATEGORI_USERNAME", username.trim())
+                    .addBodyParameter("username", username.trim())
                     .setPriority(Priority.MEDIUM)
                     .build()
                     .getAsJSONObject(object : JSONObjectRequestListener {
@@ -128,8 +128,8 @@ class RclvKategoriOnline(val context: Context, var listKategori: MutableList<Kat
     private fun editItem(kategori: KategoriOnline.Data?) {
         val intent = Intent(context, AddKategoriActivity::class.java)
         intent.putExtra("kategori_id", kategori?.id)
-        intent.putExtra("kategori_nama", kategori?.KATEGORI_NAMA)
-        intent.putExtra("kategori_gambar", kategori?.KATEGORI_GAMBAR)
+        intent.putExtra("kategori_nama", kategori?.kategori_nama)
+        intent.putExtra("kategori_gambar", kategori?.kategori_gambar)
         intent.putExtra("update", true)
         context.startActivity(intent)
     }

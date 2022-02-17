@@ -1,5 +1,6 @@
 package com.svtech.dhuwit.AdapterOnline
 
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -10,6 +11,10 @@ import android.view.ViewGroup
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.androidnetworking.AndroidNetworking
+import com.androidnetworking.common.Priority
+import com.androidnetworking.error.ANError
+import com.androidnetworking.interfaces.JSONObjectRequestListener
 import com.bumptech.glide.Glide
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.orm.SugarRecord
@@ -18,10 +23,13 @@ import com.svtech.dhuwit.Activities.MenuPembelianActivity
 import com.svtech.dhuwit.Models.ItemTransaksi
 import com.svtech.dhuwit.Models.Transaksi
 import com.svtech.dhuwit.R
+import com.svtech.dhuwit.Utils.MyConstant
+import com.svtech.dhuwit.Utils.See
 import com.svtech.dhuwit.Utils.numberToCurrency
 import com.svtech.dhuwit.modelOnline.ProdukOnline
 import kotlinx.android.synthetic.main.layout_item_produk.view.*
 import kotlinx.android.synthetic.main.layout_total_order.view.*
+import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -29,6 +37,9 @@ import java.util.*
 class RclvProdukOnline :
     RecyclerView.Adapter<RclvProdukOnline.ViewHolder> {
     val context: Context
+    var progressDialog: ProgressDialog? = null
+    var token = ""
+    var username = ""
     lateinit var listProduk: MutableList<ProdukOnline.Data?>
     val order: Boolean
     lateinit var saveListProduk: MutableList<ProdukOnline.Data?>
@@ -42,7 +53,7 @@ class RclvProdukOnline :
         this.context = context
         if (listProduk != null) {
             this.listProduk =
-                if (sort) listProduk.sortedBy { it?.NAMA } as MutableList<ProdukOnline.Data?> else listProduk
+                if (sort) listProduk.sortedBy { it?.nama } as MutableList<ProdukOnline.Data?> else listProduk
         }
         this.order = order
         if (listProduk != null) {
@@ -53,14 +64,14 @@ class RclvProdukOnline :
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(produk: ProdukOnline.Data?, context: Context) {
             if (produk != null){
-                Glide.with(context).load(produk.FOTO).fitCenter()
+                Glide.with(context).load(produk.foto).fitCenter()
                     .into(itemView.imgFoto)
-                itemView.tvNamaProduk.text = produk.NAMA
-                itemView.tvKategori.text = produk.KATEGORI_NAMA
-                itemView.tvHargaProduk.text = numberToCurrency(produk.HARGA!!)
-                itemView.tvStok.text = "Stok : " + produk.STOK.toString()
+                itemView.tvNamaProduk.text = produk.nama
+                itemView.tvKategori.text = produk.kategori_nama
+                itemView.tvHargaProduk.text = numberToCurrency(produk.harga!!)
+                itemView.tvStok.text = "Stok : " + produk.stok.toString()
                 /*Tampilkan label stok habis*/
-                if (produk.STOK == 0) {
+                if (produk.stok == 0) {
                     itemView.imgStokHabis.visibility = View.VISIBLE
                 } else {
                     itemView.imgStokHabis.visibility = View.INVISIBLE
@@ -86,7 +97,7 @@ class RclvProdukOnline :
         holder.itemView.setOnClickListener {
             if (order) {
                 /*return jika stok habis*/
-                if (produk?.STOK == 0) {
+                if (produk?.stok == 0) {
                     Toast.makeText(context, "STOK HABIS :(", Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
                 }
@@ -113,7 +124,7 @@ class RclvProdukOnline :
                         if (itemTransaksi != null) {
                             if (itemTransaksi.jumlah?.plus(
                                     view.tvJumlah.text.toString().toInt()
-                                )!! > produk.STOK!!
+                                )!! > produk.stok!!
                             ) {
                                 Toast.makeText(
                                     context,
@@ -135,14 +146,14 @@ class RclvProdukOnline :
                             transaksi.save()
                             val item = ItemTransaksi(
                                 jumlah = view.tvJumlah.text.toString().toInt(),
-                                namaProduk = produk.NAMA,
-                                hargaProduk = produk.HARGA?.toDouble(),
-                                fotoProduk = produk.FOTO,
-                                kategori = produk.KATEGORI_NAMA,
-                                minimalPembelianProduk = produk.MINIMAL_PEMBELIAN,
-                                diskonProduk = produk.DISKON?.toDouble(),
-                                stokProduk = produk.STOK,
-                                satuan = produk.SATUAN,
+                                namaProduk = produk.nama,
+                                hargaProduk = produk.harga?.toDouble(),
+                                fotoProduk = produk.foto,
+                                kategori = produk.kategori_nama,
+                                minimalPembelianProduk = produk.minimal_pembelian,
+                                diskonProduk = produk.diskon?.toDouble(),
+                                stokProduk = produk.stok,
+                                satuan = produk.satuan,
                                 produkId = produk.id?.toLong(),
                                 idTransaksi = transaksi.id
                             )
@@ -191,15 +202,15 @@ class RclvProdukOnline :
                                 val item = ItemTransaksi(
                                     jumlah = view.tvJumlah.text.toString().toInt(),
                                     idTransaksi = transaksi.id,
-                                    namaProduk = produk.NAMA,
-                                    hargaProduk = produk.HARGA?.toDouble(),
-                                    fotoProduk = produk.FOTO,
-                                    minimalPembelianProduk = produk.MINIMAL_PEMBELIAN,
-                                    diskonProduk = produk.DISKON?.toDouble(),
-                                    stokProduk = produk.STOK,
-                                    satuan = produk.SATUAN,
+                                    namaProduk = produk.nama,
+                                    hargaProduk = produk.harga?.toDouble(),
+                                    fotoProduk = produk.foto,
+                                    minimalPembelianProduk = produk.minimal_pembelian,
+                                    diskonProduk = produk.diskon?.toDouble(),
+                                    stokProduk = produk.stok,
+                                    satuan = produk.satuan,
                                     produkId = produk.id?.toLong(),
-                                    kategori = produk.KATEGORI_NAMA
+                                    kategori = produk.kategori_nama
                                 )
                                 item.save()
                                 transaksi.totalPembayaran =
@@ -226,7 +237,7 @@ class RclvProdukOnline :
                     Log.d("jumlah", jumlahTotal.toString())
 
                     /*Cek apakah sudah mencapai stok maksimum*/
-                    if (jumlahTotal!! < produk.STOK!!) {
+                    if (jumlahTotal!! < produk.stok!!) {
                         view.tvJumlah.text = (view.tvJumlah.text.toString().toInt() + 1).toString()
                     } else {
                         Toast.makeText(
@@ -260,10 +271,56 @@ class RclvProdukOnline :
     }
 
     private fun hapusItem(produk: ProdukOnline.Data?) {
+        progressDialog = ProgressDialog(context)
+        progressDialog!!.setTitle("Proses")
+        progressDialog!!.setMessage("Mohon Menunggu...")
+        progressDialog!!.setProgressStyle(ProgressDialog.STYLE_SPINNER)
+        progressDialog!!.setCancelable(false)
+        progressDialog!!.isIndeterminate = true
+        token =
+            com.svtech.dhuwit.Utils.getPreferences(context).getString(MyConstant.TOKEN, "").toString()
+        username =
+            com.svtech.dhuwit.Utils.getPreferences(context).getString(MyConstant.CURRENT_USER, "")
+                .toString()
+        See.log("token addProduk : $token")
         MaterialAlertDialogBuilder(context).setTitle("Hapus")
             .setMessage("Apakah anda yakin ingin menghapus?")
             .setPositiveButton("Hapus", DialogInterface.OnClickListener { dialogInterface, i ->
                 listProduk.removeAt(listProduk.indexOf(produk))
+                AndroidNetworking.post(MyConstant.Urlprodukhapusid)
+                    .addHeaders("Authorization", "Bearer$token")
+                    .addBodyParameter("id", produk?.id.toString().trim())
+                    .addBodyParameter("username", username.trim())
+                    .setPriority(Priority.MEDIUM)
+                    .build()
+                    .getAsJSONObject(object : JSONObjectRequestListener {
+                        override fun onResponse(response: JSONObject?) {
+                            val respon = response?.toString()
+                            See.log("respon insertKategori : $respon")
+                            val json = JSONObject(respon)
+                            val apiStatus = json.getInt(MyConstant.API_STATUS)
+                            val apiMessage = json.getString(MyConstant.API_MESSAGE)
+                            if (apiStatus.equals(1)) {
+                                progressDialog!!.dismiss()
+
+                                See.toast(context, "Hapus Item Produk to Server $apiMessage")
+
+                            } else {
+                                progressDialog!!.dismiss()
+                                See.toast(context, "Hapus Item  Produk to Server $apiMessage")
+
+                            }
+
+                        }
+
+                        override fun onError(anError: ANError?) {
+                            progressDialog?.dismiss()
+                            See.log("onError errorCode insertKategori : ${anError?.errorCode}")
+                            See.log("onError errorBody insertKategori: ${anError?.errorBody}")
+                            See.log("onError errorDetail insertKategori: ${anError?.errorDetail}")
+                        }
+
+                    })
                // produk.delete()
                 notifyDataSetChanged()
             })
@@ -277,7 +334,15 @@ class RclvProdukOnline :
     private fun editItem(produk: ProdukOnline.Data?) {
         val intent = Intent(context, AddProdukActivity::class.java)
         if (produk != null) {
-            intent.putExtra("produk", produk.id)
+            intent.putExtra("id", produk.id)
+            intent.putExtra("diskon", produk.diskon)
+            intent.putExtra("foto", produk.foto)
+            intent.putExtra("harga", produk.harga)
+            intent.putExtra("kategori", produk.kategori)
+            intent.putExtra("minimal_pembelian", produk.minimal_pembelian)
+            intent.putExtra("nama", produk.nama)
+            intent.putExtra("satuan", produk.satuan)
+            intent.putExtra("stok", produk.stok)
         }
         intent.putExtra("update", true)
         context.startActivity(intent)
@@ -286,11 +351,11 @@ class RclvProdukOnline :
     fun sortItem(sort: String) {
         when (sort) {
             "Asc" -> {
-                listProduk.sortBy { it?.NAMA }
+                listProduk.sortBy { it?.nama }
                 notifyDataSetChanged()
             }
             "Dsc" -> {
-                listProduk.sortBy { it?.NAMA }
+                listProduk.sortBy { it?.nama }
                 listProduk.reverse()
                 notifyDataSetChanged()
             }
@@ -300,7 +365,7 @@ class RclvProdukOnline :
     fun searchItem(search: String) {
         if (search.isNotEmpty()) {
             val search = saveListProduk.filter { produk ->
-                produk?.NAMA!!.trim().toLowerCase()
+                produk?.nama!!.trim().toLowerCase()
                     .toLowerCase().contains(search.trim().toLowerCase())
             }
             listProduk = search as MutableList<ProdukOnline.Data?>

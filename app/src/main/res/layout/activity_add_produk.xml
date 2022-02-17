@@ -13,6 +13,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
+        tools:ignore="MissingConstraints">
+
+
 
     <FrameLayout
         android:id="@+id/frameLayout"
@@ -52,15 +60,9 @@
         </androidx.cardview.widget.CardView>
     </FrameLayout>
 
-    <ScrollView
-        android:id="@+id/scrollView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@id/cbDiskon"
-        app:layout_constraintTop_toBottomOf="@id/frameLayout">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -83,20 +85,48 @@
                     android:inputType="textCapSentences" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.tiper.MaterialSpinner
-                android:id="@+id/spnKategori"
-                style="@style/customOutlineBox"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputKategoriProduk"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:hint="Kategori"
-                app:boxStrokeColor="@color/primary"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textInputNamaProduk"
-                app:spinnerMode="bottomsheet" />
+                app:layout_constraintTop_toBottomOf="@id/textInputNamaProduk">
+
+                <Spinner
+                    android:id="@+id/spnKategori"
+                    style="@style/customOutlineBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Kategori"
+                   />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputKategoriProdukq"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_15sdp"
+                android:layout_marginRight="@dimen/_15sdp"
+                android:layout_marginBottom="@dimen/_10sdp"
+                android:hint="Kategori Produk"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textInputKategoriProduk">
+
+                <AutoCompleteTextView
+
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:inputType="none" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInputHargaProduk"
@@ -109,7 +139,7 @@
                 android:hint="Harga Produk"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/spnKategori"
+                app:layout_constraintTop_toBottomOf="@+id/textInputKategoriProduk"
                 app:prefixText="Rp. ">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -153,6 +183,22 @@
                 app:layout_constraintTop_toBottomOf="@+id/textInputStok"
                 app:spinnerMode="bottomsheet" />
 
+            <com.tiper.MaterialSpinner
+                android:id="@+id/spnKategoriMs"
+                style="@style/customOutlineBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:hint="Satuan"
+                app:boxStrokeColor="@color/primary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textInputStok"
+                app:spinnerMode="bottomsheet" />
+
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInputDiskon"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -192,9 +238,9 @@
                     android:layout_height="match_parent"
                     android:inputType="number" />
             </com.google.android.material.textfield.TextInputLayout>
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
 
-    </ScrollView>
+
 
 
     <com.google.android.material.checkbox.MaterialCheckBox
@@ -231,4 +277,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
 
+</ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

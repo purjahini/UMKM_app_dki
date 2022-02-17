@@ -3,12 +3,14 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../home/purja/Android/Sdk/platforms/android-30/data/res/layout/simple_spinner_dropdown_item.xml" value="0.14453125" />
+        <entry key="../../../home/purja/Android/Sdk/platforms/android-30/data/res/layout/simple_spinner_item.xml" value="0.14453125" />
         <entry key="../../../layout/custom_preview.xml" value="0.2078125" />
         <entry key="app/src/main/res/drawable/ic_baseline_cloud_done_24.xml" value="0.174609375" />
         <entry key="app/src/main/res/drawable/ic_baseline_signal_wifi_statusbar_4_bar_24.xml" value="0.174609375" />
         <entry key="app/src/main/res/layout/activity_add_karyawan.xml" value="0.146875" />
         <entry key="app/src/main/res/layout/activity_add_kategori.xml" value="0.146875" />
-        <entry key="app/src/main/res/layout/activity_add_produk.xml" value="0.146875" />
+        <entry key="app/src/main/res/layout/activity_add_produk.xml" value="0.16" />
         <entry key="app/src/main/res/layout/activity_bluetooth_device_list.xml" value="0.146875" />
         <entry key="app/src/main/res/layout/activity_cash.xml" value="0.16" />
         <entry key="app/src/main/res/layout/activity_cashless.xml" value="0.1" />
@@ -26,11 +28,13 @@
         <entry key="app/src/main/res/layout/activity_menu_tambah_kategori.xml" value="0.146875" />
         <entry key="app/src/main/res/layout/activity_menu_tambah_pegawai.xml" value="0.146875" />
         <entry key="app/src/main/res/layout/activity_menu_tambah_produk.xml" value="0.146875" />
+        <entry key="app/src/main/res/layout/activity_produk_custome.xml" value="0.21" />
         <entry key="app/src/main/res/layout/activity_register.xml" value="0.146875" />
         <entry key="app/src/main/res/layout/activity_splash_screen.xml" value="0.146875" />
         <entry key="app/src/main/res/layout/cash.xml" value="0.146875" />
         <entry key="app/src/main/res/layout/dialogdone.xml" value="0.1625" />
         <entry key="app/src/main/res/layout/layout_item_produk.xml" value="0.2" />
+        <entry key="app/src/main/res/layout/layout_toolbar_with_back.xml" value="0.14453125" />
         <entry key="app/src/main/res/layout/sheet.xml" value="0.22" />
         <entry key="app/src/main/res/xml/network_security_config.xml" value="0.16983695652173914" />
       </map>

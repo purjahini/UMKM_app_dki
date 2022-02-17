@@ -6,11 +6,11 @@ data class ProfileOnline(
     val `data`: Data?
 ) {
     data class Data(
-        val ALAMAT_TOKO: String?,
-        val KODE: String?,
-        val LOGO_TOKO: Any?,
-        val NAMA_TOKO: String?,
-        val USERNAME: String?,
+        val alamat_toko: String?,
+        val kode: String?,
+        val logo_toko: Any?,
+        val nama_toko: String?,
+        val username: String?,
         val id: Int?
     )
 }

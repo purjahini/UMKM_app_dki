@@ -6,9 +6,10 @@ data class KategoriOnline(
     val `data`: MutableList<Data?>?
 ) {
     data class Data(
-        var KATEGORI_GAMBAR: String?,
-        var KATEGORI_NAMA: String?,
-        val KATEGORI_USERNAME: String?,
+        var kategori_gambar: String?,
+        var kategori_nama: String?,
+        val username: String?,
         val id: Int?
     )
+
 }

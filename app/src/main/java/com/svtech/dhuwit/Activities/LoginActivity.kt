@@ -63,8 +63,8 @@ class LoginActivity : AppCompatActivity() {
             val password = textInputPassword.editText?.text.toString().trim()
             AndroidNetworking.post(MyConstant.UrlLoginUser)
                 .addHeaders("Authorization", "Bearer${token}")
-                .addBodyParameter("USERNAME", username)
-                .addBodyParameter("PASSWORD", password)
+                .addBodyParameter("username", username)
+                .addBodyParameter("password", password)
                 .setPriority(Priority.HIGH)
                 .build()
                 .getAsJSONObject(object : JSONObjectRequestListener {
@@ -83,11 +83,11 @@ class LoginActivity : AppCompatActivity() {
                             if (list != null) {
                                 User(
                                     id = list.id,
-                                    nama = list.NAMA,
-                                    username = list.USERNAME,
-                                    role = list.ROLE
+                                    nama = list.nama,
+                                    username = list.username,
+                                    role = list.role
                                 ).save()
-                                See.log("respon user : ${list.NAMA}, ${list.USERNAME} , ${list.ROLE}")
+                                See.log("respon user : ${list.nama}, ${list.username} , ${list.role}")
                             }
                             getLoginToko()
 
@@ -130,7 +130,7 @@ class LoginActivity : AppCompatActivity() {
 
             AndroidNetworking.post(MyConstant.UrlLoginToko)
                 .addHeaders("Authorization", "Bearer${token}")
-                .addBodyParameter("USERNAME", username)
+                .addBodyParameter("username", username)
                 .setPriority(Priority.HIGH)
                 .build()
                 .getAsJSONObject(object : JSONObjectRequestListener {
@@ -148,10 +148,10 @@ class LoginActivity : AppCompatActivity() {
                             if (list != null) {
                                 Profile(
                                     id = list.id,
-                                    alamatToko = list.ALAMAT_TOKO,
-                                    kode = list.KODE,
-                                    namaToko = list.NAMA_TOKO,
-                                    USERNAME = list.USERNAME
+                                    alamatToko = list.alamat_toko,
+                                    kode = list.kode,
+                                    namaToko = list.nama_toko,
+                                    USERNAME = list.username
                                 ).save()
                                 savePreferences(applicationContext, MyConstant.CURRENT_USER, username)
                                 startActivity(Intent(applicationContext, DashboardActivity::class.java))

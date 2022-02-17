@@ -6,13 +6,13 @@ data class UserOnline(
     val `data`: Data?
 ) {
     data class Data(
-        val FOTO: Any?,
-        val KONTAK: String?,
-        val NAMA: String?,
-        val PASSWORD: String?,
-        val ROLE: String?,
-        val ROLEID: Int?,
-        val USERNAME: String?,
+        val foto: Any?,
+        val kontak: String?,
+        val nama: String?,
+        val password: String?,
+        val role: String?,
+        val roleid: Int?,
+        val username: String?,
         val id: Int?
     )
 }

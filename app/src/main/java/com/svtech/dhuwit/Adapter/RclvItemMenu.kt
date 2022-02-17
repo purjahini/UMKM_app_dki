@@ -39,19 +39,19 @@ class RclvItemMenu(val context: Context, var listItemMenu: MutableList<Menu>) :
         holder.onBind(item, context)
         holder.itemView.setOnClickListener {
             when(item.nama){
-                "Pembelian" ->{
+                "Penjualan" ->{
                     context.startActivity(Intent(context,MenuPembelianActivity::class.java))
                 }
                 "Keranjang"  ->{
                     context.startActivity(Intent(context,MenuKeranjangActivity::class.java))
                 }
-                "Tambah Kategori"  ->{
+                "Kategori"  ->{
                     context.startActivity(Intent(context,MenuTambahKategoriActivity::class.java))
                 }
-                "Tambah Produk"  ->{
+                "Produk"  ->{
                     context.startActivity(Intent(context,MenuTambahProdukActivity::class.java))
                 }
-                "Tambah Pegawai"  ->{
+                "Pegawai"  ->{
                     context.startActivity(Intent(context,MenuTambahPegawaiActivity::class.java))
                 }
                 "Laporan" ->{
