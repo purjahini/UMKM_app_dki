@@ -24,6 +24,7 @@ import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
+import com.svtech.dhuwit.AdapterOnline.SpinnerAdapterCustom
 import com.svtech.dhuwit.R
 import com.svtech.dhuwit.Utils.*
 import com.svtech.dhuwit.modelOnline.ItemOption
@@ -31,9 +32,19 @@ import kotlinx.android.synthetic.main.activity_produk_custome.*
 import org.json.JSONObject
 import java.io.File
 import java.util.*
+import kotlin.collections.ArrayList
+import android.widget.Spinner
+
+
+
+
+
+
+
 
 
 lateinit var adapterSpinnerSatuan: ArrayAdapter<String>
+
 
 
 class AddProdukActivity : AppCompatActivity() {
@@ -44,12 +55,14 @@ class AddProdukActivity : AppCompatActivity() {
     var file: File? = null
     var fileName = ""
     var kategoriId = ""
+    var kategoriLabel = ""
 
     var arrayList: ArrayList<ItemOption> = ArrayList()
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_produk_custome)
+        setContentView(com.svtech.dhuwit.R.layout.activity_produk_custome)
 
         token =
             com.svtech.dhuwit.Utils.getPreferences(this).getString(MyConstant.TOKEN, "").toString()
@@ -66,7 +79,7 @@ class AddProdukActivity : AppCompatActivity() {
 
         /*Setting tombol back dan title*/
         setToolbar(this, "Tambah Produk")
-
+        val kategori = intent.getIntExtra("kategori", 0)
         progressDialog?.show()
         AndroidNetworking.post(MyConstant.UrlKategoriGetData)
             .addHeaders(MyConstant.AUTHORIZATION, MyConstant.BEARER + token)
@@ -101,6 +114,7 @@ class AddProdukActivity : AppCompatActivity() {
 
 
                         }
+
                     } else {
                         See.toast(
                             this@AddProdukActivity,
@@ -108,16 +122,14 @@ class AddProdukActivity : AppCompatActivity() {
                         )
                     }
 
-//                    KategoriAdapter!!.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-
-                    val adapter = com.svtech.dhuwit.AdapterOnline.SpinnerAdapterCustom(
+                  var adapter = com.svtech.dhuwit.AdapterOnline.SpinnerAdapterCustom(
                         this@AddProdukActivity,
                         android.R.layout.simple_spinner_dropdown_item,
                         arrayList
                     )
 
                     spnKategoriProduk.adapter = adapter
-//                    spnKategori.adapter = KategoriAdapter
+
 
 
                 }
@@ -134,6 +146,7 @@ class AddProdukActivity : AppCompatActivity() {
             })
         /*Setting adapter spinner*/
 
+
         spnKategoriProduk.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>,
@@ -141,10 +154,14 @@ class AddProdukActivity : AppCompatActivity() {
                 position: Int,
                 id: Long
             ) {
+
+
                 val ItemOptionModel: ItemOption = parent.selectedItem as ItemOption
                 See.log("itemOption id : ", ItemOptionModel.optId)
                 See.log("itemOption label : ", ItemOptionModel.optLabel)
                 kategoriId = ItemOptionModel.optId
+                kategoriLabel =ItemOptionModel.optLabel
+
 
             }
 
@@ -227,13 +244,15 @@ class AddProdukActivity : AppCompatActivity() {
         val diskon = intent.getIntExtra("diskon", 0)
         val foto = intent.getStringExtra("foto")
         val harga = intent.getIntExtra("harga", 0)
-        val kategori = intent.getIntExtra("kategori", 0)
+
         val minimal_pembelian = intent.getIntExtra("minimal_pembelian", 0)
         val nama = intent.getStringExtra("nama")
         val satuan = intent.getStringExtra("satuan")
         val stok = intent.getIntExtra("stok", 0)
         val update = intent.getBooleanExtra("update", false)
         val produkId = intent.getIntExtra("id", 0)
+
+
 
 //        val produk = SugarRecord.findById(Produk::class.java, produkId)
 
@@ -285,7 +304,8 @@ class AddProdukActivity : AppCompatActivity() {
                 .into(imgFoto)
             textInputNamaProduk.editText?.setText(nama)
             textInputHargaProduk.editText?.setText(harga?.toInt().toString())
-//            spnKategori.selection = KategoriAdapter!!.getPosition(kategori.toString())
+//            spnKategoriProduk.selectedItem = adapterKategori.getView(kategori)
+            spnKategoriProduk.setSelection(getIndex(spnKategoriProduk,kategori.toString()))
             textInputStok.editText?.setText(stok.toString())
             spnSatuan.selection = adapterSpinnerSatuan.getPosition(satuan)
             if (diskon != null) {
@@ -303,6 +323,15 @@ class AddProdukActivity : AppCompatActivity() {
             /*Sembunyikan diskon input*/
             else hideDiskonInput()
         }
+    }
+
+    private fun getIndex(spinner: Spinner, myString: String): Int {
+        for (i in 0 until spinner.count) {
+            if (spinner.getItemAtPosition(i).toString().equals(myString, ignoreCase = true)) {
+                return i
+            }
+        }
+        return 0
     }
 
     fun insertProduk(): Boolean {

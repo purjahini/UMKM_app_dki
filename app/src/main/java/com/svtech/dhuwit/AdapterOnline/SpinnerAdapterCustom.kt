@@ -46,7 +46,19 @@ internal class SpinnerAdapterCustom(
             .inflate(R.layout.simple_spinner_dropdown_item, parent, false)
         val label: TextView = spinnerRow.findViewById(R.id.text1)
         label.text = String.format("%s", if (model != null) model.optLabel else "")
+
         return spinnerRow
+    }
+
+    override fun getPosition(item: ItemOption?): Int {
+        item?.optId
+        return super.getPosition(item)
+    }
+
+    override fun getItemId(position: Int): Long {
+        val model: ItemOption = getItem(position)
+        var itemid = model.optId.toInt()
+        return itemid.toLong()
     }
 
     init {

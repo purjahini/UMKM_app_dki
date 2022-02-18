@@ -287,6 +287,7 @@ class MenuTambahProdukActivity : AppCompatActivity() {
 
                 override fun onError(anError: ANError?) {
                     progressDialog?.dismiss()
+                    See.toast(this@MenuTambahProdukActivity, anError?.errorBody.toString())
                     See.log("onError getProduk errorCode : ${anError?.errorCode}")
                     See.log("onError getProduk errorBody : ${anError?.errorBody}")
                     See.log("onError getProduk errorDetail : ${anError?.errorDetail}")
