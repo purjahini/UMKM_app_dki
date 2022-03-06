@@ -27,7 +27,8 @@ class RclvItemTransaksi(val context: Context, var listItemTransaksi: MutableList
             itemView.tvKategori.text = itemTransaksi.kategori
             itemView.tvHargaProduk.text = numberToCurrency(itemTransaksi.hargaProduk!!)
             itemView.tvStok.text = "Stok : " + itemTransaksi.stokProduk
-            Glide.with(itemView).load(Base64.decode(itemTransaksi.fotoProduk, Base64.DEFAULT))
+            Glide.with(itemView).load(itemTransaksi.fotoProduk)
+                .placeholder(R.drawable.logo)
                 .fitCenter().into(itemView.imgFoto)
             itemView.tvJumlah.text = itemTransaksi.jumlah.toString()
         }

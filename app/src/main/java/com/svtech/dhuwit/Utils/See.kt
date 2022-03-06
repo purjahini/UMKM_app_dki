@@ -15,7 +15,15 @@ class See {
 
     companion object {
 
+        fun getIndex(list: ArrayList<ItemOption>, spinner: Spinner, searchId: String?): Int {
+            for (i in 0 until spinner.count) {
+                if (list[i].optId.equals(searchId)) {
+                    return i
+                }
 
+            }
+            return 0
+        }
 
         fun log(message: String) {
 
@@ -63,6 +71,11 @@ class See {
         }
         fun EditText.itText(): String {
             return this.text.toString().trim()
+        }
+
+        @JvmStatic
+        fun Companion(s: String) {
+
         }
     }
 

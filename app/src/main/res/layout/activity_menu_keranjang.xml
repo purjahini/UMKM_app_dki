@@ -30,13 +30,13 @@
                 android:text="Belum ada item produk!"
                 android:typeface="serif"
                 android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="@+id/rclv"
+                app:layout_constraintBottom_toBottomOf="@+id/rclvPenjualan"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/rclv" />
+                app:layout_constraintTop_toTopOf="@+id/rclvPenjualan" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rclv"
+                android:id="@+id/rclvPenjualan"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:clipToPadding="false"
@@ -58,7 +58,7 @@
                 android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/rclv">
+                app:layout_constraintTop_toBottomOf="@+id/rclvPenjualan">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"

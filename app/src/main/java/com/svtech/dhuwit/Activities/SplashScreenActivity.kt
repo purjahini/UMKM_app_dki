@@ -1,15 +1,9 @@
 package com.svtech.dhuwit.Activities
 
-import android.R.attr
-import android.annotation.SuppressLint
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.MutableLiveData
 import com.androidnetworking.AndroidNetworking
 import com.androidnetworking.common.Priority
 import com.androidnetworking.error.ANError
@@ -18,14 +12,12 @@ import com.google.gson.Gson
 import com.orm.SugarRecord
 import com.svtech.dhuwit.Models.Profile
 
-import com.svtech.dhuwit.Models.User
 import com.svtech.dhuwit.R
 import com.svtech.dhuwit.Utils.MyConstant
 import com.svtech.dhuwit.Utils.See
 
 import com.svtech.dhuwit.Utils.savePreferences
 import org.json.JSONObject
-import android.content.SharedPreferences
 import com.svtech.dhuwit.modelOnline.TokenModel
 
 
@@ -51,25 +43,27 @@ class SplashScreenActivity : AppCompatActivity() {
         val profile = SugarRecord.listAll(Profile::class.java).firstOrNull()
         if (profile != null) {
 
+
         }
 //        feedFirstDataToDatabase()
+      val username =   com.svtech.dhuwit.Utils.getPreferences(this).getString(MyConstant.CURRENT_USER, "")
         Handler().postDelayed({
-            if (com.svtech.dhuwit.Utils.getPreferences(this)
-                    .getString(MyConstant.CURRENT_USER, "")!!.isEmpty()
-
-            ) {
-                startActivity(Intent(this, LoginActivity::class.java))
-                finish()
-            } else {
-                startActivity(Intent(this, DashboardActivity::class.java))
-                finish()
+            if (username != null) {
+                if (username.isEmpty()) {
+                    startActivity(Intent(this, LoginActivity::class.java))
+                    finish()
+                } else {
+                    startActivity(Intent(this, DashboardActivity::class.java))
+                    finish()
+                }
             }
+            See.log("Username Splash : $username")
         }, 2000)
 
     }
 
     private fun hitToken() {
-        AndroidNetworking.post(MyConstant.TOKENS)
+        AndroidNetworking.post(MyConstant.UrlTOKENS)
             .addBodyParameter("secret",MyConstant.SECRET)
             .setPriority(Priority.HIGH)
             .build()
@@ -92,10 +86,6 @@ class SplashScreenActivity : AppCompatActivity() {
                             savePreferences(this@SplashScreenActivity, MyConstant.TIME, time)
                             See.log("token Splash: $token")
                         }
-
-
-
-
 
                     }
                     else {

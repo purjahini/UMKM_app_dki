@@ -102,7 +102,7 @@
 
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rclv"
+            android:id="@+id/rclvPenjualan"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/_10sdp"

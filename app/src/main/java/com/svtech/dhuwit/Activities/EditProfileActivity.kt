@@ -14,7 +14,6 @@ import com.svtech.dhuwit.Models.User
 import com.svtech.dhuwit.R
 import com.svtech.dhuwit.Utils.*
 import kotlinx.android.synthetic.main.activity_edit_profile.*
-import java.util.*
 
 
 class EditProfileActivity : AppCompatActivity() {
@@ -23,7 +22,8 @@ class EditProfileActivity : AppCompatActivity() {
         setContentView(R.layout.activity_edit_profile)
         setToolbar(this, "Ubah Profil")
         /*Setting data profile*/
-        val username = com.svtech.dhuwit.Utils.getPreferences(this).getString(MyConstant.CURRENT_USER,"")!!
+        val username = getPreferences(this).getString(MyConstant.CURRENT_USER,"")
+        val token = getPreferences(this).getString(MyConstant.TOKEN,"")
         val user = SugarRecord.find(User::class.java,"USERNAME = ?",username).firstOrNull()
         initProfile(user)
 
@@ -35,7 +35,16 @@ class EditProfileActivity : AppCompatActivity() {
 
         /*Logout*/
         btnLogOut.setOnClickListener {
-            savePreferences(this,MyConstant.CURRENT_USER,"")
+            if (username != null) {
+                deletePreferences(this,username)
+                See.log("username deletePref $username")
+            }
+
+            if (token != null) {
+                deletePreferences(this,token)
+                See.log("token deletePref $token")
+            }
+
             val users = SugarRecord.find(User::class.java, "USERNAME =?",username).firstOrNull()
             See.log("respon user ${users}")
             users?.delete()
@@ -44,7 +53,9 @@ class EditProfileActivity : AppCompatActivity() {
             See.log("respon profil ${profil}")
             profil?.delete()
 
-            startActivity(Intent(this,LoginActivity::class.java))
+
+
+            startActivity(Intent(this,SplashScreenActivity::class.java))
             finishAffinity()
             finish()
         }

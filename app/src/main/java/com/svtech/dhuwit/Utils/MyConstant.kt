@@ -14,14 +14,20 @@ object MyConstant{
     const val API_STATUS = "api_status"
     const val API_MESSAGE = "api_message"
     const val AUTHORIZATION ="Authorization"
+    const val USERNAME ="username"
+    const val STATUSPARAM ="status"
     const val TOKEN = "token"
     const val BEARER = "Bearer"
+    const val FORBIDDEN = "Forbidden Access!"
     const val TIME = "time"
-    const val url = "http://203.210.87.97/umkm_core/public/api"
+    const val url = "http://203.210.87.95:8014/umkm_core/public/api"
+
+    const val ID_TRANSAKSI = "id_transaksi"
+    const val PRODUK_ID = "produk_id"
 
     const val urlToko = "$url/tokoregister"
     const val urlUser = "$url/userregister"
-    const val TOKENS = "$url/get-token"
+    const val UrlTOKENS = "$url/get-token"
     const val UrlLoginToko = "$url/tokologin"
     const val UrlLoginUser = "$url/userlogin"
 
@@ -30,10 +36,17 @@ object MyConstant{
     const val UrlKategoriGetData = "$url/kategorigetdata"
     const val Urlkategoriupdate = "$url/kategoriupdate"
 
-    const val UrlInputTransaksi = "$url/input_transaksi"
+    const val Urltransaksiinput = "$url/transaksiinput"
 
     const val Urlprodukhapusid= "$url/produkhapusid"
     const val Urlproduklistdata = "$url/produklistdata"
     const val Urlprodukcreate = "$url/produkcreate"
+    const val Urlprodukupdateid = "$url/produkupdateid"
+
+    const val Urltransaksigetstatus = "$url/transaksigetstatus"
+
+    const val Urlitemtransaksidataidproduk = "$url/itemtransaksidataidproduk"
+
+
 
 }

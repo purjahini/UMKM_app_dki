@@ -19,13 +19,13 @@
         android:layout_height="wrap_content"
         android:text="Belum ada pegawai!"
         android:typeface="serif"
-        app:layout_constraintBottom_toBottomOf="@+id/rclv"
-        app:layout_constraintEnd_toEndOf="@+id/rclv"
+        app:layout_constraintBottom_toBottomOf="@+id/rclvPenjualan"
+        app:layout_constraintEnd_toEndOf="@+id/rclvPenjualan"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/include2" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rclv"
+        android:id="@+id/rclvPenjualan"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:padding="8dp"

@@ -13,7 +13,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.provider.MediaStore
-import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -122,15 +121,17 @@ class CheckoutActivity : AppCompatActivity() {
                     if (transaksi != null) {
                         transaksi.status = false
 
-                        AndroidNetworking.post(MyConstant.UrlInputTransaksi)
+                        See.log("post Transaksi : diskon ${transaksi.diskon}")
+
+                        AndroidNetworking.post(MyConstant.Urltransaksiinput)
                             .addHeaders("Authorization", "Bearer$token")
-                            .addBodyParameter("BAYAR",transaksi?.bayar.toString().trim() )
-                            .addBodyParameter("DISKON",transaksi?.diskon.toString().trim())
-                            .addBodyParameter("NAMA_PEMBELI",transaksi?.namaPembeli.toString().trim() )
-                            .addBodyParameter("STATUS",0.toString().trim() )
-                            .addBodyParameter("TANGGAL_TRANSAKSI",transaksi?.tanggalTrasaksi.toString().trim() )
-                            .addBodyParameter("TOTAL_PEMBAYARAN",transaksi?.totalPembayaran.toString().trim() )
-                            .addBodyParameter("USERNAME", username.trim())
+                            .addBodyParameter("bayar", transaksi?.bayar?.toInt().toString().trim())
+                            .addBodyParameter("diskon",transaksi?.diskon?.toInt().toString().trim())
+                            .addBodyParameter("nama_pembeli",transaksi?.namaPembeli.toString().trim() )
+                            .addBodyParameter("status",0.toString().trim() )
+                            .addBodyParameter("tanggal_transaksi",transaksi?.tanggalTrasaksi.toString().trim() )
+                            .addBodyParameter("total_pembayaran",transaksi?.totalPembayaran?.toInt().toString().trim() )
+                            .addBodyParameter("username", username.trim())
                             .setPriority(Priority.MEDIUM)
                             .build()
                             .getAsJSONObject(object : JSONObjectRequestListener {
@@ -163,7 +164,7 @@ class CheckoutActivity : AppCompatActivity() {
                             })
 
                         transaksi.save()
-                        kurangiStok(transaksi.id);
+//                        kurangiStok(transaksi.id);
                         finish()
                         startActivity(Intent(this, DashboardActivity::class.java))
                     }

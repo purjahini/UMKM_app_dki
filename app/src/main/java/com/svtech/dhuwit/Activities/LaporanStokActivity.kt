@@ -22,7 +22,7 @@ class LaporanStokActivity : AppCompatActivity() {
         val sorted = stok.sortedBy { l -> l.tanggal }.reversed()
         if (stok.isNotEmpty()) {
             tvEmpty.visibility = View.GONE
-            rclv.apply {
+            rclvPenjualan.apply {
                 adapter = RclvLaporanStok(this@LaporanStokActivity, sorted as MutableList<Stok>)
                 layoutManager = LinearLayoutManager(this@LaporanStokActivity)
                 setHasFixedSize(true)

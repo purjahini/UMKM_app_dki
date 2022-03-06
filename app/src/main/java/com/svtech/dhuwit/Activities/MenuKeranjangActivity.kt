@@ -18,10 +18,7 @@ import com.svtech.dhuwit.Adapter.RclvItemTransaksi
 import com.svtech.dhuwit.Models.ItemTransaksi
 import com.svtech.dhuwit.Models.Transaksi
 import com.svtech.dhuwit.R
-import com.svtech.dhuwit.Utils.checkInput
-import com.svtech.dhuwit.Utils.hideSoftKeyboard
-import com.svtech.dhuwit.Utils.numberToCurrency
-import com.svtech.dhuwit.Utils.setToolbar
+import com.svtech.dhuwit.Utils.*
 import kotlinx.android.synthetic.main.activity_menu_keranjang.*
 import kotlinx.android.synthetic.main.layout_input_dialog.view.*
 import kotlinx.android.synthetic.main.sheet.view.*
@@ -50,7 +47,8 @@ class MenuKeranjangActivity : AppCompatActivity() {
             }
 
 
-            Log.d("total", transaksi?.totalPembayaran.toString())
+
+            See.Companion.log("Total ${transaksi?.totalPembayaran}")
 
             val btnSheet = layoutInflater.inflate(R.layout.sheet, null)
             val dialog = BottomSheetDialog(this)
@@ -128,7 +126,7 @@ class MenuKeranjangActivity : AppCompatActivity() {
                 }).show()
         }
 
-        rclv.adapter?.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+        rclvPenjualan.adapter?.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
             override fun onChanged() {
                 super.onChanged()
                 setTotalPembayaran()
@@ -215,7 +213,7 @@ class MenuKeranjangActivity : AppCompatActivity() {
         if (transaksi != null) {
             val itemTransaksi =
                 SugarRecord.find(ItemTransaksi::class.java, "id_transaksi = ?", "${transaksi?.id}")
-            rclv.apply {
+            rclvPenjualan.apply {
                 adapter = RclvItemTransaksi(context, itemTransaksi)
                 layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
                 setHasFixedSize(true)

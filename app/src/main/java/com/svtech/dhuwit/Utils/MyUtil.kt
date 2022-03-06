@@ -20,6 +20,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.startActivity
 import androidx.core.view.drawToBitmap
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -32,6 +33,9 @@ import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
+import com.pattra.pattracardsdk.Service.SyncService
+import com.svtech.dhuwit.Activities.LoginActivity
+import com.svtech.dhuwit.Activities.SplashScreenActivity
 import kotlinx.android.synthetic.main.layout_toolbar_with_back.*
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -244,11 +248,25 @@ fun savePreferences(context: Context, namePreferences: String, value: Any): Bool
         }
     }
 }
+fun deletePreferences(context: Context, value: String):Boolean {
+    val preferences = context.getSharedPreferences("prefs", 0)
+    val editor = preferences.edit()
+    editor.clear()
+    editor.remove(value)
+    editor.apply()
+
+    return true
+
+}
 
 fun getPreferences(context: Context): SharedPreferences {
     return context.getSharedPreferences("prefs", 0)
 
 }
+
+
+
+
 
 
 

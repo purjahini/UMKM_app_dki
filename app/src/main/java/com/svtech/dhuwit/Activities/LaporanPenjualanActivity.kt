@@ -40,7 +40,7 @@ class LaporanPenjualanActivity : AppCompatActivity() {
         val transaksi = SugarRecord.listAll(Transaksi::class.java).distinctBy { l -> l.namaPembeli }
         if (transaksi.isNotEmpty()) {
             tvEmpty.visibility = View.GONE
-            rclv.apply {
+            rclvPenjualan.apply {
                 adapter = RclvLaporanPenjualan(
                     this@LaporanPenjualanActivity,
                     transaksi as MutableList<Transaksi>
@@ -183,7 +183,7 @@ class LaporanPenjualanActivity : AppCompatActivity() {
         doc.addTable(table, floatArrayOf(200f, 120f), PdfUtils.align_center)
         doc.close()
         val snackbar =
-            Snackbar.make(rclv.rootView, "Laporan berhasil tersimpan!", Snackbar.LENGTH_INDEFINITE)
+            Snackbar.make(rclvPenjualan.rootView, "Laporan berhasil tersimpan!", Snackbar.LENGTH_INDEFINITE)
         snackbar.setAction("Tampilkan", View.OnClickListener {
             val intent = Intent(Intent.ACTION_VIEW)
             intent.setType("application/pdf")

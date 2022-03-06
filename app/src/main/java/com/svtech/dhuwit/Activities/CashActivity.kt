@@ -23,6 +23,7 @@ class CashActivity : AppCompatActivity() {
 
     var uangElektronikSDK: UangElektronikSDK? = null
     var progressDialog: ProgressDialog? = null
+    var amount = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cash)
@@ -35,6 +36,10 @@ class CashActivity : AppCompatActivity() {
 
         val myIntent = Intent(this, SyncService::class.java)
         startService(myIntent)
+
+        amount = intent.getStringExtra("Total").toString()
+        balance_pay_total.text = amount
+
         val manager = getSystemService(NFC_SERVICE) as NfcManager
         val nfcAdapter = manager.defaultAdapter
 
@@ -147,8 +152,8 @@ class CashActivity : AppCompatActivity() {
             }
         uangElektronikSDK = UangElektronikSDK(this, cardCallback, "203.210.87.98", "didik")
         btn_pay.setOnClickListener {
-            val amount: Int = balance_pay_total.getText().toString().toInt()
-            uangElektronikSDK!!.startPurchase(amount, "INV2021092802", "android didik", false)
+//            val amount: Int = balance_pay_total.getText().toString().toInt()
+            uangElektronikSDK!!.startPurchase(amount.toInt(), "INV2021092802", "android didik", false)
         }
 
     }

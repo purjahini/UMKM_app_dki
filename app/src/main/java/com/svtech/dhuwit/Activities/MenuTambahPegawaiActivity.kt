@@ -33,7 +33,7 @@ class MenuTambahPegawaiActivity : AppCompatActivity() {
             tvEmpty.visibility = View.VISIBLE
         }else{
             tvEmpty.visibility = View.GONE
-            rclv.apply {
+            rclvPenjualan.apply {
                 adapter = RclvUser(this@MenuTambahPegawaiActivity, pegawai)
                 layoutManager = GridLayoutManager(this@MenuTambahPegawaiActivity, calculateNoOfColumns(this@MenuTambahPegawaiActivity,200F))
                 setHasFixedSize(true)

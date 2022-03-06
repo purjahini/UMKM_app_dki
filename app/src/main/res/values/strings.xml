@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">UMKM ver 0.0.7.3</string>
+    <string name="app_name">UMKM ver 0.0.7.5</string>
     <string name="nama_toko">svtech Pos</string>
     <string name="alamat_toko">www.svtech.com</string>
     <string name="title_activity_main">MainActivity</string>
@@ -23,4 +23,5 @@
     <string name="label_nfc">Tempelkan kartu pada bagian sensor NFC</string>
     <string name="serverOn">Server Connected</string>
     <string name="serverOff">Server Disconnected</string>
+    <string name="penjualan">Penjualan</string>
 </resources>

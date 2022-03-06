@@ -73,7 +73,7 @@ class MenuTambahKategoriActivity : AppCompatActivity() {
                         }else {
                             tvEmpty.visibility = View.GONE
                             val rclvadapter = RclvKategoriOnline(this@MenuTambahKategoriActivity, data.data)
-                            rclv.apply {
+                            rclvPenjualan.apply {
                                 adapter = rclvadapter
                                 layoutManager = GridLayoutManager(context, 2)
                                 setHasFixedSize(true)

@@ -27,7 +27,7 @@
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rclv"
+        android:id="@+id/rclvPenjualan"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:padding="8dp"

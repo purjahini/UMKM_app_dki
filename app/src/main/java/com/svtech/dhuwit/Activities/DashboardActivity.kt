@@ -73,7 +73,7 @@ class DashboardActivity : AppCompatActivity() {
             imgEditProfile.setImageDrawable(getDrawable(R.drawable.off))
         }
 
-        rclv.apply {
+        rclvPenjualan.apply {
             adapter = RclvItemMenu(this@DashboardActivity,listMenu)
             layoutManager = GridLayoutManager(this@DashboardActivity, colSpan)
             setHasFixedSize(true)
@@ -85,7 +85,7 @@ class DashboardActivity : AppCompatActivity() {
         val profile  = SugarRecord.listAll(Profile::class.java).firstOrNull()
         if(profile != null){
             if(profile.logoToko != null){
-                Glide.with(this).load(Base64.decode(profile.logoToko, Base64.DEFAULT)).fitCenter().into(imgLogo)
+                Glide.with(this).load(profile.logoToko).fitCenter().into(imgLogo)
             }
             tvNamaCafe.text = profile.namaToko
             tvAlamatCafe.text = profile.alamatToko

@@ -38,8 +38,8 @@
             android:background="@drawable/ic_label"
             android:gravity="center"
             android:paddingBottom="15dp"
-            android:text="HABIS"
-            android:textColor="@android:color/white"
+            android:text="Habis"
+            android:textColor="@android:color/holo_red_dark"
             android:textSize="12sp"
             android:textStyle="bold"
             android:visibility="invisible" />

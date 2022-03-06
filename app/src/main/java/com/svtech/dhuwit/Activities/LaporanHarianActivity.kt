@@ -43,7 +43,7 @@ class LaporanHarianActivity : AppCompatActivity() {
         if (transaksi.isNotEmpty()) {
             tvEmpty.visibility = View.GONE
             textView12.visibility = View.VISIBLE
-            rclv.apply {
+            rclvPenjualan.apply {
                 adapter = RclvLaporanHarian(
                     this@LaporanHarianActivity, sorted as MutableList<Transaksi>
                 )
@@ -186,7 +186,7 @@ class LaporanHarianActivity : AppCompatActivity() {
         doc.addTable(table, floatArrayOf(200f, 120f), PdfUtils.align_center)
         doc.close()
         val snackbar =
-            Snackbar.make(rclv.rootView, "Laporan berhasil tersimpan!", Snackbar.LENGTH_INDEFINITE)
+            Snackbar.make(rclvPenjualan.rootView, "Laporan berhasil tersimpan!", Snackbar.LENGTH_INDEFINITE)
         snackbar.setAction("Tampilkan", View.OnClickListener {
             val intent = Intent(Intent.ACTION_VIEW)
             intent.setType("application/pdf")
