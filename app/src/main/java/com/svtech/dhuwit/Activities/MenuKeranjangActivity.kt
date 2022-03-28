@@ -37,33 +37,43 @@ class MenuKeranjangActivity : AppCompatActivity() {
         setRecyclerView(SugarRecord.find(Transaksi::class.java, "status = ?", "1").firstOrNull())
 
         btnCheckout.setOnClickListener {
+
+
             val transaksi = SugarRecord.find(Transaksi::class.java, "status = ?", "1").firstOrNull()
             if (transaksi != null) {
-                /*Mengupdate tanggal transaksi */
-                transaksi.tanggalTrasaksi =
-                    android.text.format.DateFormat.format("dd/MM/yyyy hh:mm:ss", Date().time)
-                        .toString()
-                transaksi.save()
+                if (transaksi.totalPembayaran!! >= transaksi.bayar!!) {
+                    /*Mengupdate tanggal transaksi */
+                    transaksi.tanggalTrasaksi =
+                        android.text.format.DateFormat.format("dd/MM/yyyy hh:mm:ss", Date().time)
+                            .toString()
+                    transaksi.save()
+
+
+                    val btnSheet = layoutInflater.inflate(R.layout.sheet, null)
+                    val dialog = BottomSheetDialog(this)
+                    val btnCash = btnSheet.btnCash
+                    val btnCashless = btnSheet.btnCashless
+                    btnCash.setOnClickListener {
+                        startActivity(Intent(this, CheckoutActivity::class.java))
+                    }
+                    btnCashless.setOnClickListener {
+                        val intent = Intent(this, CashActivity::class.java)
+                        intent.putExtra("Total", transaksi?.totalPembayaran)
+                        startActivity(intent)
+                    }
+                    dialog.setContentView(btnSheet)
+                    dialog.show()
+
+                } else {
+                    See.toast(this, "Silahkkan masukan nominal pembayaran..")
+                }
+
             }
 
 
 
             See.Companion.log("Total ${transaksi?.totalPembayaran}")
 
-            val btnSheet = layoutInflater.inflate(R.layout.sheet, null)
-            val dialog = BottomSheetDialog(this)
-            val btnCash = btnSheet.btnCash
-            val btnCashless = btnSheet.btnCashless
-            btnCash.setOnClickListener {
-            startActivity(Intent(this, CheckoutActivity::class.java))
-            }
-            btnCashless.setOnClickListener {
-            val intent = Intent(this, CashActivity::class.java)
-            intent.putExtra("Total", transaksi?.totalPembayaran)
-            startActivity(intent)
-            }
-            dialog.setContentView(btnSheet)
-            dialog.show()
 
 
 
@@ -229,3 +239,5 @@ class MenuKeranjangActivity : AppCompatActivity() {
         return super.dispatchTouchEvent(ev)
     }
 }
+
+

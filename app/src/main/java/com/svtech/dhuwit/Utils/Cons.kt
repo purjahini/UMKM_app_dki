@@ -2,7 +2,7 @@ package com.svtech.dhuwit.Utils
 
 interface Cons {
     companion object {
-        val TAG = "DhuwitApp"
+        val TAG = "umkmApp"
 
 
 

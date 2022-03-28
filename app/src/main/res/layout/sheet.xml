@@ -23,6 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Cash"
+        android:visibility="gone"
         android:textAlignment="textStart"
         app:icon="@drawable/ic_baseline_money_24" />
 

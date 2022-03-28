@@ -142,6 +142,7 @@
         android:id="@+id/btn_pay"
         style="@style/Animation.Design.BottomSheetDialog"
         android:layout_width="match_parent"
+        android:visibility="visible"
         android:layout_height="@dimen/_50sdp"
         android:layout_marginLeft="@dimen/_10sdp"
         android:layout_marginTop="@dimen/_5sdp"

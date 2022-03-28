@@ -63,7 +63,7 @@ class LoginActivity : AppCompatActivity() {
             val password = textInputPassword.editText?.text.toString().trim()
             AndroidNetworking.post(MyConstant.UrlLoginUser)
                 .addHeaders("Authorization", "Bearer${token}")
-                .addBodyParameter("username", username)
+                .addBodyParameter("kontak", username)
                 .addBodyParameter("password", password)
                 .setPriority(Priority.HIGH)
                 .build()

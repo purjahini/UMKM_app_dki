@@ -15,6 +15,7 @@ import com.svtech.dhuwit.Models.Profile
 import com.svtech.dhuwit.R
 import com.svtech.dhuwit.Utils.MyConstant
 import com.svtech.dhuwit.Utils.See
+import com.svtech.dhuwit.Utils.getDeviceId
 
 import com.svtech.dhuwit.Utils.savePreferences
 import org.json.JSONObject
@@ -31,13 +32,15 @@ class SplashScreenActivity : AppCompatActivity() {
         AndroidNetworking.initialize(applicationContext)
         val timeRightnow :Long = System.currentTimeMillis()/1000
 
+        val idDevice = getDeviceId(this)
+
         time = com.svtech.dhuwit.Utils.getPreferences(this).getLong(MyConstant.TIME,0)
 
         if (timeRightnow > time){
             hitToken()
         }
 
-        See.log("jam sekararang $timeRightnow , waktu  expiry $time")
+        See.log("jam sekararang $timeRightnow , waktu  expiry $time , idDevice : $idDevice")
 
         /*Insert data default ke database*/
         val profile = SugarRecord.listAll(Profile::class.java).firstOrNull()

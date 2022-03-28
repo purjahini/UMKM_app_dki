@@ -14,6 +14,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.net.Uri
 import android.os.Environment
+import android.provider.Settings
 import android.util.DisplayMetrics
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -76,6 +77,10 @@ fun calculateNoOfColumns(
     val displayMetrics: DisplayMetrics = context.getResources().getDisplayMetrics()
     val screenWidthDp = displayMetrics.widthPixels / displayMetrics.density
     return (screenWidthDp / columnWidthDp + 0.5).toInt()
+}
+
+fun getDeviceId(activity: Context) : String {
+    return Settings.Secure.getString(activity.contentResolver, Settings.Secure.ANDROID_ID)
 }
 
 /*Fungsi untuk memilih gambar*/

@@ -13,7 +13,7 @@
         <entry key="app/src/main/res/layout/activity_add_kategori.xml" value="0.146875" />
         <entry key="app/src/main/res/layout/activity_add_produk.xml" value="0.16" />
         <entry key="app/src/main/res/layout/activity_bluetooth_device_list.xml" value="0.146875" />
-        <entry key="app/src/main/res/layout/activity_cash.xml" value="0.16" />
+        <entry key="app/src/main/res/layout/activity_cash.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_cashless.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_checkout.xml" value="0.146875" />
         <entry key="app/src/main/res/layout/activity_dashboard.xml" value="0.11666666666666667" />
@@ -24,6 +24,7 @@
         <entry key="app/src/main/res/layout/activity_laporan_harian.xml" value="0.146875" />
         <entry key="app/src/main/res/layout/activity_laporan_penjualan.xml" value="0.146875" />
         <entry key="app/src/main/res/layout/activity_laporan_stok.xml" value="0.146875" />
+        <entry key="app/src/main/res/layout/activity_login.xml" value="0.19270833333333334" />
         <entry key="app/src/main/res/layout/activity_menu_keranjang.xml" value="0.22" />
         <entry key="app/src/main/res/layout/activity_menu_pembelian.xml" value="0.146875" />
         <entry key="app/src/main/res/layout/activity_menu_tambah_kategori.xml" value="0.146875" />
@@ -40,10 +41,11 @@
         <entry key="app/src/main/res/layout/layout_total_order.xml" value="0.14453125" />
         <entry key="app/src/main/res/layout/sheet.xml" value="0.22" />
         <entry key="app/src/main/res/xml/network_security_config.xml" value="0.16983695652173914" />
+        <entry key="app/src/main/res/xml/nfc_tech_filter.xml" value="0.19270833333333334" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="JDK" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
