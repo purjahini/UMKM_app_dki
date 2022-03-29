@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,7 +28,7 @@
             <FrameLayout
                 android:id="@+id/card_background"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_200sdp"
+                android:layout_height="@dimen/_180sdp"
                 android:background="@drawable/logo" />
 
             <TextView
@@ -151,4 +152,80 @@
         android:text="@string/bayar" />
 
     <!--</LinearLayout>-->
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:layout_marginLeft="@dimen/_20sdp"
+            android:text="Status Printer :"
+            />
+        <TextView
+            android:id="@+id/tvPrinterStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:layout_marginLeft="@dimen/_5sdp"
+            android:text="Disconnected"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:weightSum="10"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnConnectBluetooth"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_weight="5"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_5sdp"
+            android:padding="5dp"
+            android:drawableLeft="@drawable/ic_bluetooth_24"
+            android:drawableTint="@color/colorPrimary"
+            android:text="Connect"
+            android:textSize="12dp"
+            />
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnStatusCashCard"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_weight="5"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_5sdp"
+            android:padding="5dp"
+            android:outlineSpotShadowColor="@color/colorPrimary"
+            android:drawableLeft="@drawable/ic_baseline_credit_card_24"
+            android:drawableTint="@color/colorPrimary"
+            android:text="Status CashCard"
+            android:textSize="12dp"
+            />
+
+
+    </LinearLayout>
+
+
+
+
+    <TextView
+        android:id="@+id/tvVersi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:textColor="@color/abu_abu"
+        android:text="@string/app_name"/>
+
+
+
 </LinearLayout>

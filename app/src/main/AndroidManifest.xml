@@ -28,7 +28,7 @@
         tools:replace="android:icon">
         <activity
             android:name=".Activities.CashActivity"
-            android:exported="true">
+      >
             <intent-filter>
                 <action android:name="android.nfc.action.TAG_DISCOVERED" />
 
