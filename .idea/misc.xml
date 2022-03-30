@@ -7,8 +7,26 @@
         <entry key="../../../home/purja/Android/Sdk/platforms/android-30/data/res/layout/simple_spinner_dropdown_item.xml" value="0.14453125" />
         <entry key="../../../home/purja/Android/Sdk/platforms/android-30/data/res/layout/simple_spinner_item.xml" value="0.14453125" />
         <entry key="../../../layout/custom_preview.xml" value="0.2078125" />
+        <entry key="app/src/main/res/drawable/ic_arrow_back.xml" value="0.131" />
+        <entry key="app/src/main/res/drawable/ic_arrow_downward_24.xml" value="0.194" />
+        <entry key="app/src/main/res/drawable/ic_arrow_upward_24.xml" value="0.131" />
+        <entry key="app/src/main/res/drawable/ic_baseline_close_24.xml" value="0.131" />
         <entry key="app/src/main/res/drawable/ic_baseline_cloud_done_24.xml" value="0.174609375" />
+        <entry key="app/src/main/res/drawable/ic_baseline_credit_card_24.xml" value="0.131" />
+        <entry key="app/src/main/res/drawable/ic_baseline_label_24.xml" value="0.131" />
+        <entry key="app/src/main/res/drawable/ic_baseline_lokasi.xml" value="0.131" />
+        <entry key="app/src/main/res/drawable/ic_baseline_money_24.xml" value="0.131" />
         <entry key="app/src/main/res/drawable/ic_baseline_signal_wifi_statusbar_4_bar_24.xml" value="0.174609375" />
+        <entry key="app/src/main/res/drawable/ic_baseline_toko.xml" value="0.131" />
+        <entry key="app/src/main/res/drawable/ic_menu_slideshow.xml" value="0.131" />
+        <entry key="app/src/main/res/drawable/ic_name.xml" value="0.131" />
+        <entry key="app/src/main/res/drawable/ic_print_24.xml" value="0.131" />
+        <entry key="app/src/main/res/drawable/ic_remove_circle_24.xml" value="0.131" />
+        <entry key="app/src/main/res/drawable/rounded_corner.xml" value="0.131" />
+        <entry key="app/src/main/res/drawable/rounded_corner_btn_primary.xml" value="0.131" />
+        <entry key="app/src/main/res/drawable/rounded_corner_btn_primary_dark.xml" value="0.131" />
+        <entry key="app/src/main/res/drawable/rounded_corner_red.xml" value="0.131" />
+        <entry key="app/src/main/res/drawable/rounded_corner_white.xml" value="0.131" />
         <entry key="app/src/main/res/layout/activity_add_karyawan.xml" value="0.146875" />
         <entry key="app/src/main/res/layout/activity_add_kategori.xml" value="0.146875" />
         <entry key="app/src/main/res/layout/activity_add_produk.xml" value="0.16" />
@@ -19,7 +37,7 @@
         <entry key="app/src/main/res/layout/activity_dashboard.xml" value="0.11666666666666667" />
         <entry key="app/src/main/res/layout/activity_detail_laporan_harian.xml" value="0.146875" />
         <entry key="app/src/main/res/layout/activity_detail_laporan_penjualan.xml" value="0.146875" />
-        <entry key="app/src/main/res/layout/activity_edit_profile.xml" value="0.146875" />
+        <entry key="app/src/main/res/layout/activity_edit_profile.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_laporan.xml" value="0.146875" />
         <entry key="app/src/main/res/layout/activity_laporan_harian.xml" value="0.146875" />
         <entry key="app/src/main/res/layout/activity_laporan_penjualan.xml" value="0.146875" />
@@ -32,11 +50,13 @@
         <entry key="app/src/main/res/layout/activity_menu_tambah_produk.xml" value="0.146875" />
         <entry key="app/src/main/res/layout/activity_produk_custome.xml" value="0.21" />
         <entry key="app/src/main/res/layout/activity_register.xml" value="0.146875" />
+        <entry key="app/src/main/res/layout/activity_register_device.xml" value="0.22" />
         <entry key="app/src/main/res/layout/activity_spinner.xml" value="0.133984375" />
         <entry key="app/src/main/res/layout/activity_splash_screen.xml" value="0.146875" />
         <entry key="app/src/main/res/layout/cash.xml" value="0.146875" />
         <entry key="app/src/main/res/layout/dialogdone.xml" value="0.1625" />
         <entry key="app/src/main/res/layout/item_slider.xml" value="0.19270833333333334" />
+        <entry key="app/src/main/res/layout/layout_item_menu.xml" value="0.19270833333333334" />
         <entry key="app/src/main/res/layout/layout_item_produk.xml" value="0.2" />
         <entry key="app/src/main/res/layout/layout_toolbar_with_back.xml" value="0.14453125" />
         <entry key="app/src/main/res/layout/layout_total_order.xml" value="0.14453125" />

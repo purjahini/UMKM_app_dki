@@ -42,6 +42,12 @@ class LoginActivity : AppCompatActivity() {
         progressDialog!!.setCancelable(false)
         progressDialog!!.isIndeterminate = true
 
+        btnRegisDevice.setOnClickListener {
+            val intent = Intent(this, RegisterDeviceActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            startActivity(intent)
+        }
+
         TvToRegister.setOnClickListener {
             val intent = Intent(this, RegisterActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP

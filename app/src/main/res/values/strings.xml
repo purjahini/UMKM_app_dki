@@ -24,4 +24,8 @@
     <string name="serverOn">Server Connected</string>
     <string name="serverOff">Server Disconnected</string>
     <string name="penjualan">Penjualan</string>
+    <string name="data_config">Data Config</string>
+    <string name="info_umum">Info Umum</string>
+    <string name="status_device">Status Device</string>
+    <string name="data_bank">Data Bank</string>
 </resources>

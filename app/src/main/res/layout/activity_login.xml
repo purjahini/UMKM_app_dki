@@ -100,6 +100,15 @@
                     android:layout_marginTop="15dp"
                     android:text="Masuk"
                     app:cornerRadius="10dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnRegisDevice"
+                    style="@style/Widget.MaterialComponents.Button"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:text="Register Device"
+                    android:textAllCaps="false"
+                    app:cornerRadius="@dimen/_5sdp" />
                 <TextView
                     android:id="@+id/TvToRegister"
                     android:layout_width="match_parent"
