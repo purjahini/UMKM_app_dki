@@ -50,7 +50,7 @@ class MenuTambahKategoriActivity : AppCompatActivity() {
     }
 
 
-    fun setToRecyclerView(): Boolean {
+   private fun setToRecyclerView(): Boolean {
 
         progressDialog?.show()
         AndroidNetworking.post(MyConstant.UrlKategoriGetData)
@@ -80,6 +80,8 @@ class MenuTambahKategoriActivity : AppCompatActivity() {
                             }
                         }
 
+                    } else {
+                        See.toast(this@MenuTambahKategoriActivity, "response api $apiMessage")
                     }
 
 

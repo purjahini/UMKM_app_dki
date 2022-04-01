@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">UMKM ver 0.0.7.5</string>
+    <string name="app_name">UMKM ver 0.0.7.6</string>
     <string name="nama_toko">svtech Pos</string>
     <string name="alamat_toko">www.svtech.com</string>
     <string name="title_activity_main">MainActivity</string>
@@ -27,5 +27,5 @@
     <string name="data_config">Data Config</string>
     <string name="info_umum">Info Umum</string>
     <string name="status_device">Status Device</string>
-    <string name="data_bank">Data Bank</string>
+    <string name="data_bank">Support Data Bank </string>
 </resources>

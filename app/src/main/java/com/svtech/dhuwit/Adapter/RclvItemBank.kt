@@ -5,29 +5,29 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.svtech.dhuwit.Models.DataBank
 import com.svtech.dhuwit.R
+import com.svtech.dhuwit.modelOnline.ResponseConfig
 import kotlinx.android.synthetic.main.layout_item_menu.view.*
 
 /*Adapter recycler view untuk menu dashboard*/
-class RclvItemBank(val context: Context, var listItemMenu: MutableList<DataBank>) :
+class RclvItemBank(val context: Context, var listItemMenu: List<ResponseConfig.DataBank>) :
     RecyclerView.Adapter<RclvItemBank.ViewHolder>() {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun onBind(menu: DataBank, context: Context) {
+        fun onBind(menu: ResponseConfig.DataBank, context: Context) {
             when (menu.bank) {
-                "BNI" -> {
+                "BNI", "Bni" -> {
                     itemView.iconMenu.setImageDrawable(context.getDrawable(R.drawable.tapcash))
                 }
-                "DKI" -> {
+                "DKI","Dki" -> {
                     itemView.iconMenu.setImageDrawable(context.getDrawable(R.drawable.dki))
                 }
 
-                "MANDIRI" -> {
+                "MANDIRI", "Mandiri" -> {
                     itemView.iconMenu.setImageDrawable(context.getDrawable(R.drawable.mandiri))
-
                 }
-                "BRI" -> {
+
+                "BRI","Bni" -> {
                     itemView.iconMenu.setImageDrawable(context.getDrawable(R.drawable.brizzi))
 
                 }

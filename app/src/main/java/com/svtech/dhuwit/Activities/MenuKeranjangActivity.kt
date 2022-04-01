@@ -57,6 +57,7 @@ class MenuKeranjangActivity : AppCompatActivity() {
                         startActivity(Intent(this, CheckoutActivity::class.java))
                     }
                     btnCashless.setOnClickListener {
+//                        startActivity(Intent(this, CheckoutActivity::class.java))
                         val intent = Intent(this, CashActivity::class.java)
                         intent.putExtra("Total", transaksi?.totalPembayaran)
                         startActivity(intent)

@@ -18,12 +18,18 @@ object MyConstant{
     const val STATUSPARAM ="status"
     const val TOKEN = "token"
     const val BEARER = "Bearer"
+    const val ROLE = "role"
     const val FORBIDDEN = "Forbidden Access!"
     const val TIME = "time"
     const val url = "http://203.210.87.95:8014/umkm_core/public/api"
 
     const val ID_TRANSAKSI = "id_transaksi"
     const val PRODUK_ID = "produk_id"
+    const val ID = "id"
+    const val FOTO = "foto"
+    const val KONTAK = "kontak"
+    const val  PASSWORD= "passwword"
+    const val NAMA = "nama"
 
     const val urlToko = "$url/tokoregister"
     const val urlUser = "$url/userregister"
@@ -37,6 +43,13 @@ object MyConstant{
     const val Urlkategoriupdate = "$url/kategoriupdate"
 
     const val Urltransaksiinput = "$url/transaksiinput"
+
+    const val Urlpegawaicreate = "$url/pegawaicreate"
+    const val Urlpegawaigetdata = "$url/pegawaigetdata"
+    const val Urlpegawaihapus = "$url/pegawaihapus"
+    const val Urlpegawaiupdate = "$url/pegawaiupdate"
+
+
 
     const val Urlprodukhapusid= "$url/produkhapusid"
     const val Urlproduklistdata = "$url/produklistdata"

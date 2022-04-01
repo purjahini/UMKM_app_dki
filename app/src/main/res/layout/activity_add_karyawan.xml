@@ -99,7 +99,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:hint="No Hp"
+        android:hint="No Hp/Username"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textInputKontak">
@@ -137,7 +137,7 @@
         style="@style/Widget.MaterialComponents.Button"
         android:layout_width="0dp"
         android:layout_height="60dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/_20sdp"
         android:text="Simpan"
         app:layout_constraintEnd_toEndOf="@+id/textInputNamaPegawai"
         app:layout_constraintStart_toStartOf="@+id/textInputKontak"
@@ -154,6 +154,19 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:id="@+id/labelwarning"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="* Jika password tidak di rubah biarkan kosong"
+        android:textColor="@color/colorRed"
+        android:layout_marginLeft="@dimen/_20sdp"
+        android:textSize="@dimen/_8sdp"
+        app:layout_constraintEnd_toEndOf="@+id/textInputPasswordAdmin"
+        app:layout_constraintStart_toStartOf="@+id/textInputPasswordAdmin"
+        app:layout_constraintTop_toBottomOf="@id/textInputPasswordAdmin" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

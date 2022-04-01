@@ -5,9 +5,9 @@ package com.svtech.dhuwit.Utils
 
 
 import android.Manifest
+import android.R
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -21,7 +21,6 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.startActivity
 import androidx.core.view.drawToBitmap
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -34,13 +33,9 @@ import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
-import com.pattra.pattracardsdk.Service.SyncService
-import com.svtech.dhuwit.Activities.LoginActivity
-import com.svtech.dhuwit.Activities.SplashScreenActivity
 import kotlinx.android.synthetic.main.layout_toolbar_with_back.*
 import java.io.ByteArrayOutputStream
 import java.io.File
-import java.net.URI
 import java.text.NumberFormat
 import java.util.*
 
@@ -68,6 +63,12 @@ fun numberToCurrency(number: Double): String {
 fun numberToCurrency(number: Int): String {
     return NumberFormat.getCurrencyInstance(Locale("id", "ID")).format(number).toString()
         .removeSuffix(",00").replace("Rp", "Rp. ")
+}
+
+fun getURLForResource(resourceId: Int): String? {
+    //use BuildConfig.APPLICATION_ID instead of R.class.getPackage().getName() if both are not same
+    return Uri.parse("android.resource://" + R::class.java.getPackage().name + "/" + resourceId)
+        .toString()
 }
 
 fun calculateNoOfColumns(

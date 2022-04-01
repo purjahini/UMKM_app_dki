@@ -6,6 +6,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <include
+        android:id="@+id/layout"
+        layout="@layout/layout_toolbar_with_back"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -28,20 +34,19 @@
             <FrameLayout
                 android:id="@+id/card_background"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_180sdp"
-                android:background="@drawable/logo" />
+                android:layout_height="@dimen/_130sdp"
+                android:background="@drawable/logo1" />
 
             <TextView
                 android:id="@+id/card_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:layout_marginStart="30dp"
-                android:layout_marginLeft="30dp"
-                android:layout_marginBottom="30dp"
-                android:text="@string/app_name"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:layout_marginBottom="@dimen/_10sdp"
+                android:text="1234567891012345"
                 android:textColor="@color/colorWhite"
-                android:textSize="@dimen/_18sdp"
+                android:textSize="@dimen/_15sdp"
                 android:textStyle="bold"
                 android:visibility="visible" />
 
@@ -198,15 +203,13 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnStatusCashCard"
+            android:visibility="invisible"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="match_parent"
             android:layout_weight="5"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/_5sdp"
             android:padding="5dp"
-            android:outlineSpotShadowColor="@color/colorPrimary"
-            android:drawableLeft="@drawable/ic_baseline_credit_card_24"
-            android:drawableTint="@color/colorPrimary"
             android:text="Status CashCard"
             android:textSize="12dp"
             />

@@ -33,6 +33,8 @@ import kotlinx.android.synthetic.main.layout_table_row.view.*
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.io.IOException
+import java.text.DateFormat
+import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -48,6 +50,7 @@ class CheckoutActivity : AppCompatActivity() {
     var token = ""
     var username = ""
     var progressDialog : ProgressDialog? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -328,6 +331,7 @@ class CheckoutActivity : AppCompatActivity() {
             try {
                 val outputStream = mBluetoothSocket.outputStream
                 val printer = BluetoothPrinterUtils(outputStream)
+
                 printer.setFontStyle(BluetoothPrinterUtils.f2)
                 printer.printText(profile?.namaToko!!, BluetoothPrinterUtils.ALIGN_CENTER)
                 printer.printText(profile.alamatToko!!, BluetoothPrinterUtils.ALIGN_CENTER)
@@ -363,16 +367,16 @@ class CheckoutActivity : AppCompatActivity() {
                     "Total",
                     numberToCurrency(transaksi.totalPembayaran!!)
                 )
-                printer.printString(str, BluetoothPrinterUtils.ALIGN_LEFT)
+                printer.printString(str, BluetoothPrinterUtils.ALIGN_RIGHT)
                 str = java.lang.String.format(
-                    "%1s %2s %3s",
+                    "%1$-10s %2$-12s %3$-18s",
                     " ",
                     "Bayar",
                     numberToCurrency(transaksi.bayar!!)
                 )
                 printer.printString(str, BluetoothPrinterUtils.ALIGN_RIGHT)
                 str = java.lang.String.format(
-                    "%1s %2s %3s",
+                    "%1$-10s %2$-12s %3$-18s",
                     "",
                     "Kembalian",
                     numberToCurrency(transaksi.bayar!!.minus(transaksi.totalPembayaran!!))

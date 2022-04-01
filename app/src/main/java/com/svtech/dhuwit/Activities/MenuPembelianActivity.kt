@@ -45,7 +45,7 @@ class MenuPembelianActivity : AppCompatActivity() {
         username =
             com.svtech.dhuwit.Utils.getPreferences(this).getString(MyConstant.CURRENT_USER, "")
                 .toString()
-        See.log("token addProduk : $token")
+        See.log("token penjualan : $token")
         progressDialog = ProgressDialog(this)
         progressDialog!!.setTitle("Proses")
         progressDialog!!.setMessage("Mohon Menunggu...")

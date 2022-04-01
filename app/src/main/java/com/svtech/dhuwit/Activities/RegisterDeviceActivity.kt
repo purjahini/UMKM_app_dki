@@ -1,13 +1,14 @@
 package com.svtech.dhuwit.Activities
 
+import android.app.ProgressDialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
 import com.pattra.pattracardsdk.PattraCardConfig
 import com.svtech.dhuwit.Adapter.RclvItemBank
 import com.svtech.dhuwit.Models.DataBank
-import com.svtech.dhuwit.Models.Menu
 import com.svtech.dhuwit.R
 import com.svtech.dhuwit.Utils.Cons
 import com.svtech.dhuwit.Utils.See
@@ -19,9 +20,18 @@ import org.json.JSONObject
 
 class RegisterDeviceActivity : AppCompatActivity() {
     var pattraCardConfig: PattraCardConfig? = null
+    var progressDialog : ProgressDialog? = null
+    lateinit var rclvItemBank : RclvItemBank
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register_device)
+
+        progressDialog = ProgressDialog(this)
+        progressDialog!!.setTitle("Proses")
+        progressDialog!!.setMessage("Loading...")
+        progressDialog!!.setProgressStyle(ProgressDialog.STYLE_SPINNER)
+        progressDialog!!.setCancelable(false)
+        progressDialog!!.isIndeterminate = true
 
         setToolbar(this, "Device Status")
 
@@ -34,59 +44,64 @@ class RegisterDeviceActivity : AppCompatActivity() {
             }
 
             override fun ConfigSuccess(person: JSONObject) {
+                progressDialog!!.show()
                 val respon = person.toString()
                 See.log("ConfigSuccess $respon")
                 val json = JSONObject(respon)
                 val apiStatus = json.getBoolean(Cons.STATUS)
                 val apiCode = json.getString(Cons.CODE)
                 if (apiStatus && apiCode.equals("00")) {
+                    progressDialog!!.dismiss()
                     val data = Gson().fromJson(respon, ResponseConfig::class.java)
                     See.log("response apitrue dan 00 ${data.message}")
                     TvMessageStatus.text = ": "+data.message
 
                     val listConfig = data.data_config
-                    Tvdevice_id.text = ": "+listConfig.device_id
-                    Tvip_sam.text = ": "+listConfig.ip_sam
-                    Tvport.text = ": "+listConfig.port
+//                    Tvdevice_id.text = ": "+listConfig.device_id
+//                    Tvip_sam.text = ": "+listConfig.ip_sam
+//                    Tvport.text = ": "+listConfig.port
 
                     val listinfoUmum = data.info_umum
 
-                    Tvalamatlokasi.text = ": "+listinfoUmum.alamatlokasi
-                    Tvidhost.text = ": "+listinfoUmum.idhost
-                    Tvkodelokasi.text  = ": "+listinfoUmum.kodelokasi
-                    Tvlokasi.text = ": "+listinfoUmum.lokasi
-                    Tvpesankeluar.text = ": "+listinfoUmum.pesankeluar
-                    Tvpesanmasuk.text = ": "+listinfoUmum.pesanmasuk
-                    Tvshift.text = ": "+listinfoUmum.shift
+//                    Tvalamatlokasi.text = ": "+listinfoUmum.alamatlokasi
+//                    Tvidhost.text = ": "+listinfoUmum.idhost
+//                    Tvkodelokasi.text  = ": "+listinfoUmum.kodelokasi
+//                    Tvlokasi.text = ": "+listinfoUmum.lokasi
+//                    Tvpesankeluar.text = ": "+listinfoUmum.pesankeluar
+//                    Tvpesanmasuk.text = ": "+listinfoUmum.pesanmasuk
+//                    Tvshift.text = ": "+listinfoUmum.shift
 
 
-                    val listBank = data.data_bank
-                    var listDataBank = ArrayList<DataBank>()
+                    var listLastTransaction = data?.data_bank
 
-                        listBank.map {
-                            listDataBank.clear()
-                            for (i in listBank.indices) {
-                                listDataBank.add(DataBank(it.bank,"","","","","","",""))
-                            }
+                    if (listLastTransaction != null){
 
+                        rclvItemBank = RclvItemBank(
+                            this@RegisterDeviceActivity,
+                            listLastTransaction
+                        )
+
+                        RvBankConfig.apply {
+                            adapter = rclvItemBank
+                            layoutManager = GridLayoutManager(this@RegisterDeviceActivity,2)
+                            setHasFixedSize(true)
                         }
-
-                    RvBankConfig.apply {
-                        adapter = RclvItemBank(this@RegisterDeviceActivity,listDataBank)
-                        layoutManager = LinearLayoutManager(this@RegisterDeviceActivity)
-                        setHasFixedSize(true)
                     }
+
+
 
 
                 }
 
                 if (apiStatus && apiCode.equals("11")) {
+                    progressDialog!!.dismiss()
                     val data = Gson().fromJson(respon, ResponseConfig::class.java)
                     See.log("response apitrue dan 11 ${data.message}")
                     TvMessageStatus.text  = ": "+data.message
                 }
 
                 if (apiStatus == false && apiCode.equals("08")) {
+                    progressDialog!!.dismiss()
                     val data = Gson().fromJson(respon, ResponseConfig::class.java)
                     See.log("response apifalse dan 08 ${data.message}")
                     TvMessageStatus.text  = ": "+data.message

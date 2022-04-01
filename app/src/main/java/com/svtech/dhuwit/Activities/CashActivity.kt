@@ -41,7 +41,6 @@ import java.util.*
 
 
 class CashActivity : AppCompatActivity() {
-    var pattraCardConfig: PattraCardConfig? = null
     var pattraCardSDK: PattraCardSDK? = null
 
 
@@ -57,16 +56,17 @@ class CashActivity : AppCompatActivity() {
     var progressDialog : ProgressDialog? = null
     var amount = ""
     var message = ""
-    @SuppressLint("SetTextI18n")
+    var bank = ""
+    var nokartu = ""
+    var saldoawal = 0
+    var saldoakhir = 0
+    var tid = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cash)
-        supportActionBar?.setTitle("Transaksi CashCard")
-        supportActionBar?.setDisplayShowHomeEnabled(true)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-
-
+        /*Setting toolbar*/
+        setToolbar(this, "Transaksi CashCard")
 
         checkPairedDevice()
         progressDialog = ProgressDialog(this)
@@ -134,55 +134,6 @@ class CashActivity : AppCompatActivity() {
 
         }
 
-        pattraCardConfig = PattraCardConfig(object : ConfigCallback {
-            override fun ConfigError(s: String) {
-                See.log("Config Error $s")
-
-            }
-
-            override fun ConfigSuccess(person: JSONObject) {
-                val respon = person.toString()
-                See.log("ConfigSuccess $respon")
-                val json = JSONObject(respon)
-                val apiStatus = json.getBoolean(Cons.STATUS)
-                val apiCode = json.getString(Cons.CODE)
-                if (apiStatus && apiCode.equals("00")) {
-                    val data = Gson().fromJson(respon, ResponseConfig::class.java)
-                    See.log("response apitrue dan 00 ${data.message}")
-                    message = data.message
-
-                }
-
-                if (apiStatus && apiCode.equals("11")) {
-                    val data = Gson().fromJson(respon, ResponseConfig::class.java)
-                    See.log("response apitrue dan 11 ${data.message}")
-                    message = data.message
-                }
-
-                if (apiStatus == false && apiCode.equals("08")) {
-                    val data = Gson().fromJson(respon, ResponseConfig::class.java)
-                    See.log("response apifalse dan 08 ${data.message}")
-                    message = data.message
-                }
-
-
-            }
-
-            override fun LogSuccess(jsonObject: JSONObject) {
-                val respon = jsonObject.toString()
-                See.log("LogSuccess $respon")
-
-            }
-
-            override fun LogError(jsonObject: JSONObject) {
-                val respon = jsonObject.toString()
-                See.log("LogError $respon")
-            }
-        })
-
-        pattraCardConfig!!.getConfig("203.210.87.98", getDeviceId(this))
-
-
         btnStatusCashCard.setOnClickListener {
             val btnSheet = layoutInflater.inflate(R.layout.sheet_config, null)
             val dialog = BottomSheetDialog(this)
@@ -246,7 +197,13 @@ class CashActivity : AppCompatActivity() {
             override fun purchaseSuccess(purchaseData: PurchaseData) {
                 runOnUiThread {
                     balance_value.setText(purchaseData?.lastBalance)
+                    bank = purchaseData?.bank
+                    nokartu = purchaseData?.cardNumber
+                    saldoawal = purchaseData?.prevBalance.toInt()
+                    saldoakhir = purchaseData?.lastBalance.toInt()
+                    tid = purchaseData?.tid
 
+                    print()
                     showAlertDialog(
                         purchaseData?.cardNumber!!,
                         purchaseData?.debitAmount,
@@ -292,7 +249,7 @@ class CashActivity : AppCompatActivity() {
         pattraCardSDK = PattraCardSDK(this, cardCallback, "203.210.87.98", "didik")
         btn_pay.setOnClickListener {
             pattraCardSDK!!.startPurchase(1, "", "android test", false)
-            print()
+
 //            UploadToServer()
         }
 
@@ -459,7 +416,7 @@ class CashActivity : AppCompatActivity() {
 //                printer.printText(item, BluetoothPrinterUtils.ALIGN_CENTER)
                 for (it in itemsTrasaksi) {
                     val item = java.lang.String.format(
-                        "%1s \n %2s X %3s %4s",
+                        "%1s \n %2s X %3s %4$-5s",
                         if (it.namaProduk.toString().length >= 10) it.namaProduk?.substring(
                             0,
                             10
@@ -477,21 +434,43 @@ class CashActivity : AppCompatActivity() {
                     "Total",
                     numberToCurrency(transaksi.totalPembayaran!!)
                 )
-                printer.printString(str, BluetoothPrinterUtils.ALIGN_LEFT)
+                printer.printString(str, BluetoothPrinterUtils.ALIGN_RIGHT)
                 str = java.lang.String.format(
-                    "%1s %2s %3s",
+                    "%1$-10s %2$-12s %3$-18s",
                     " ",
-                    "Bayar",
-                    numberToCurrency(transaksi.bayar!!)
+                    "Bank",
+                    bank
                 )
                 printer.printString(str, BluetoothPrinterUtils.ALIGN_RIGHT)
                 str = java.lang.String.format(
-                    "%1s %2s %3s",
-                    "",
-                    "Kembalian",
-                    numberToCurrency(transaksi.bayar!!.minus(transaksi.totalPembayaran!!))
+                    "%1$-2s %2$-12s %3$-18s",
+                    " ",
+                    "nokartu",
+                    nokartu
                 )
                 printer.printString(str, BluetoothPrinterUtils.ALIGN_RIGHT)
+                str = java.lang.String.format(
+                    "%1$-2s %2$-12s %3$-18s",
+                    " ",
+                    "saldoawal",
+                    numberToCurrency(saldoawal)
+                )
+                printer.printString(str, BluetoothPrinterUtils.ALIGN_RIGHT)
+                str = java.lang.String.format(
+                    "%1$-2s %2$-12s %3$-18s",
+                    " ",
+                    "saldoakhir",
+                    numberToCurrency(saldoakhir)
+                )
+                printer.printString(str, BluetoothPrinterUtils.ALIGN_RIGHT)
+                str = java.lang.String.format(
+                    "%1$-10s %2$-12s %3$-18s",
+                    " ",
+                    "TID",
+                    tid
+                )
+                printer.printString(str, BluetoothPrinterUtils.ALIGN_RIGHT)
+
                 printer.printNewLines(2)
                 printer.printText(transaksi.namaPembeli!!, BluetoothPrinterUtils.ALIGN_CENTER)
                 printer.printText("Terimakasih Sudah Berbelanja", BluetoothPrinterUtils.ALIGN_CENTER)

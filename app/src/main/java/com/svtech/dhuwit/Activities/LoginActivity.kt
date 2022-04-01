@@ -26,6 +26,7 @@ import org.json.JSONObject
 class LoginActivity : AppCompatActivity() {
     var progressDialog: ProgressDialog? = null
     var token = ""
+    var usernameToko = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,7 +87,9 @@ class LoginActivity : AppCompatActivity() {
                             val data = Gson().fromJson(respon, UserOnline::class.java)
                             val list = data.data
 
+
                             if (list != null) {
+                                usernameToko = list.username.toString()
                                 User(
                                     id = list.id,
                                     nama = list.nama,
@@ -95,6 +98,7 @@ class LoginActivity : AppCompatActivity() {
                                 ).save()
                                 See.log("respon user : ${list.nama}, ${list.username} , ${list.role}")
                             }
+
                             getLoginToko()
 
 
@@ -106,7 +110,7 @@ class LoginActivity : AppCompatActivity() {
                                 Toast.LENGTH_SHORT
                             ).show()
 
-                            See.log("api status 0 : " + respon.toString())
+                            See.log("api status 0 : " + apiMessage)
                         }
                     }
 
@@ -132,11 +136,9 @@ class LoginActivity : AppCompatActivity() {
     private fun getLoginToko() {
         progressDialog?.show()
         if (checkInputUsername(textInputUsername) && checkInputPassword(textInputPassword)) {
-            val username = textInputUsername.editText?.text.toString().trim()
-
             AndroidNetworking.post(MyConstant.UrlLoginToko)
                 .addHeaders("Authorization", "Bearer${token}")
-                .addBodyParameter("username", username)
+                .addBodyParameter("username", usernameToko)
                 .setPriority(Priority.HIGH)
                 .build()
                 .getAsJSONObject(object : JSONObjectRequestListener {
@@ -159,7 +161,7 @@ class LoginActivity : AppCompatActivity() {
                                     namaToko = list.nama_toko,
                                     USERNAME = list.username
                                 ).save()
-                                savePreferences(applicationContext, MyConstant.CURRENT_USER, username)
+                                savePreferences(applicationContext, MyConstant.CURRENT_USER, usernameToko)
                                 startActivity(Intent(applicationContext, DashboardActivity::class.java))
                                 finish()
 //                                InsertProduks()
