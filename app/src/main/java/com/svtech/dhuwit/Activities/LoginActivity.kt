@@ -105,7 +105,7 @@ class LoginActivity : AppCompatActivity() {
                         } else {
                             progressDialog?.dismiss()
                             Toast.makeText(
-                                applicationContext,
+                                this@LoginActivity,
                                 apiMessage,
                                 Toast.LENGTH_SHORT
                             ).show()
@@ -117,7 +117,7 @@ class LoginActivity : AppCompatActivity() {
                     override fun onError(anError: ANError?) {
                         progressDialog?.dismiss()
                         Toast.makeText(
-                            applicationContext,
+                            this@LoginActivity,
                             anError?.errorCode!!,
                             Toast.LENGTH_SHORT
                         ).show()
@@ -173,7 +173,7 @@ class LoginActivity : AppCompatActivity() {
                         } else {
                             progressDialog?.dismiss()
                             Toast.makeText(
-                                applicationContext,
+                                this@LoginActivity,
                                 "Login gagal user / password salah!",
                                 Toast.LENGTH_SHORT
                             ).show()
@@ -185,6 +185,11 @@ class LoginActivity : AppCompatActivity() {
                     override fun onError(anError: ANError?) {
                         progressDialog?.dismiss()
                         See.log("aanError getLoginToko : ${anError?.errorCode}, ${anError?.errorBody}, ${anError?.errorDetail}")
+                        Toast.makeText(
+                            this@LoginActivity,
+                            anError?.errorCode!!,
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
 
                 })

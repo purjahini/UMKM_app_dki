@@ -9,6 +9,7 @@ import android.R
 import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
+import android.database.sqlite.SQLiteDatabase
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
@@ -16,6 +17,7 @@ import android.net.Uri
 import android.os.Environment
 import android.provider.Settings
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
@@ -33,6 +35,7 @@ import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
+import com.orm.SugarApp.getSugarContext
 import kotlinx.android.synthetic.main.layout_toolbar_with_back.*
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -70,6 +73,7 @@ fun getURLForResource(resourceId: Int): String? {
     return Uri.parse("android.resource://" + R::class.java.getPackage().name + "/" + resourceId)
         .toString()
 }
+
 
 fun calculateNoOfColumns(
     context: Context,
@@ -269,6 +273,8 @@ fun getPreferences(context: Context): SharedPreferences {
     return context.getSharedPreferences("prefs", 0)
 
 }
+
+
 
 
 

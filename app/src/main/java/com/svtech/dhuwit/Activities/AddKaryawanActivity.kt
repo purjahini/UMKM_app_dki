@@ -27,13 +27,8 @@ import com.svtech.dhuwit.Models.User
 import com.svtech.dhuwit.R
 import com.svtech.dhuwit.Utils.*
 import kotlinx.android.synthetic.main.activity_add_karyawan.*
-import kotlinx.android.synthetic.main.activity_add_karyawan.btnLoadImage
-import kotlinx.android.synthetic.main.activity_add_karyawan.btnSimpan
-import kotlinx.android.synthetic.main.activity_add_karyawan.imgFoto
-import kotlinx.android.synthetic.main.activity_add_kategori.*
 import org.json.JSONObject
 import java.io.File
-import java.util.*
 
 
 class AddKaryawanActivity : AppCompatActivity() {
@@ -53,7 +48,7 @@ class AddKaryawanActivity : AppCompatActivity() {
         username =
             com.svtech.dhuwit.Utils.getPreferences(this).getString(MyConstant.CURRENT_USER, "")
                 .toString()
-        See.log("token login :  $token")
+        See.log("token add Karyawan :  $token")
         progressDialog = ProgressDialog(this)
         progressDialog!!.setTitle("Proses")
         progressDialog!!.setMessage("Mohon Menunggu...")
@@ -130,6 +125,7 @@ class AddKaryawanActivity : AppCompatActivity() {
 
         btnSimpan.setOnClickListener {
             if (update) {
+
                 if ( checkInput(
                         textInputNamaPegawai
                     ) && checkInputUsername(
@@ -165,6 +161,7 @@ class AddKaryawanActivity : AppCompatActivity() {
         }
         if (idUser != null) {
             Glide.with(this).load(foto).fitCenter()
+                .placeholder(R.drawable.logo1)
                 .into(imgFoto)
             textInputNamaPegawai.editText?.setText(nama)
             textInputUsernameAdmin.editText?.setText(userkontak)
@@ -174,158 +171,344 @@ class AddKaryawanActivity : AppCompatActivity() {
 
     private fun insertKaryawan() {
         progressDialog?.show()
-        var NameFile: File?
-        val imageUrl: String = getURLForResource(R.drawable.logo1).toString()
+
 
         val FilePath: String = "${file}/${fileName}"
 
-        if (FilePath.isEmpty()) {
-            NameFile = File(imageUrl)
-        } else {
-            NameFile = File(FilePath)
+
+        when {
+            fileName.isEmpty() -> {
+                See.log("filepath : $FilePath")
+                AndroidNetworking.upload(MyConstant.Urlpegawaicreate)
+                    .addHeaders("Authorization", "Bearer$token")
+                    .addMultipartParameter("kontak",textInputUsernameAdmin.editText?.text.toString().trim())
+                    .addMultipartParameter("nama",textInputNamaPegawai.editText?.text.toString().trim())
+                    .addMultipartParameter("password",textInputPasswordAdmin.editText?.text.toString().trim())
+                    .addMultipartParameter("role", User.userAdmin.trim())
+                    .addMultipartParameter("username", username.trim())
+                    .setPriority(Priority.HIGH)
+                    .build()
+                    .getAsJSONObject(object : JSONObjectRequestListener {
+                        override fun onResponse(response: JSONObject?) {
+                            val respon = response?.toString()
+                            See.log("respon add karyawan : $respon")
+                            val json = JSONObject(respon)
+                            val apiStatus = json.getInt(MyConstant.API_STATUS)
+                            val apiMessage = json.getString(MyConstant.API_MESSAGE)
+                            if (apiStatus.equals(1)) {
+                                progressDialog!!.dismiss()
+
+                                See.toast(this@AddKaryawanActivity, "Insert add Karyawan $apiMessage")
+                                finish()
+                            } else {
+                                progressDialog!!.dismiss()
+                                See.toast(this@AddKaryawanActivity, "Insert add Karyawan $apiMessage")
+
+                            }
+
+                        }
+
+                        override fun onError(anError: ANError?) {
+                            progressDialog?.dismiss()
+                            See.toast(
+                                this@AddKaryawanActivity,
+                                "Error Code Add karyawan ${anError?.errorCode}"
+                            )
+                            See.log("onError errorCode trx : ${anError?.errorCode}")
+                            See.log("onError errorBody trx: ${anError?.errorBody}")
+                            See.log("onError errorDetail trx: ${anError?.errorDetail}")
+                        }
+
+                    })
+
+
+            }
+            fileName.isNotEmpty() -> {
+                See.log("filepath : $FilePath")
+                AndroidNetworking.upload(MyConstant.Urlpegawaicreate)
+                    .addHeaders("Authorization", "Bearer$token")
+                    .addMultipartFile("foto", File(FilePath))
+                    .addMultipartParameter("kontak",textInputUsernameAdmin.editText?.text.toString().trim())
+                    .addMultipartParameter("nama",textInputNamaPegawai.editText?.text.toString().trim())
+                    .addMultipartParameter("password",textInputPasswordAdmin.editText?.text.toString().trim())
+                    .addMultipartParameter("role", User.userAdmin)
+                    .addMultipartParameter("username", username.trim())
+                    .setPriority(Priority.MEDIUM)
+                    .build()
+                    .getAsJSONObject(object : JSONObjectRequestListener {
+                        override fun onResponse(response: JSONObject?) {
+                            val respon = response?.toString()
+                            See.log("respon add karyawan : $respon")
+                            val json = JSONObject(respon)
+                            val apiStatus = json.getInt(MyConstant.API_STATUS)
+                            val apiMessage = json.getString(MyConstant.API_MESSAGE)
+                            if (apiStatus.equals(1)) {
+                                progressDialog!!.dismiss()
+
+                                See.toast(this@AddKaryawanActivity, "Insert add Karyawan $apiMessage")
+                                finish()
+                            } else {
+                                progressDialog!!.dismiss()
+                                See.toast(this@AddKaryawanActivity, "Insert add Karyawan $apiMessage")
+
+                            }
+
+                        }
+
+                        override fun onError(anError: ANError?) {
+                            progressDialog?.dismiss()
+                            See.toast(
+                                this@AddKaryawanActivity,
+                                "Error Code Add karyawan ${anError?.errorCode}"
+                            )
+                            See.log("onError errorCode trx : ${anError?.errorCode}")
+                            See.log("onError errorBody trx: ${anError?.errorBody}")
+                            See.log("onError errorDetail trx: ${anError?.errorDetail}")
+                        }
+
+                    })
+
+            }
         }
-        AndroidNetworking.upload(MyConstant.Urlpegawaicreate)
-            .addHeaders("Authorization", "Bearer$token")
-            .addMultipartFile("foto", NameFile)
-            .addMultipartParameter(
-                "kontak",
-                textInputUsernameAdmin.editText?.text.toString().trim()
-            )
-            .addMultipartParameter("nama", textInputNamaPegawai.editText?.text.toString().trim())
-            .addMultipartParameter(
-                "password",
-                textInputPasswordAdmin.editText?.text.toString().trim()
-            )
-            .addMultipartParameter("role", User.userAdmin)
-            .addMultipartParameter("username", username.trim())
-            .setPriority(Priority.MEDIUM)
-            .build()
-            .getAsJSONObject(object : JSONObjectRequestListener {
-                override fun onResponse(response: JSONObject?) {
-                    val respon = response?.toString()
-                    See.log("respon add karyawan : $respon")
-                    val json = JSONObject(respon)
-                    val apiStatus = json.getInt(MyConstant.API_STATUS)
-                    val apiMessage = json.getString(MyConstant.API_MESSAGE)
-                    if (apiStatus.equals(1)) {
-                        progressDialog!!.dismiss()
 
-                        See.toast(this@AddKaryawanActivity, "Insert add Karyawan $apiMessage")
-                        finish()
-                    } else {
-                        progressDialog!!.dismiss()
-                        See.toast(this@AddKaryawanActivity, "Insert add Karyawan $apiMessage")
 
-                    }
-
-                }
-
-                override fun onError(anError: ANError?) {
-                    progressDialog?.dismiss()
-                    See.toast(
-                        this@AddKaryawanActivity,
-                        "Error Code Add karyawan ${anError?.errorCode}"
-                    )
-                    See.log("onError errorCode trx : ${anError?.errorCode}")
-                    See.log("onError errorBody trx: ${anError?.errorBody}")
-                    See.log("onError errorDetail trx: ${anError?.errorDetail}")
-                }
-
-            })
 
     }
 
     private fun updateKaryawan(userid: Int) {
         progressDialog?.show()
-        var NameFile: File?
-        val imageUrl: String = getURLForResource(R.drawable.logo1).toString()
-
         val FilePath: String = "${file}/${fileName}"
 
-        if (FilePath.isEmpty()) {
-            NameFile = File(imageUrl)
-        } else {
-            NameFile = File(FilePath)
-        }
+        when {
+            textInputPasswordAdmin.editText?.text.toString().isEmpty() && fileName.isEmpty()-> {
+                AndroidNetworking.upload(MyConstant.Urlpegawaiupdate)
+                    .addHeaders("Authorization", "Bearer$token")
+                    .addMultipartParameter("kontak",textInputUsernameAdmin.editText?.text.toString().trim())
+                    .addMultipartParameter("nama",textInputNamaPegawai.editText?.text.toString().trim())
+                    .addMultipartParameter("id", userid.toString().trim())
+                    .addMultipartParameter("role", User.userAdmin)
+                    .addMultipartParameter("username", username.trim())
+                    .setPriority(Priority.MEDIUM)
+                    .build()
+                    .getAsJSONObject(object : JSONObjectRequestListener {
+                        override fun onResponse(response: JSONObject?) {
+                            val respon = response?.toString()
+                            See.log("respon update no pass karyawan : $respon")
+                            val json = JSONObject(respon)
+                            val apiStatus = json.getInt(MyConstant.API_STATUS)
+                            val apiMessage = json.getString(MyConstant.API_MESSAGE)
+                            if (apiStatus.equals(1)) {
+                                progressDialog!!.dismiss()
 
-        if (textInputPasswordAdmin.editText?.text.toString().isEmpty()) {
-            AndroidNetworking.upload(MyConstant.Urlpegawaiupdate)
-                .addHeaders(MyConstant.AUTHORIZATION, MyConstant.BEARER + token)
-                .addMultipartParameter(MyConstant.ID, userid.toString().trim())
-                .addMultipartParameter(
-                    MyConstant.NAMA,
-                    textInputNamaPegawai.editText?.text.toString().trim()
-                )
-                .addMultipartParameter(MyConstant.USERNAME, username)
-                .addMultipartFile(MyConstant.FOTO, NameFile)
-                .setPriority(Priority.MEDIUM)
-                .build()
-                .getAsJSONObject(object : JSONObjectRequestListener {
-                    override fun onResponse(response: JSONObject?) {
-                        progressDialog?.dismiss()
+                                See.toast(this@AddKaryawanActivity, "Insert update Karyawan $apiMessage")
+                                finish()
+                            } else {
+                                progressDialog!!.dismiss()
+                                See.toast(this@AddKaryawanActivity, "Insert update Karyawan $apiMessage")
 
-                        val apiStatus = response?.getInt(Cons.API_STATUS)
-                        val apiMessage = response?.getString(Cons.API_MESSAGE)
+                            }
 
-                        if (apiStatus!!.equals(1)) {
-                            See.toast(
-                                this@AddKaryawanActivity,
-                                "Update Pegawai berhasil disimpan! $apiMessage"
-                            )
-                            finish()
-                        } else {
-                            See.toast(this@AddKaryawanActivity, "Update Pegawai gagal disimpan! $apiMessage")
                         }
 
-                    }
-
-                    override fun onError(anError: ANError?) {
-                        progressDialog?.dismiss()
-                        See.toast(this@AddKaryawanActivity, "Server Error Code : ${anError?.errorCode}")
-                    }
-
-                })
-
-        }
-        else {
-            AndroidNetworking.upload(MyConstant.Urlpegawaiupdate)
-                .addHeaders(MyConstant.AUTHORIZATION, MyConstant.BEARER + token)
-                .addMultipartParameter(MyConstant.ID, userid.toString().trim())
-                .addMultipartParameter(
-                    MyConstant.NAMA,
-                    textInputNamaPegawai.editText?.text.toString().trim()
-                )
-                .addMultipartParameter(MyConstant.PASSWORD, textInputPasswordAdmin.editText?.text.toString().trim())
-                .addMultipartFile(MyConstant.FOTO, NameFile)
-                .setPriority(Priority.MEDIUM)
-                .build()
-                .getAsJSONObject(object : JSONObjectRequestListener {
-                    override fun onResponse(response: JSONObject?) {
-                        progressDialog?.dismiss()
-                        val apiStatus = response?.getInt(Cons.API_STATUS)
-                        val apiMessage = response?.getString(Cons.API_MESSAGE)
-
-                        if (apiStatus!!.equals(1)) {
+                        override fun onError(anError: ANError?) {
+                            progressDialog?.dismiss()
                             See.toast(
                                 this@AddKaryawanActivity,
-                                "Update Pegawai berhasil disimpan! $apiMessage"
+                                "Error Code update karyawan ${anError?.errorCode}"
                             )
-                            finish()
-                        } else {
-                            See.toast(this@AddKaryawanActivity, "Update Pegawai gagal disimpan! $apiMessage")
+                            See.log("onError update karyawan errorCode trx : ${anError?.errorCode}")
+                            See.log("onError update karyawan errorBody trx: ${anError?.errorBody}")
+                            See.log("onError update karyawan errorDetail trx: ${anError?.errorDetail}")
                         }
 
-                    }
+                    })
 
-                    override fun onError(anError: ANError?) {
-                        progressDialog?.dismiss()
-                        See.toast(this@AddKaryawanActivity, "Server Error Code : ${anError?.errorCode}")
-                    }
+            }
+            textInputPasswordAdmin.editText?.text.toString().isNotEmpty() && fileName.isEmpty() -> {
+                AndroidNetworking.upload(MyConstant.Urlpegawaiupdate)
+                    .addHeaders("Authorization", "Bearer$token")
+                    .addMultipartParameter("kontak",textInputUsernameAdmin.editText?.text.toString().trim())
+                    .addMultipartParameter("nama",textInputNamaPegawai.editText?.text.toString().trim())
+                    .addMultipartParameter("id", userid.toString().trim())
+                    .addMultipartParameter("password",textInputPasswordAdmin.editText?.text.toString().trim())
+                    .addMultipartParameter("role", User.userAdmin)
+                    .addMultipartParameter("username", username.trim())
+                    .setPriority(Priority.MEDIUM)
+                    .build()
+                    .getAsJSONObject(object : JSONObjectRequestListener {
+                        override fun onResponse(response: JSONObject?) {
+                            val respon = response?.toString()
+                            See.log("respon update no pass karyawan : $respon")
+                            val json = JSONObject(respon)
+                            val apiStatus = json.getInt(MyConstant.API_STATUS)
+                            val apiMessage = json.getString(MyConstant.API_MESSAGE)
+                            if (apiStatus.equals(1)) {
+                                progressDialog!!.dismiss()
 
-                })
+                                See.toast(this@AddKaryawanActivity, "Insert update Karyawan $apiMessage")
+                                finish()
+                            } else {
+                                progressDialog!!.dismiss()
+                                See.toast(this@AddKaryawanActivity, "Insert update Karyawan $apiMessage")
 
+                            }
+
+                        }
+
+                        override fun onError(anError: ANError?) {
+                            progressDialog?.dismiss()
+                            See.toast(
+                                this@AddKaryawanActivity,
+                                "Error Code update karyawan ${anError?.errorCode}"
+                            )
+                            See.log("onError update karyawan errorCode trx : ${anError?.errorCode}")
+                            See.log("onError update karyawan errorBody trx: ${anError?.errorBody}")
+                            See.log("onError update karyawan errorDetail trx: ${anError?.errorDetail}")
+                        }
+
+                    })
+
+            }
+
+            textInputPasswordAdmin.editText?.text.toString().isNotEmpty() -> {
+                AndroidNetworking.upload(MyConstant.Urlpegawaiupdate)
+                    .addHeaders("Authorization", "Bearer$token")
+                    .addMultipartParameter("kontak",textInputUsernameAdmin.editText?.text.toString().trim())
+                    .addMultipartParameter("nama",textInputNamaPegawai.editText?.text.toString().trim())
+                    .addMultipartParameter("id", userid.toString().trim())
+                    .addMultipartParameter("password",textInputPasswordAdmin.editText?.text.toString().trim())
+                    .addMultipartParameter("role", User.userAdmin)
+                    .addMultipartParameter("username", username.trim())
+                    .setPriority(Priority.MEDIUM)
+                    .build()
+                    .getAsJSONObject(object : JSONObjectRequestListener {
+                        override fun onResponse(response: JSONObject?) {
+                            val respon = response?.toString()
+                            See.log("respon update no pass karyawan : $respon")
+                            val json = JSONObject(respon)
+                            val apiStatus = json.getInt(MyConstant.API_STATUS)
+                            val apiMessage = json.getString(MyConstant.API_MESSAGE)
+                            if (apiStatus.equals(1)) {
+                                progressDialog!!.dismiss()
+
+                                See.toast(this@AddKaryawanActivity, "Insert update Karyawan $apiMessage")
+                                finish()
+                            } else {
+                                progressDialog!!.dismiss()
+                                See.toast(this@AddKaryawanActivity, "Insert update Karyawan $apiMessage")
+
+                            }
+
+                        }
+
+                        override fun onError(anError: ANError?) {
+                            progressDialog?.dismiss()
+                            See.toast(
+                                this@AddKaryawanActivity,
+                                "Error Code update karyawan ${anError?.errorCode}"
+                            )
+                            See.log("onError update karyawan errorCode trx : ${anError?.errorCode}")
+                            See.log("onError update karyawan errorBody trx: ${anError?.errorBody}")
+                            See.log("onError update karyawan errorDetail trx: ${anError?.errorDetail}")
+                        }
+
+                    })
+
+            }
+
+
+            fileName.isNotEmpty() && textInputPasswordAdmin.editText?.text.toString().isNotEmpty()-> {
+                AndroidNetworking.upload(MyConstant.Urlpegawaiupdate)
+                    .addHeaders("Authorization", "Bearer$token")
+                    .addMultipartFile("foto", File(FilePath))
+                    .addMultipartParameter("kontak",textInputUsernameAdmin.editText?.text.toString().trim())
+                    .addMultipartParameter("nama",textInputNamaPegawai.editText?.text.toString().trim())
+                    .addMultipartParameter("id", userid.toString().trim())
+                    .addMultipartParameter("password",textInputPasswordAdmin.editText?.text.toString().trim())
+                    .addMultipartParameter("role", User.userAdmin)
+                    .addMultipartParameter("username", username.trim())
+                    .setPriority(Priority.MEDIUM)
+                    .build()
+                    .getAsJSONObject(object : JSONObjectRequestListener {
+                        override fun onResponse(response: JSONObject?) {
+                            val respon = response?.toString()
+                            See.log("respon update no pass karyawan : $respon")
+                            val json = JSONObject(respon)
+                            val apiStatus = json.getInt(MyConstant.API_STATUS)
+                            val apiMessage = json.getString(MyConstant.API_MESSAGE)
+                            if (apiStatus.equals(1)) {
+                                progressDialog!!.dismiss()
+
+                                See.toast(this@AddKaryawanActivity, "Insert update Karyawan $apiMessage")
+                                finish()
+                            } else {
+                                progressDialog!!.dismiss()
+                                See.toast(this@AddKaryawanActivity, "Insert update Karyawan $apiMessage")
+
+                            }
+
+                        }
+
+                        override fun onError(anError: ANError?) {
+                            progressDialog?.dismiss()
+                            See.toast(
+                                this@AddKaryawanActivity,
+                                "Error Code update karyawan ${anError?.errorCode}"
+                            )
+                            See.log("onError update karyawan errorCode trx : ${anError?.errorCode}")
+                            See.log("onError update karyawan errorBody trx: ${anError?.errorBody}")
+                            See.log("onError update karyawan errorDetail trx: ${anError?.errorDetail}")
+                        }
+
+                    })
+
+            }
+            fileName.isNotEmpty() && textInputPasswordAdmin.editText?.text.toString().isEmpty()-> {
+                AndroidNetworking.upload(MyConstant.Urlpegawaiupdate)
+                    .addHeaders("Authorization", "Bearer$token")
+                    .addMultipartFile("foto", File(FilePath))
+                    .addMultipartParameter("kontak",textInputUsernameAdmin.editText?.text.toString().trim())
+                    .addMultipartParameter("nama",textInputNamaPegawai.editText?.text.toString().trim())
+                    .addMultipartParameter("id", userid.toString().trim())
+                    .addMultipartParameter("role", User.userAdmin)
+                    .addMultipartParameter("username", username.trim())
+                    .setPriority(Priority.MEDIUM)
+                    .build()
+                    .getAsJSONObject(object : JSONObjectRequestListener {
+                        override fun onResponse(response: JSONObject?) {
+                            val respon = response?.toString()
+                            See.log("respon update no pass karyawan : $respon")
+                            val json = JSONObject(respon)
+                            val apiStatus = json.getInt(MyConstant.API_STATUS)
+                            val apiMessage = json.getString(MyConstant.API_MESSAGE)
+                            if (apiStatus.equals(1)) {
+                                progressDialog!!.dismiss()
+
+                                See.toast(this@AddKaryawanActivity, "Insert update Karyawan $apiMessage")
+                                finish()
+                            } else {
+                                progressDialog!!.dismiss()
+                                See.toast(this@AddKaryawanActivity, "Insert update Karyawan $apiMessage")
+
+                            }
+
+                        }
+
+                        override fun onError(anError: ANError?) {
+                            progressDialog?.dismiss()
+                            See.toast(
+                                this@AddKaryawanActivity,
+                                "Error Code update karyawan ${anError?.errorCode}"
+                            )
+                            See.log("onError update karyawan errorCode trx : ${anError?.errorCode}")
+                            See.log("onError update karyawan errorBody trx: ${anError?.errorBody}")
+                            See.log("onError update karyawan errorDetail trx: ${anError?.errorDetail}")
+                        }
+
+                    })
+
+            }
         }
-
 
 
     }

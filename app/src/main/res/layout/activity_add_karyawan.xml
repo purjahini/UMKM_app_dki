@@ -68,6 +68,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:singleLine="true"
             android:inputType="textCapSentences"/>
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -108,6 +109,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:inputType="phone"
+            android:singleLine="true"
             android:digits="0123456789"/>
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -129,6 +131,7 @@
             android:layout_height="match_parent"
             android:inputType="text"
             android:maxLength="5"
+            android:singleLine="true"
             android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"/>
     </com.google.android.material.textfield.TextInputLayout>
 

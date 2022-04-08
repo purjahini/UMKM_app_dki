@@ -28,4 +28,12 @@
     <string name="info_umum">Info Umum</string>
     <string name="status_device">Status Device</string>
     <string name="data_bank">Support Data Bank </string>
+    <string name="labelfilter">Filter</string>
+    <string name="labelfrom">From</string>
+    <string name="labelto">To</string>
+    <string name="label_reset">Reset</string>
+    <string name="labelsubmit">Submit</string>
+    <string name="lap_todays">Laporan Penjualan Harian</string>
+    <string name="lap_detail">Laporan Detail</string>
+    <string name="lap_stoks">Laporan Stok</string>
 </resources>

@@ -12,24 +12,29 @@ object MyConstant{
     const val REQUEST_OPEN_FILE = 9999
     const val SECRET = "350ac8234c7515318253b24fed7aaf5c"
     const val API_STATUS = "api_status"
+    const val STATUS = "status"
     const val API_MESSAGE = "api_message"
     const val AUTHORIZATION ="Authorization"
-    const val USERNAME ="username"
-    const val STATUSPARAM ="status"
+    const val DATE_FROM = "from"
+    const val DATE_TO = "to"
+
     const val TOKEN = "token"
     const val BEARER = "Bearer"
-    const val ROLE = "role"
+
     const val FORBIDDEN = "Forbidden Access!"
     const val TIME = "time"
     const val url = "http://203.210.87.95:8014/umkm_core/public/api"
 
     const val ID_TRANSAKSI = "id_transaksi"
     const val PRODUK_ID = "produk_id"
+
+    const val USERNAME ="username"
+    const val KONTAK = "kontak"
+    const val NAMA = "nama"
+    const val  PASSWORD= "password"
+    const val ROLE = "role"
     const val ID = "id"
     const val FOTO = "foto"
-    const val KONTAK = "kontak"
-    const val  PASSWORD= "passwword"
-    const val NAMA = "nama"
 
     const val urlToko = "$url/tokoregister"
     const val urlUser = "$url/userregister"
@@ -42,12 +47,12 @@ object MyConstant{
     const val UrlKategoriGetData = "$url/kategorigetdata"
     const val Urlkategoriupdate = "$url/kategoriupdate"
 
-    const val Urltransaksiinput = "$url/transaksiinput"
 
     const val Urlpegawaicreate = "$url/pegawaicreate"
     const val Urlpegawaigetdata = "$url/pegawaigetdata"
     const val Urlpegawaihapus = "$url/pegawaihapus"
     const val Urlpegawaiupdate = "$url/pegawaiupdate"
+
 
 
 
@@ -57,6 +62,12 @@ object MyConstant{
     const val Urlprodukupdateid = "$url/produkupdateid"
 
     const val Urltransaksigetstatus = "$url/transaksigetstatus"
+    const val Urltransaksiinput = "$url/transaksiinput"
+    const val Urltransaksipertanggal = "$url/transaksipertanggal"
+
+    const val Urllaporandetail = "$url/laporandetail"
+    const val Urllaporantodaydetail = "$url/laporantodaydetail"
+
 
     const val Urlitemtransaksidataidproduk = "$url/itemtransaksidataidproduk"
 

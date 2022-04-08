@@ -53,7 +53,7 @@ class DetailLaporanHarianActivity : AppCompatActivity() {
             }
 
             val date = SimpleDateFormat("dd/MM/yyyy").parse(tanggal)
-            tvTanggal.text = ": " +SimpleDateFormat("dd MMMM yyyy").format(date)
+//            tvTanggal.text = ": " +SimpleDateFormat("dd MMMM yyyy").format(date)
             tvTotalPendapatan.text = ": " +numberToCurrency(total)
             tvTotalProduk.text = ": " +totalProduk.toString() + " Produk"
         }

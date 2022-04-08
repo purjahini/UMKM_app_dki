@@ -1,87 +1,273 @@
 package com.svtech.dhuwit.Activities
 
-import android.app.Activity
+import android.app.DatePickerDialog
+import android.app.ProgressDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Environment
+import android.text.format.DateFormat
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.androidnetworking.AndroidNetworking
+import com.androidnetworking.common.Priority
+import com.androidnetworking.error.ANError
+import com.androidnetworking.interfaces.JSONObjectRequestListener
 import com.google.android.material.snackbar.Snackbar
+import com.google.gson.Gson
 import com.itextpdf.text.pdf.PdfPTable
-import com.karumi.dexter.Dexter
-import com.karumi.dexter.MultiplePermissionsReport
-import com.karumi.dexter.PermissionToken
-import com.karumi.dexter.listener.PermissionRequest
-import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.orm.SugarRecord
-import com.svtech.dhuwit.Adapter.RclvLaporanHarian
+import com.svtech.dhuwit.AdapterOnline.RclvLaporanTodays
 import com.svtech.dhuwit.Models.ItemTransaksi
 import com.svtech.dhuwit.Models.Transaksi
 import com.svtech.dhuwit.R
-import com.svtech.dhuwit.Utils.MyConstant
-import com.svtech.dhuwit.Utils.PdfUtils
-import com.svtech.dhuwit.Utils.numberToCurrency
-import com.svtech.dhuwit.Utils.setToolbar
+import com.svtech.dhuwit.Utils.*
+import com.svtech.dhuwit.modelOnline.ResponseTransaksiTodays
 import kotlinx.android.synthetic.main.activity_laporan_harian.*
+import org.json.JSONObject
 import java.io.File
 import java.text.SimpleDateFormat
+import java.util.*
+
 
 class LaporanHarianActivity : AppCompatActivity() {
-    var transaksi: Transaksi? = null
+    //    var transaksi: Transaksi? = null
+    var progressDialog: ProgressDialog? = null
+    var token = ""
+    var username = ""
+
+    var from = ""
+    var to = ""
+    var now = Calendar.getInstance()
+
+    var dayFrom: Int = 0
+    var monthFrom: Int = 0
+    var yearFrom: Int = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_laporan_harian)
+        token =
+            com.svtech.dhuwit.Utils.getPreferences(this).getString(MyConstant.TOKEN, "").toString()
+        username =
+            com.svtech.dhuwit.Utils.getPreferences(this).getString(MyConstant.CURRENT_USER, "")
+                .toString()
+        See.log("token lap harian :  $token")
+        progressDialog = ProgressDialog(this)
+        progressDialog!!.setTitle("Proses")
+        progressDialog!!.setMessage("Mohon Menunggu...")
+        progressDialog!!.setProgressStyle(ProgressDialog.STYLE_SPINNER)
+        progressDialog!!.setCancelable(false)
+        progressDialog!!.isIndeterminate = true
         setToolbar(this, "Laporan Penjualan Harian")
 
-        val transaksi = SugarRecord.listAll(Transaksi::class.java)
-            .distinctBy { it.tanggalTrasaksi?.substring(0, it.tanggalTrasaksi?.indexOf(" ")!!) }
-        val sorted = transaksi.sortedBy { l -> l.tanggalTrasaksi }.reversed()
-        if (transaksi.isNotEmpty()) {
-            tvEmpty.visibility = View.GONE
-            textView12.visibility = View.VISIBLE
-            rclvPenjualan.apply {
-                adapter = RclvLaporanHarian(
-                    this@LaporanHarianActivity, sorted as MutableList<Transaksi>
+        TvReset.setOnClickListener {
+            TvTanggalTo.text = ""
+            to = ""
+            TvTanggalFrom.text = ""
+            from = ""
+            now = Calendar.getInstance()
+            rclvPenjualan.visibility = View.GONE
+            tvEmptyMesage.visibility = View.VISIBLE
+            tvEmptyMesage.text = "Maaf ..Data Transaksi Kosong."
+
+        }
+
+        TvTanggalFrom.setOnClickListener {
+            val datePickerDialog = DatePickerDialog(
+                this,
+                { view, year, monthOfYear, dayOfMonth ->
+                    val calendar: Calendar = GregorianCalendar(year, monthOfYear, dayOfMonth)
+
+                    from = DateFormat.format(
+                        "yyyy-MM-dd",
+                        calendar.timeInMillis
+                    )
+                        .toString()
+
+                    dayFrom = dayOfMonth
+                    monthFrom = monthOfYear
+                    yearFrom = year
+
+                    TvTanggalFrom.setText(from)
+
+                    See.log("See date From $from")
+
+                },
+                now.get(Calendar.YEAR),
+                now.get(Calendar.MONTH),
+                now.get(Calendar.DAY_OF_MONTH)
+            )
+            datePickerDialog.getDatePicker().setMaxDate(now.getTimeInMillis())
+            datePickerDialog.show()
+
+        }
+
+        TvTanggalTo.setOnClickListener {
+            if (from.isNotEmpty()) {
+                val calendarFromMax: Calendar = GregorianCalendar(yearFrom, monthFrom, dayFrom)
+                now.clear()
+                calendarFromMax.set(Calendar.YEAR, yearFrom)
+                calendarFromMax.set(Calendar.MONTH, monthFrom + 1)
+                calendarFromMax.set(Calendar.DAY_OF_MONTH, dayFrom)
+
+                val calendarFromMin: Calendar = GregorianCalendar(yearFrom, monthFrom, dayFrom)
+                now.clear()
+                calendarFromMin.set(Calendar.YEAR, yearFrom)
+                calendarFromMin.set(Calendar.MONTH, monthFrom)
+                calendarFromMin.set(Calendar.DAY_OF_MONTH, dayFrom)
+
+                now.set(yearFrom, monthFrom, dayFrom)
+
+                val Date = DatePickerDialog(
+                    this,
+                    DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+                        val calendar: Calendar = GregorianCalendar(year, monthOfYear, dayOfMonth)
+
+                        to = DateFormat.format(
+                            "yyyy-MM-dd",
+                            calendar.timeInMillis
+                        )
+                            .toString()
+
+                        TvTanggalTo.setText(to)
+
+                        See.log("See log time to $to")
+
+                    },
+
+                    now.get(Calendar.YEAR),
+                    now.get(Calendar.MONTH),
+                    now.get(Calendar.DAY_OF_MONTH)
                 )
-                layoutManager = LinearLayoutManager(this@LaporanHarianActivity)
-                setHasFixedSize(true)
+                Date.getDatePicker().setMinDate(calendarFromMin.timeInMillis)
+                Date.getDatePicker().setMaxDate(calendarFromMax.timeInMillis)
+                Date.show()
+
+
+            } else {
+                See.toast(this, "Silahkan Pilih tanggal From Terlebih dahulu")
             }
-        } else {
-            tvEmpty.visibility = View.VISIBLE
-            textView12.visibility = View.GONE
+
+        }
+
+        TvSubmit.setOnClickListener {
+
+            return@setOnClickListener when {
+                from.isEmpty() -> {
+                    See.toast(this, "Tanggal Form tidak boleh kosong")
+                }
+                else -> {
+                    LoadDataTransToday()
+                }
+            }
+
         }
 
     }
 
-    fun savePDF(transaksi: Transaksi) {
-        this.transaksi = transaksi
-        Dexter.withContext(this)
-            .withPermissions(
-                android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                android.Manifest.permission.READ_EXTERNAL_STORAGE
-            )
-            .withListener(object : MultiplePermissionsListener {
-                override fun onPermissionsChecked(p0: MultiplePermissionsReport?) {
-                    if (p0?.areAllPermissionsGranted()!!) {
-                        createPDF(transaksi)
+    private fun LoadDataTransToday() {
+        progressDialog?.show()
+        rclvPenjualan.visibility = View.VISIBLE
+        AndroidNetworking.post(MyConstant.Urllaporandetail)
+            .addHeaders(MyConstant.AUTHORIZATION, "Bearer$token")
+            .addBodyParameter(MyConstant.STATUS, "0")
+            .addBodyParameter(MyConstant.USERNAME, username.trim())
+            .addBodyParameter(MyConstant.DATE_FROM, from.trim())
+            .addBodyParameter(MyConstant.DATE_TO, to.trim())
+            .setPriority(Priority.MEDIUM)
+            .build()
+            .getAsJSONObject(object : JSONObjectRequestListener {
+                override fun onResponse(response: JSONObject?) {
+                    val respon = response?.toString()
+                    See.log("respon get Transaksi Status : $respon")
+                    val json = JSONObject(respon)
+                    val apiStatus = json.getInt(MyConstant.API_STATUS)
+                    val apiMessage = json.getString(MyConstant.API_MESSAGE)
+                    if (apiStatus.equals(1)) {
+                        val data = Gson().fromJson(respon, ResponseTransaksiTodays::class.java)
+                        val list = data.data
+                        if (list != null) {
+
+
+                            val transaksi =
+                                Gson().fromJson(respon, ResponseTransaksiTodays::class.java).data
+                            See.log("transaksi : $transaksi")
+
+
+                            if (transaksi.isNotEmpty()) {
+                                tvEmptyMesage.visibility = View.GONE
+
+                                rclvPenjualan.apply {
+                                    adapter = RclvLaporanTodays(
+                                        this@LaporanHarianActivity, transaksi
+                                    )
+                                    layoutManager = LinearLayoutManager(this@LaporanHarianActivity)
+                                    setHasFixedSize(true)
+                                }
+                            } else {
+                                tvEmptyMesage.visibility = View.VISIBLE
+                                tvEmptyMesage.text = apiMessage
+
+                            }
+                        }
+
+
+
+                        progressDialog!!.dismiss()
+
+
+                    } else {
+                        progressDialog!!.dismiss()
+                        See.toast(this@LaporanHarianActivity, "Response Server : $apiMessage")
+
                     }
+
                 }
 
-                override fun onPermissionRationaleShouldBeShown(
-                    p0: MutableList<PermissionRequest>?,
-                    p1: PermissionToken?
-                ) {
-                    p1?.continuePermissionRequest()
+                override fun onError(anError: ANError?) {
+                    progressDialog?.dismiss()
+                    See.toast(
+                        this@LaporanHarianActivity,
+                        "Check your Connecting Internet And Error Code Lap Today ${anError?.errorCode}"
+                    )
+                    See.log("Error Code Lap Today errorCode trx : ${anError?.errorCode}")
+                    See.log("Error Code Lap Today errorBody trx: ${anError?.errorBody}")
+                    See.log("Error Code Lap Today errorDetail trx: ${anError?.errorDetail}")
                 }
 
             })
-            .check()
 
     }
+
+//    fun savePDF(transaksi: Transaksi) {
+//        this.transaksi = transaksi
+//        Dexter.withContext(this)
+//            .withPermissions(
+//                android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+//                android.Manifest.permission.READ_EXTERNAL_STORAGE
+//            )
+//            .withListener(object : MultiplePermissionsListener {
+//                override fun onPermissionsChecked(p0: MultiplePermissionsReport?) {
+//                    if (p0?.areAllPermissionsGranted()!!) {
+//                        createPDF(transaksi)
+//                    }
+//                }
+//
+//                override fun onPermissionRationaleShouldBeShown(
+//                    p0: MutableList<PermissionRequest>?,
+//                    p1: PermissionToken?
+//                ) {
+//                    p1?.continuePermissionRequest()
+//                }
+//
+//            })
+//            .check()
+//
+//    }
 
     fun createPDF(transaksi: Transaksi) {
         val folder = File(Environment.getExternalStorageDirectory(), "Laporan Penjualan Harian")
@@ -186,7 +372,11 @@ class LaporanHarianActivity : AppCompatActivity() {
         doc.addTable(table, floatArrayOf(200f, 120f), PdfUtils.align_center)
         doc.close()
         val snackbar =
-            Snackbar.make(rclvPenjualan.rootView, "Laporan berhasil tersimpan!", Snackbar.LENGTH_INDEFINITE)
+            Snackbar.make(
+                rclvPenjualan.rootView,
+                "Laporan berhasil tersimpan!",
+                Snackbar.LENGTH_INDEFINITE
+            )
         snackbar.setAction("Tampilkan", View.OnClickListener {
             val intent = Intent(Intent.ACTION_VIEW)
             intent.setType("application/pdf")
@@ -206,13 +396,13 @@ class LaporanHarianActivity : AppCompatActivity() {
         }).show()
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK && requestCode == MyConstant.REQUEST_OPEN_FILE) {
-            if (transaksi != null) {
-
-//                Toast.makeText(this, "Laporan berhasil tersimpan di ${file.absolutePath}", Toast.LENGTH_LONG).show()
-            }
-        }
-    }
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        super.onActivityResult(requestCode, resultCode, data)
+//        if (resultCode == Activity.RESULT_OK && requestCode == MyConstant.REQUEST_OPEN_FILE) {
+//            if (transaksi != null) {
+//
+////                Toast.makeText(this, "Laporan berhasil tersimpan di ${file.absolutePath}", Toast.LENGTH_LONG).show()
+//            }
+//        }
+//    }
 }
