@@ -246,6 +246,7 @@ class MenuTambahProdukActivity : AppCompatActivity() {
 
 
     fun setToRecyclerView(): Boolean {
+
 //        val listProduk = SugarRecord.listAll(Produk::class.java)
         progressDialog?.show()
         AndroidNetworking.post(MyConstant.Urlproduklistdata)
@@ -253,16 +254,17 @@ class MenuTambahProdukActivity : AppCompatActivity() {
             .addBodyParameter("username", username)
             .setPriority(Priority.HIGH)
             .build()
-            .getAsJSONObject( object: JSONObjectRequestListener {
+            .getAsJSONObject(object : JSONObjectRequestListener {
                 override fun onResponse(response: JSONObject?) {
-                   progressDialog?.dismiss()
+                    progressDialog?.dismiss()
 
-                    if (response != null ) {
+                    if (response != null) {
                         val respon = response?.toString()
                         See.log("respon getProduk: \n $respon")
                         val json = JSONObject(respon)
                         val apiStatus = json.getInt(MyConstant.API_STATUS)
                         val apiMessage = json.getString(MyConstant.API_MESSAGE)
+                        See.log("api message on respon" + apiMessage)
 
                         if (apiStatus.equals(1)) {
                             val data = Gson().fromJson(respon, ProdukOnline::class.java)
@@ -272,7 +274,12 @@ class MenuTambahProdukActivity : AppCompatActivity() {
                                 tvEmpty.visibility = View.VISIBLE
                             } else {
                                 tvEmpty.visibility = View.GONE
-                                val rclvadapter = RclvProdukOnline(this@MenuTambahProdukActivity,list,false, false)
+                                val rclvadapter = RclvProdukOnline(
+                                    this@MenuTambahProdukActivity,
+                                    list,
+                                    false,
+                                    false
+                                )
                                 rclvProduk.apply {
                                     adapter = rclvadapter
                                     layoutManager = GridLayoutManager(context, 2)
@@ -280,14 +287,23 @@ class MenuTambahProdukActivity : AppCompatActivity() {
                                 }
                             }
                         } else {
+
                             See.toast(this@MenuTambahProdukActivity, apiMessage)
                         }
                     }
                 }
 
                 override fun onError(anError: ANError?) {
+
                     progressDialog?.dismiss()
-                    See.toast(this@MenuTambahProdukActivity, anError?.errorBody.toString())
+                    val json = JSONObject(anError?.errorBody)
+                    val apiMessage = json.getString(MyConstant.API_MESSAGE)
+                    if (apiMessage != null) {
+                        if (apiMessage.equals(MyConstant.FORBIDDEN)) {
+                            getToken(this@MenuTambahProdukActivity)
+                        }
+                    }
+
                     See.log("onError getProduk errorCode : ${anError?.errorCode}")
                     See.log("onError getProduk errorBody : ${anError?.errorBody}")
                     See.log("onError getProduk errorDetail : ${anError?.errorDetail}")

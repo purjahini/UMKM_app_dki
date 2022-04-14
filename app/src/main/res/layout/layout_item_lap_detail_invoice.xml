@@ -18,24 +18,12 @@
 
         <TextView
             android:textStyle="bold"
-            android:drawableLeft="@drawable/ic_money"
-            android:drawablePadding="@dimen/_5sdp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/app_name"
-            android:id="@+id/tvTotal"
-            android:gravity="center_vertical"
-            android:textColor="@color/primary"
-           />
-
-        <TextView
-            android:textStyle="bold"
             android:drawableLeft="@drawable/ic_keranjang"
             android:drawablePadding="@dimen/_5sdp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/app_name"
-            android:id="@+id/tvTrx"
+            android:id="@+id/tvInvoice"
             android:gravity="center_vertical"
             android:textColor="@color/primary"
             />
@@ -50,12 +38,12 @@
             <TextView
                 android:layout_weight="2"
                 android:textStyle="bold"
-                android:drawableLeft="@drawable/ic_date"
+                android:drawableLeft="@drawable/ic_money"
                 android:drawablePadding="@dimen/_5sdp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/app_name"
-                android:id="@+id/tvTanggal"
+                android:id="@+id/tvTotalBayar"
                 android:gravity="center_vertical"
                 android:textColor="@color/primary"
                 />
@@ -76,8 +64,9 @@
                 android:id="@+id/TvDetailInvoiceBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableRight="@drawable/ic_baseline_keyboard_arrow_down_24"
+                android:drawableRight="@drawable/ic_arrow_forward"
                 android:drawablePadding="@dimen/_5sdp"
+                android:drawableTint="@color/primary"
                 android:textColor="@color/primary"
                 android:textStyle="bold" />
 

@@ -93,9 +93,21 @@ class MenuTambahPegawaiActivity : AppCompatActivity() {
                 }
 
                 override fun onError(anError: ANError?) {
+
                     progressDialog?.dismiss()
-                    See.toast(this@MenuTambahPegawaiActivity, "code api : ${anError?.errorCode}")
+                    val json = JSONObject(anError?.errorBody)
+                    val apiMessage = json.getString(MyConstant.API_MESSAGE)
+                    if (apiMessage != null) {
+                        if (apiMessage.equals(MyConstant.FORBIDDEN)) {
+                            getToken(this@MenuTambahPegawaiActivity)
+                        }
+                    }
+
+                    See.log("onError getProduk errorCode : ${anError?.errorCode}")
+                    See.log("onError getProduk errorBody : ${anError?.errorBody}")
+                    See.log("onError getProduk errorDetail : ${anError?.errorDetail}")
                 }
+
 
             })
 

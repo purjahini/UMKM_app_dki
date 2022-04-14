@@ -36,4 +36,5 @@
     <string name="lap_todays">Laporan Penjualan Harian</string>
     <string name="lap_detail">Laporan Detail</string>
     <string name="lap_stoks">Laporan Stok</string>
+    <string name="lap_detail_invoice">Detail</string>
 </resources>

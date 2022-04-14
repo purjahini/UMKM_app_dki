@@ -15,6 +15,7 @@ import com.svtech.dhuwit.AdapterOnline.RclvKategoriOnline
 import com.svtech.dhuwit.R
 import com.svtech.dhuwit.Utils.MyConstant
 import com.svtech.dhuwit.Utils.See
+import com.svtech.dhuwit.Utils.getToken
 import com.svtech.dhuwit.Utils.setToolbar
 import com.svtech.dhuwit.modelOnline.KategoriOnline
 import kotlinx.android.synthetic.main.activity_menu_tambah_kategori.*
@@ -88,9 +89,19 @@ class MenuTambahKategoriActivity : AppCompatActivity() {
                 }
 
                 override fun onError(anError: ANError?) {
+
                     progressDialog?.dismiss()
-                    See.toast(this@MenuTambahKategoriActivity, "Check Koneksi Internet anda Code "+anError?.errorCode.toString() )
-                    See.log("aanError getLoginToko : ${anError?.errorCode}, ${anError?.errorBody}, ${anError?.errorDetail}")
+                    val json = JSONObject(anError?.errorBody)
+                    val apiMessage = json.getString(MyConstant.API_MESSAGE)
+                    if (apiMessage != null) {
+                        if (apiMessage.equals(MyConstant.FORBIDDEN)) {
+                            getToken(this@MenuTambahKategoriActivity)
+                        }
+                    }
+
+                    See.log("onError getProduk errorCode : ${anError?.errorCode}")
+                    See.log("onError getProduk errorBody : ${anError?.errorBody}")
+                    See.log("onError getProduk errorDetail : ${anError?.errorDetail}")
                 }
 
             })

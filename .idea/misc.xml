@@ -10,8 +10,10 @@
         <entry key="app/src/main/res/drawable-xxxhdpi/gradient_180.xml" value="0.131" />
         <entry key="app/src/main/res/drawable/gradient.xml" value="0.131" />
         <entry key="app/src/main/res/drawable/gradient_180.xml" value="0.131" />
+        <entry key="app/src/main/res/drawable/ic_add_circle_24.xml" value="0.131" />
         <entry key="app/src/main/res/drawable/ic_arrow_back.xml" value="0.131" />
         <entry key="app/src/main/res/drawable/ic_arrow_downward_24.xml" value="0.194" />
+        <entry key="app/src/main/res/drawable/ic_arrow_forward.xml" value="0.131" />
         <entry key="app/src/main/res/drawable/ic_arrow_upward_24.xml" value="0.131" />
         <entry key="app/src/main/res/drawable/ic_baseline_close_24.xml" value="0.131" />
         <entry key="app/src/main/res/drawable/ic_baseline_cloud_done_24.xml" value="0.174609375" />
@@ -44,7 +46,7 @@
         <entry key="app/src/main/res/layout/activity_laporan.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_laporan_harian.xml" value="0.22" />
         <entry key="app/src/main/res/layout/activity_laporan_penjualan.xml" value="0.146875" />
-        <entry key="app/src/main/res/layout/activity_laporan_stok.xml" value="0.146875" />
+        <entry key="app/src/main/res/layout/activity_laporan_stok.xml" value="0.22" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.19270833333333334" />
         <entry key="app/src/main/res/layout/activity_menu_keranjang.xml" value="0.22" />
         <entry key="app/src/main/res/layout/activity_menu_pembelian.xml" value="0.146875" />
@@ -56,15 +58,20 @@
         <entry key="app/src/main/res/layout/activity_register_device.xml" value="0.22" />
         <entry key="app/src/main/res/layout/activity_spinner.xml" value="0.133984375" />
         <entry key="app/src/main/res/layout/activity_splash_screen.xml" value="0.146875" />
+        <entry key="app/src/main/res/layout/activity_struk.xml" value="0.2" />
         <entry key="app/src/main/res/layout/cash.xml" value="0.146875" />
         <entry key="app/src/main/res/layout/dialogdone.xml" value="0.1625" />
         <entry key="app/src/main/res/layout/item_slider.xml" value="0.19270833333333334" />
-        <entry key="app/src/main/res/layout/layout_item_lap_detail.xml" value="0.33" />
-        <entry key="app/src/main/res/layout/layout_item_lap_todays.xml" value="0.19270833333333334" />
+        <entry key="app/src/main/res/layout/item_struk_produk.xml" value="0.19270833333333334" />
+        <entry key="app/src/main/res/layout/layout_item_lap_detail.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/layout_item_lap_detail_invoice.xml" value="0.19270833333333334" />
+        <entry key="app/src/main/res/layout/layout_item_lap_todays.xml" value="0.25" />
         <entry key="app/src/main/res/layout/layout_item_laporan_harian.xml" value="0.19270833333333334" />
+        <entry key="app/src/main/res/layout/layout_item_laporan_stok.xml" value="0.22" />
         <entry key="app/src/main/res/layout/layout_item_menu.xml" value="0.19270833333333334" />
         <entry key="app/src/main/res/layout/layout_item_pegawai.xml" value="0.25" />
         <entry key="app/src/main/res/layout/layout_item_produk.xml" value="0.2" />
+        <entry key="app/src/main/res/layout/layout_item_struk.xml" value="0.19270833333333334" />
         <entry key="app/src/main/res/layout/layout_toolbar_with_back.xml" value="0.14453125" />
         <entry key="app/src/main/res/layout/layout_total_order.xml" value="0.14453125" />
         <entry key="app/src/main/res/layout/sheet.xml" value="0.22" />

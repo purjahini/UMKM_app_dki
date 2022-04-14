@@ -19,6 +19,7 @@ import com.svtech.dhuwit.R
 import com.svtech.dhuwit.Utils.MyConstant
 import com.svtech.dhuwit.Utils.See
 import com.svtech.dhuwit.Utils.checkInput
+import com.svtech.dhuwit.Utils.getToken
 import kotlinx.android.synthetic.main.activity_register.*
 import org.json.JSONObject
 import java.util.*
@@ -115,11 +116,19 @@ class RegisterActivity : AppCompatActivity() {
                 }
 
                 override fun onError(anError: ANError?) {
-                    progressDialog?.dismiss()
-                    See.log("onError ProsesDaftarUser errorCode : ${anError?.errorCode}")
-                    See.log("onError ProsesDaftarUser errorBody : ${anError?.errorBody}")
-                    See.log("onError ProsesDaftarUser errorDetail : ${anError?.errorDetail}")
 
+                    progressDialog?.dismiss()
+                    val json = JSONObject(anError?.errorBody)
+                    val apiMessage = json.getString(MyConstant.API_MESSAGE)
+                    if (apiMessage != null) {
+                        if (apiMessage.equals(MyConstant.FORBIDDEN)) {
+                            getToken(this@RegisterActivity)
+                        }
+                    }
+
+                    See.log("onError getProduk errorCode : ${anError?.errorCode}")
+                    See.log("onError getProduk errorBody : ${anError?.errorBody}")
+                    See.log("onError getProduk errorDetail : ${anError?.errorDetail}")
                 }
 
             })
@@ -169,10 +178,19 @@ class RegisterActivity : AppCompatActivity() {
                 }
 
                 override fun onError(anError: ANError?) {
+
                     progressDialog?.dismiss()
-                    See.log("onError errorCode register toko : ${anError?.errorCode}")
-                    See.log("onError errorBody register toko: ${anError?.errorBody}")
-                    See.log("onError errorDetail register toko: ${anError?.errorDetail}")
+                    val json = JSONObject(anError?.errorBody)
+                    val apiMessage = json.getString(MyConstant.API_MESSAGE)
+                    if (apiMessage != null) {
+                        if (apiMessage.equals(MyConstant.FORBIDDEN)) {
+                            getToken(this@RegisterActivity)
+                        }
+                    }
+
+                    See.log("onError getProduk errorCode : ${anError?.errorCode}")
+                    See.log("onError getProduk errorBody : ${anError?.errorBody}")
+                    See.log("onError getProduk errorDetail : ${anError?.errorDetail}")
                 }
 
             })

@@ -155,8 +155,16 @@ class MenuPembelianActivity : AppCompatActivity() {
                 }
 
                 override fun onError(anError: ANError?) {
+
                     progressDialog?.dismiss()
-                    See.toast(this@MenuPembelianActivity, anError?.errorBody.toString())
+                    val json = JSONObject(anError?.errorBody)
+                    val apiMessage = json.getString(MyConstant.API_MESSAGE)
+                    if (apiMessage != null) {
+                        if (apiMessage.equals(MyConstant.FORBIDDEN)) {
+                            getToken(this@MenuPembelianActivity)
+                        }
+                    }
+
                     See.log("onError getProduk errorCode : ${anError?.errorCode}")
                     See.log("onError getProduk errorBody : ${anError?.errorBody}")
                     See.log("onError getProduk errorDetail : ${anError?.errorDetail}")

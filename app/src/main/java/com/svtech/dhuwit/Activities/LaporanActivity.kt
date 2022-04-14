@@ -16,16 +16,20 @@ class LaporanActivity : AppCompatActivity() {
 
         btnLaporanPenjualan.setOnClickListener {
             startActivity(Intent(this, LaporanPenjualanActivity::class.java))
-//            See.toast(this, "Dalam Pengembangan")
         }
 
         btnLaporanStok.setOnClickListener {
             startActivity(Intent(this, LaporanStokActivity::class.java))
-//            See.toast(this, "Dalam Pengembangan")
+
         }
 
         btnLaporanHarian.setOnClickListener{
             startActivity(Intent(this, LaporanHarianActivity::class.java))
         }
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
     }
 }

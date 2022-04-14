@@ -229,14 +229,19 @@ class LaporanHarianActivity : AppCompatActivity() {
                 }
 
                 override fun onError(anError: ANError?) {
+
                     progressDialog?.dismiss()
-                    See.toast(
-                        this@LaporanHarianActivity,
-                        "Check your Connecting Internet And Error Code Lap Today ${anError?.errorCode}"
-                    )
-                    See.log("Error Code Lap Today errorCode trx : ${anError?.errorCode}")
-                    See.log("Error Code Lap Today errorBody trx: ${anError?.errorBody}")
-                    See.log("Error Code Lap Today errorDetail trx: ${anError?.errorDetail}")
+                    val json = JSONObject(anError?.errorBody)
+                    val apiMessage = json.getString(MyConstant.API_MESSAGE)
+                    if (apiMessage != null) {
+                        if (apiMessage.equals(MyConstant.FORBIDDEN)) {
+                            getToken(this@LaporanHarianActivity)
+                        }
+                    }
+
+                    See.log("onError getProduk errorCode : ${anError?.errorCode}")
+                    See.log("onError getProduk errorBody : ${anError?.errorBody}")
+                    See.log("onError getProduk errorDetail : ${anError?.errorDetail}")
                 }
 
             })

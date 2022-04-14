@@ -115,15 +115,19 @@ class LoginActivity : AppCompatActivity() {
                     }
 
                     override fun onError(anError: ANError?) {
+
                         progressDialog?.dismiss()
-                        Toast.makeText(
-                            this@LoginActivity,
-                            anError?.errorCode!!,
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        See.log("anError btnMasuk errorCode : ${anError?.errorCode}")
-                        See.log("anError btnMasuk errorBody : ${anError?.errorBody}")
-                        See.log("anError btnMasuk errorDetail : ${anError?.errorDetail}")
+                        val json = JSONObject(anError?.errorBody)
+                        val apiMessage = json.getString(MyConstant.API_MESSAGE)
+                        if (apiMessage != null) {
+                            if (apiMessage.equals(MyConstant.FORBIDDEN)) {
+                                getToken(this@LoginActivity)
+                            }
+                        }
+
+                        See.log("onError getProduk errorCode : ${anError?.errorCode}")
+                        See.log("onError getProduk errorBody : ${anError?.errorBody}")
+                        See.log("onError getProduk errorDetail : ${anError?.errorDetail}")
                     }
 
                 })
@@ -161,13 +165,20 @@ class LoginActivity : AppCompatActivity() {
                                     namaToko = list.nama_toko,
                                     USERNAME = list.username
                                 ).save()
-                                savePreferences(applicationContext, MyConstant.CURRENT_USER, usernameToko)
-                                startActivity(Intent(applicationContext, DashboardActivity::class.java))
+                                savePreferences(
+                                    applicationContext,
+                                    MyConstant.CURRENT_USER,
+                                    usernameToko
+                                )
+                                startActivity(
+                                    Intent(
+                                        applicationContext,
+                                        DashboardActivity::class.java
+                                    )
+                                )
                                 finish()
 //                                InsertProduks()
                             }
-
-
 
 
                         } else {
@@ -183,14 +194,21 @@ class LoginActivity : AppCompatActivity() {
                     }
 
                     override fun onError(anError: ANError?) {
+
                         progressDialog?.dismiss()
-                        See.log("aanError getLoginToko : ${anError?.errorCode}, ${anError?.errorBody}, ${anError?.errorDetail}")
-                        Toast.makeText(
-                            this@LoginActivity,
-                            anError?.errorCode!!,
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        val json = JSONObject(anError?.errorBody)
+                        val apiMessage = json.getString(MyConstant.API_MESSAGE)
+                        if (apiMessage != null) {
+                            if (apiMessage.equals(MyConstant.FORBIDDEN)) {
+                                getToken(this@LoginActivity)
+                            }
+                        }
+
+                        See.log("onError getProduk errorCode : ${anError?.errorCode}")
+                        See.log("onError getProduk errorBody : ${anError?.errorBody}")
+                        See.log("onError getProduk errorDetail : ${anError?.errorDetail}")
                     }
+
 
                 })
 

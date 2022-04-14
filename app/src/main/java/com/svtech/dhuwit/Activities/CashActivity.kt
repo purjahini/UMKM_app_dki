@@ -298,10 +298,19 @@ class CashActivity : AppCompatActivity() {
                         }
 
                         override fun onError(anError: ANError?) {
+
                             progressDialog?.dismiss()
-                            See.log("onError errorCode trx : ${anError?.errorCode}")
-                            See.log("onError errorBody trx: ${anError?.errorBody}")
-                            See.log("onError errorDetail trx: ${anError?.errorDetail}")
+                            val json = JSONObject(anError?.errorBody)
+                            val apiMessage = json.getString(MyConstant.API_MESSAGE)
+                            if (apiMessage != null) {
+                                if (apiMessage.equals(MyConstant.FORBIDDEN)) {
+                                    getToken(this@CashActivity)
+                                }
+                            }
+
+                            See.log("onError getProduk errorCode : ${anError?.errorCode}")
+                            See.log("onError getProduk errorBody : ${anError?.errorBody}")
+                            See.log("onError getProduk errorDetail : ${anError?.errorDetail}")
                         }
 
                     })

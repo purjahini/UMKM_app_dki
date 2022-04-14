@@ -8,6 +8,7 @@ import android.Manifest
 import android.R
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.database.sqlite.SQLiteDatabase
 import android.graphics.Bitmap
@@ -36,6 +37,10 @@ import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.orm.SugarApp.getSugarContext
+import com.orm.SugarRecord
+import com.svtech.dhuwit.Activities.SplashScreenActivity
+import com.svtech.dhuwit.Models.Profile
+import com.svtech.dhuwit.Models.User
 import kotlinx.android.synthetic.main.layout_toolbar_with_back.*
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -149,6 +154,33 @@ fun setToolbar(
         activity.onBackPressed()
     }
     activity.tvTitle.setText(title)
+}
+
+fun getToken(activity: Activity) {
+    val username = getPreferences(activity).getString(MyConstant.CURRENT_USER,"")
+    val token = getPreferences(activity).getString(MyConstant.TOKEN,"")
+    if (username != null) {
+        deletePreferences(activity,username)
+        See.log("username deletePref $username")
+    }
+
+    if (token != null) {
+        deletePreferences(activity,token)
+        See.log("token deletePref $token")
+    }
+
+    val users = SugarRecord.find(User::class.java, "USERNAME =?",username).firstOrNull()
+    See.log("respon user ${users}")
+    users?.delete()
+
+    val profil = SugarRecord.find(Profile::class.java,"USERNAME=?",username).firstOrNull()
+    See.log("respon profil ${profil}")
+    profil?.delete()
+
+    val intent = Intent(activity, SplashScreenActivity::class.java)
+    activity.startActivity(intent)
+    activity.finish()
+
 }
 
 /*Fungsi untuk mengambil screen shoot*/

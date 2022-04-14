@@ -134,12 +134,19 @@ class AddProdukActivity : AppCompatActivity() {
                 }
 
                 override fun onError(anError: ANError?) {
+
                     progressDialog?.dismiss()
-                    See.toast(
-                        this@AddProdukActivity,
-                        "Check Koneksi Internet anda Code " + anError?.errorCode.toString()
-                    )
-                    See.log("aanError getLoginToko : ${anError?.errorCode}, ${anError?.errorBody}, ${anError?.errorDetail}")
+                    val json = JSONObject(anError?.errorBody)
+                    val apiMessage = json.getString(MyConstant.API_MESSAGE)
+                    if (apiMessage != null) {
+                        if (apiMessage.equals(MyConstant.FORBIDDEN)) {
+                            getToken(this@AddProdukActivity)
+                        }
+                    }
+
+                    See.log("onError getProduk errorCode : ${anError?.errorCode}")
+                    See.log("onError getProduk errorBody : ${anError?.errorBody}")
+                    See.log("onError getProduk errorDetail : ${anError?.errorDetail}")
                 }
 
             })
@@ -298,10 +305,19 @@ class AddProdukActivity : AppCompatActivity() {
                     }
 
                     override fun onError(anError: ANError?) {
+
                         progressDialog?.dismiss()
-                        See.log("onError errorCode insertKategori : ${anError?.errorCode}")
-                        See.log("onError errorBody insertKategori: ${anError?.errorBody}")
-                        See.log("onError errorDetail insertKategori: ${anError?.errorDetail}")
+                        val json = JSONObject(anError?.errorBody)
+                        val apiMessage = json.getString(MyConstant.API_MESSAGE)
+                        if (apiMessage != null) {
+                            if (apiMessage.equals(MyConstant.FORBIDDEN)) {
+                                getToken(this@AddProdukActivity)
+                            }
+                        }
+
+                        See.log("onError getProduk errorCode : ${anError?.errorCode}")
+                        See.log("onError getProduk errorBody : ${anError?.errorBody}")
+                        See.log("onError getProduk errorDetail : ${anError?.errorDetail}")
                     }
 
                 })
@@ -482,10 +498,19 @@ class AddProdukActivity : AppCompatActivity() {
                                 }
 
                                 override fun onError(anError: ANError?) {
+
                                     progressDialog?.dismiss()
-                                    See.log("onError errorCode insertKategori : ${anError?.errorCode}")
-                                    See.log("onError errorBody insertKategori: ${anError?.errorBody}")
-                                    See.log("onError errorDetail insertKategori: ${anError?.errorDetail}")
+                                    val json = JSONObject(anError?.errorBody)
+                                    val apiMessage = json.getString(MyConstant.API_MESSAGE)
+                                    if (apiMessage != null) {
+                                        if (apiMessage.equals(MyConstant.FORBIDDEN)) {
+                                            getToken(this@AddProdukActivity)
+                                        }
+                                    }
+
+                                    See.log("onError getProduk errorCode : ${anError?.errorCode}")
+                                    See.log("onError getProduk errorBody : ${anError?.errorBody}")
+                                    See.log("onError getProduk errorDetail : ${anError?.errorDetail}")
                                 }
 
                             })
