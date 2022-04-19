@@ -183,6 +183,33 @@ fun getToken(activity: Activity) {
 
 }
 
+fun getTokenContext(context: Context) {
+    val username = getPreferences(context).getString(MyConstant.CURRENT_USER,"")
+    val token = getPreferences(context).getString(MyConstant.TOKEN,"")
+    if (username != null) {
+        deletePreferences(context,username)
+        See.log("username deletePref $username")
+    }
+
+    if (token != null) {
+        deletePreferences(context,token)
+        See.log("token deletePref $token")
+    }
+
+    val users = SugarRecord.find(User::class.java, "USERNAME =?",username).firstOrNull()
+    See.log("respon user ${users}")
+    users?.delete()
+
+    val profil = SugarRecord.find(Profile::class.java,"USERNAME=?",username).firstOrNull()
+    See.log("respon profil ${profil}")
+    profil?.delete()
+
+    val intent = Intent(context, SplashScreenActivity::class.java)
+    context.startActivity(intent)
+    (context as Activity).finish()
+
+}
+
 /*Fungsi untuk mengambil screen shoot*/
 fun viewToImage(view: View): Bitmap? {
     val returnedBitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)

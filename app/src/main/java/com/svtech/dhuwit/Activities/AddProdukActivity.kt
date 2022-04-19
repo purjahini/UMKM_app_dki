@@ -7,7 +7,9 @@ import android.os.Bundle
 import android.os.Environment
 import android.view.MotionEvent
 import android.view.View
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.androidnetworking.AndroidNetworking
 import com.androidnetworking.common.Priority
@@ -25,17 +27,13 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.svtech.dhuwit.AdapterOnline.SpinnerAdapterCustom
 import com.svtech.dhuwit.R
 import com.svtech.dhuwit.Utils.*
-
+import com.svtech.dhuwit.modelOnline.ItemOption
 import kotlinx.android.synthetic.main.activity_produk_custome.*
 import org.json.JSONObject
 import java.io.File
-import java.util.*
-import kotlin.collections.ArrayList
-import com.svtech.dhuwit.modelOnline.ItemOption
 
 
 lateinit var adapterSpinnerSatuan: ArrayAdapter<String>
-
 
 
 class AddProdukActivity : AppCompatActivity() {
@@ -47,9 +45,20 @@ class AddProdukActivity : AppCompatActivity() {
     var fileName = ""
     var kategoriId = ""
 
+    var diskon = 0
+    var foto = ""
+    var harga = 0
+
+    var minimal_pembelian = 0
+    var nama = ""
+    var satuan = ""
+    var stok = 0
+    var update = false
+    var produkId = 0
+    val kategori = 0
+
 
     var arrayList: ArrayList<ItemOption> = ArrayList()
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -97,8 +106,6 @@ class AddProdukActivity : AppCompatActivity() {
                             arrayList.add(aItmOpt)
 
 
-
-
 //                        KategoriList.add(kategoriName)
 //                        KategoriListId.add(kategoriId)
 //                        KategoriAdapter = ArrayAdapter(
@@ -116,7 +123,7 @@ class AddProdukActivity : AppCompatActivity() {
                         )
                     }
 
-                  var adapter = SpinnerAdapterCustom(
+                    var adapter = SpinnerAdapterCustom(
                         this@AddProdukActivity,
                         android.R.layout.simple_spinner_dropdown_item,
                         arrayList
@@ -124,11 +131,12 @@ class AddProdukActivity : AppCompatActivity() {
 
 
                     spnKategoriProduk.adapter = adapter
-                    spnKategoriProduk.setSelection(See.getIndex(arrayList,spnKategoriProduk,
-                        kategori.toString()
-                    ))
-
-
+                    spnKategoriProduk.setSelection(
+                        See.getIndex(
+                            arrayList, spnKategoriProduk,
+                            kategori.toString()
+                        )
+                    )
 
 
                 }
@@ -188,6 +196,7 @@ class AddProdukActivity : AppCompatActivity() {
 
         spnSatuan.adapter = adapterSpinnerSatuan
 
+
         btnLoadImage.setOnClickListener {
             /*Membuka galeri*/
 //            pickImage(this, imgFoto,"Produk")
@@ -243,293 +252,16 @@ class AddProdukActivity : AppCompatActivity() {
         }
 
 
-        val diskon = intent.getIntExtra("diskon", 0)
-        val foto = intent.getStringExtra("foto")
-        val harga = intent.getIntExtra("harga", 0)
+        diskon = intent.getIntExtra("diskon", 0)
+        foto = intent.getStringExtra("foto").toString()
+        harga = intent.getIntExtra("harga", 0)
 
-        val minimal_pembelian = intent.getIntExtra("minimal_pembelian", 0)
-        val nama = intent.getStringExtra("nama")
-        val satuan = intent.getStringExtra("satuan")
-        val stok = intent.getIntExtra("stok", 0)
-        val update = intent.getBooleanExtra("update", false)
-        val produkId = intent.getIntExtra("id", 0)
-
-
-
-//        val produk = SugarRecord.findById(Produk::class.java, produkId)
-
-        btnSimpanProduk.setOnClickListener {
-            See.log("button klik simpan")
-            val FilePath: String = "${file}/${fileName}"
-            val NameFile = File(FilePath)
-            val vSpn = spnKategoriProduk.selectedItem.toString()
-            See.log("file upload : ${NameFile}  nilai sPnKt : ${vSpn}")
-
-            AndroidNetworking.upload(MyConstant.Urlprodukcreate)
-                .addHeaders("Authorization", "Bearer$token")
-                .addMultipartFile("foto", NameFile)
-                .addMultipartParameter("diskon", textInputDiskon.editText?.text.toString().trim())
-                .addMultipartParameter(
-                    "harga",
-                    textInputHargaProduk.editText?.text.toString().trim()
-                )
-                .addMultipartParameter("kategori", kategoriId.trim())
-                .addMultipartParameter(
-                    "minimal_pembelian",
-                    textInputMinimalPembelian.editText?.text.toString().trim()
-                )
-                .addMultipartParameter("nama", textInputNamaProduk.editText?.text.toString().trim())
-                .addMultipartParameter("satuan", spnSatuan.selectedItem as String)
-                .addMultipartParameter("stok", textInputStok.editText?.text.toString())
-                .addMultipartParameter("username", username.trim())
-                .setPriority(Priority.MEDIUM)
-                .build()
-                .getAsJSONObject(object : JSONObjectRequestListener {
-                    override fun onResponse(response: JSONObject?) {
-                        val respon = response?.toString()
-                        See.log("respon insert produk : $respon")
-                        val json = JSONObject(respon)
-                        val apiStatus = json.getInt(MyConstant.API_STATUS)
-                        val apiMessage = json.getString(MyConstant.API_MESSAGE)
-                        if (apiStatus.equals(1)) {
-                            progressDialog!!.dismiss()
-
-                            See.toast(this@AddProdukActivity, "Upload produk to Server $apiMessage")
-                            finish()
-                        } else {
-                            progressDialog!!.dismiss()
-                            See.toast(this@AddProdukActivity, "Upload produk to Server $apiMessage")
-
-                        }
-
-                    }
-
-                    override fun onError(anError: ANError?) {
-
-                        progressDialog?.dismiss()
-                        val json = JSONObject(anError?.errorBody)
-                        val apiMessage = json.getString(MyConstant.API_MESSAGE)
-                        if (apiMessage != null) {
-                            if (apiMessage.equals(MyConstant.FORBIDDEN)) {
-                                getToken(this@AddProdukActivity)
-                            }
-                        }
-
-                        See.log("onError getProduk errorCode : ${anError?.errorCode}")
-                        See.log("onError getProduk errorBody : ${anError?.errorBody}")
-                        See.log("onError getProduk errorDetail : ${anError?.errorDetail}")
-                    }
-
-                })
-
-
-            /*Simpan dengan diskon*/
-            if (cbDiskon.isChecked || update) {
-                See.log("CbDiskon isCheck")
-                if (checkInput(textInputNamaProduk) && checkInput(spnKategoriProduk)
-                    && checkInput(textInputHargaProduk) && checkInput(spnSatuan) && checkInput(
-                        textInputDiskon
-                    )
-                    && checkInput(textInputMinimalPembelian) && checkInput(textInputStok)
-                ) {
-
-
-//                    if (cbDiskon.isChecked){
-//                        AndroidNetworking.upload(MyConstant.Urlprodukupdateid)
-//                            .addHeaders("Authorization", "Bearer$token")
-//                            .addMultipartFile("foto", NameFile)
-//                            .addMultipartParameter("id", produkId.toString().trim())
-//                            .addMultipartParameter("diskon", textInputDiskon.editText?.text.toString().trim())
-//                            .addMultipartParameter(
-//                                "harga",
-//                                textInputHargaProduk.editText?.text.toString().trim()
-//                            )
-//                            .addMultipartParameter("kategori", kategoriId.trim())
-//                            .addMultipartParameter(
-//                                "minimal_pembelian",
-//                                textInputMinimalPembelian.editText?.text.toString().trim()
-//                            )
-//                            .addMultipartParameter("nama", textInputNamaProduk.editText?.text.toString().trim())
-//                            .addMultipartParameter("satuan", spnSatuan.selectedItem as String)
-//                            .addMultipartParameter("stok", textInputStok.editText?.text.toString())
-//                            .addMultipartParameter("username", username.trim())
-//                            .setPriority(Priority.MEDIUM)
-//                            .build()
-//                            .getAsJSONObject(object : JSONObjectRequestListener {
-//                                override fun onResponse(response: JSONObject?) {
-//                                    val respon = response?.toString()
-//                                    See.log("respon insert produk : $respon")
-//                                    val json = JSONObject(respon)
-//                                    val apiStatus = json.getInt(MyConstant.API_STATUS)
-//                                    val apiMessage = json.getString(MyConstant.API_MESSAGE)
-//                                    if (apiStatus.equals(1)) {
-//                                        progressDialog!!.dismiss()
-//
-//                                        See.toast(this@AddProdukActivity, "Upload produk to Server $apiMessage")
-//                                        finish()
-//                                    } else {
-//                                        progressDialog!!.dismiss()
-//                                        See.toast(this@AddProdukActivity, "Upload produk to Server $apiMessage")
-//
-//                                    }
-//
-//                                }
-//
-//                                override fun onError(anError: ANError?) {
-//                                    progressDialog?.dismiss()
-//                                    See.log("onError errorCode insertKategori : ${anError?.errorCode}")
-//                                    See.log("onError errorBody insertKategori: ${anError?.errorBody}")
-//                                    See.log("onError errorDetail insertKategori: ${anError?.errorDetail}")
-//                                }
-//
-//                            })
-//
-//                    } else {
-//                        AndroidNetworking.upload(MyConstant.Urlprodukupdateid)
-//                            .addHeaders("Authorization", "Bearer$token")
-//                            .addMultipartFile("foto", NameFile)
-//                            .addMultipartParameter("id", produkId.toString().trim())
-//                            .addMultipartParameter("diskon", textInputDiskon.editText?.text.toString().trim())
-//                            .addMultipartParameter(
-//                                "harga",
-//                                textInputHargaProduk.editText?.text.toString().trim()
-//                            )
-//                            .addMultipartParameter("kategori", kategoriId.trim())
-//                            .addMultipartParameter(
-//                                "minimal_pembelian",
-//                                textInputMinimalPembelian.editText?.text.toString().trim()
-//                            )
-//                            .addMultipartParameter("nama", textInputNamaProduk.editText?.text.toString().trim())
-//                            .addMultipartParameter("satuan", spnSatuan.selectedItem as String)
-//                            .addMultipartParameter("stok", textInputStok.editText?.text.toString())
-//                            .addMultipartParameter("username", username.trim())
-//                            .setPriority(Priority.MEDIUM)
-//                            .build()
-//                            .getAsJSONObject(object : JSONObjectRequestListener {
-//                                override fun onResponse(response: JSONObject?) {
-//                                    val respon = response?.toString()
-//                                    See.log("respon insert produk : $respon")
-//                                    val json = JSONObject(respon)
-//                                    val apiStatus = json.getInt(MyConstant.API_STATUS)
-//                                    val apiMessage = json.getString(MyConstant.API_MESSAGE)
-//                                    if (apiStatus.equals(1)) {
-//                                        progressDialog!!.dismiss()
-//
-//                                        See.toast(this@AddProdukActivity, "Upload produk update to Server $apiMessage")
-//                                        finish()
-//                                    } else {
-//                                        progressDialog!!.dismiss()
-//                                        See.toast(this@AddProdukActivity, "Upload produk update to Server $apiMessage")
-//
-//                                    }
-//
-//                                }
-//
-//                                override fun onError(anError: ANError?) {
-//                                    progressDialog?.dismiss()
-//                                    See.log("onError errorCode insertKategori : ${anError?.errorCode}")
-//                                    See.log("onError errorBody insertKategori: ${anError?.errorBody}")
-//                                    See.log("onError errorDetail insertKategori: ${anError?.errorDetail}")
-//                                }
-//
-//                            })
-//
-//                    }
-
-
-                    See.log("update = ${update} isCheck")
-                        /*Update produk*/
-                        updateProduk(produkId)
-
-
-                        /*Insert produk*/
-//                        insertProduk()
-
-
-//                    Toast.makeText(this, "Produk berhasil disimpan!", Toast.LENGTH_SHORT).show()
-//                    finish()
-                }
-            } else {
-                /*Simpan tanpa diskon*/
-                if (checkInput(textInputNamaProduk) && checkInput(spnKategoriProduk)
-                    && checkInput(textInputHargaProduk) && checkInput(textInputStok) && checkInput(
-                        spnSatuan
-                    )
-                ) {
-
-                    if (cbDiskon.isChecked) {
-                    } else {
-                        /*insert tanpa diskon*/
-
-                        AndroidNetworking.upload(MyConstant.Urlprodukcreate)
-                            .addHeaders("Authorization", "Bearer$token")
-                            .addMultipartFile("foto", NameFile)
-                            .addMultipartParameter("diskon", null)
-                            .addMultipartParameter(
-                                "harga",
-                                textInputHargaProduk.editText?.text.toString().trim()
-                            )
-                            .addMultipartParameter("kategori", kategoriId.trim())
-                            .addMultipartParameter("minimal_pembelian", null)
-                            .addMultipartParameter("nama", textInputNamaProduk.editText?.text.toString().trim())
-                            .addMultipartParameter("satuan", spnSatuan.selectedItem as String)
-                            .addMultipartParameter("stok", textInputStok.editText?.text.toString())
-                            .addMultipartParameter("username", username.trim())
-                            .setPriority(Priority.MEDIUM)
-                            .build()
-                            .getAsJSONObject(object : JSONObjectRequestListener {
-                                override fun onResponse(response: JSONObject?) {
-                                    val respon = response?.toString()
-                                    See.log("respon insert produk : $respon")
-                                    val json = JSONObject(respon)
-                                    val apiStatus = json.getInt(MyConstant.API_STATUS)
-                                    val apiMessage = json.getString(MyConstant.API_MESSAGE)
-                                    if (apiStatus.equals(1)) {
-                                        progressDialog!!.dismiss()
-
-                                        See.toast(this@AddProdukActivity, "Upload produk to Server $apiMessage")
-                                        finish()
-                                    } else {
-                                        progressDialog!!.dismiss()
-                                        See.toast(this@AddProdukActivity, "Upload produk to Server $apiMessage")
-
-                                    }
-
-                                }
-
-                                override fun onError(anError: ANError?) {
-
-                                    progressDialog?.dismiss()
-                                    val json = JSONObject(anError?.errorBody)
-                                    val apiMessage = json.getString(MyConstant.API_MESSAGE)
-                                    if (apiMessage != null) {
-                                        if (apiMessage.equals(MyConstant.FORBIDDEN)) {
-                                            getToken(this@AddProdukActivity)
-                                        }
-                                    }
-
-                                    See.log("onError getProduk errorCode : ${anError?.errorCode}")
-                                    See.log("onError getProduk errorBody : ${anError?.errorBody}")
-                                    See.log("onError getProduk errorDetail : ${anError?.errorDetail}")
-                                }
-
-                            })
-
-
-                    }
-
-
-
-                    /*Insert produk*/
-                        insertProduk()
-                    See.log("insert Produk")
-
-//                    Toast.makeText(this, "Produk berhasil disimpan!", Toast.LENGTH_SHORT).show()
-//                    finish()
-                }
-            }
-
-        }
+        minimal_pembelian = intent.getIntExtra("minimal_pembelian", 0)
+        nama = intent.getStringExtra("nama").toString()
+        satuan = intent.getStringExtra("satuan").toString()
+        stok = intent.getIntExtra("stok", 0)
+        update = intent.getBooleanExtra("update", false)
+        produkId = intent.getIntExtra("id", 0)
 
         if (produkId != 0) {
             Glide.with(this).load(foto).fitCenter()
@@ -538,7 +270,13 @@ class AddProdukActivity : AppCompatActivity() {
             textInputNamaProduk.editText?.setText(nama)
             textInputHargaProduk.editText?.setText(harga?.toInt().toString())
 //            spnKategoriProduk.selectedItem = adapterKategori.getView(kategori)
-            spnKategoriProduk.setSelection(See.getIndex(arrayList,spnKategoriProduk,kategori.toString()))
+            spnKategoriProduk.setSelection(
+                See.getIndex(
+                    arrayList,
+                    spnKategoriProduk,
+                    kategori.toString()
+                )
+            )
             textInputStok.editText?.setText(stok.toString())
             spnSatuan.selection = adapterSpinnerSatuan.getPosition(satuan)
             if (diskon != null) {
@@ -549,19 +287,389 @@ class AddProdukActivity : AppCompatActivity() {
             }
         }
 
-        /*CheckBox Diskon Listener*/
-        cbDiskon.setOnCheckedChangeListener { _, isChecked ->
-            /*Tampilkan diskon input*/
-            if (isChecked) showDiskonInput()
-            /*Sembunyikan diskon input*/
-            else hideDiskonInput()
+        btnSimpanProduk.setOnClickListener {
+            if (update) {
+                updateProdukId()
+            } else {
+                addProdukId()
+            }
+
+//            val FilePath: String = "${file}/${fileName}"
+//            val NameFile = File(FilePath)
+//            val vSpn = spnKategoriProduk.selectedItem.toString()
+//            See.log("file upload : ${NameFile}  nilai sPnKt : ${vSpn}")
+
+
+            /*Simpan dengan diskon*/
+//            if (cbDiskon.isChecked || update) {
+//                See.log("CbDiskon isCheck")
+//                if (checkInput(textInputNamaProduk) && checkInput(spnKategoriProduk)
+//                    && checkInput(textInputHargaProduk) && checkInput(spnSatuan) && checkInput(
+//                        textInputDiskon
+//                    )
+//                    && checkInput(textInputMinimalPembelian) && checkInput(textInputStok)
+//                ) {
+//
+//
+////                    if (cbDiskon.isChecked){
+////                        AndroidNetworking.upload(MyConstant.Urlprodukupdateid)
+////                            .addHeaders("Authorization", "Bearer$token")
+////                            .addMultipartFile("foto", NameFile)
+////                            .addMultipartParameter("id", produkId.toString().trim())
+////                            .addMultipartParameter("diskon", textInputDiskon.editText?.text.toString().trim())
+////                            .addMultipartParameter(
+////                                "harga",
+////                                textInputHargaProduk.editText?.text.toString().trim()
+////                            )
+////                            .addMultipartParameter("kategori", kategoriId.trim())
+////                            .addMultipartParameter(
+////                                "minimal_pembelian",
+////                                textInputMinimalPembelian.editText?.text.toString().trim()
+////                            )
+////                            .addMultipartParameter("nama", textInputNamaProduk.editText?.text.toString().trim())
+////                            .addMultipartParameter("satuan", spnSatuan.selectedItem as String)
+////                            .addMultipartParameter("stok", textInputStok.editText?.text.toString())
+////                            .addMultipartParameter("username", username.trim())
+////                            .setPriority(Priority.MEDIUM)
+////                            .build()
+////                            .getAsJSONObject(object : JSONObjectRequestListener {
+////                                override fun onResponse(response: JSONObject?) {
+////                                    val respon = response?.toString()
+////                                    See.log("respon insert produk : $respon")
+////                                    val json = JSONObject(respon)
+////                                    val apiStatus = json.getInt(MyConstant.API_STATUS)
+////                                    val apiMessage = json.getString(MyConstant.API_MESSAGE)
+////                                    if (apiStatus.equals(1)) {
+////                                        progressDialog!!.dismiss()
+////
+////                                        See.toast(this@AddProdukActivity, "Upload produk to Server $apiMessage")
+////                                        finish()
+////                                    } else {
+////                                        progressDialog!!.dismiss()
+////                                        See.toast(this@AddProdukActivity, "Upload produk to Server $apiMessage")
+////
+////                                    }
+////
+////                                }
+////
+////                                override fun onError(anError: ANError?) {
+////                                    progressDialog?.dismiss()
+////                                    See.log("onError errorCode insertKategori : ${anError?.errorCode}")
+////                                    See.log("onError errorBody insertKategori: ${anError?.errorBody}")
+////                                    See.log("onError errorDetail insertKategori: ${anError?.errorDetail}")
+////                                }
+////
+////                            })
+////
+////                    } else {
+////                        AndroidNetworking.upload(MyConstant.Urlprodukupdateid)
+////                            .addHeaders("Authorization", "Bearer$token")
+////                            .addMultipartFile("foto", NameFile)
+////                            .addMultipartParameter("id", produkId.toString().trim())
+////                            .addMultipartParameter("diskon", textInputDiskon.editText?.text.toString().trim())
+////                            .addMultipartParameter(
+////                                "harga",
+////                                textInputHargaProduk.editText?.text.toString().trim()
+////                            )
+////                            .addMultipartParameter("kategori", kategoriId.trim())
+////                            .addMultipartParameter(
+////                                "minimal_pembelian",
+////                                textInputMinimalPembelian.editText?.text.toString().trim()
+////                            )
+////                            .addMultipartParameter("nama", textInputNamaProduk.editText?.text.toString().trim())
+////                            .addMultipartParameter("satuan", spnSatuan.selectedItem as String)
+////                            .addMultipartParameter("stok", textInputStok.editText?.text.toString())
+////                            .addMultipartParameter("username", username.trim())
+////                            .setPriority(Priority.MEDIUM)
+////                            .build()
+////                            .getAsJSONObject(object : JSONObjectRequestListener {
+////                                override fun onResponse(response: JSONObject?) {
+////                                    val respon = response?.toString()
+////                                    See.log("respon insert produk : $respon")
+////                                    val json = JSONObject(respon)
+////                                    val apiStatus = json.getInt(MyConstant.API_STATUS)
+////                                    val apiMessage = json.getString(MyConstant.API_MESSAGE)
+////                                    if (apiStatus.equals(1)) {
+////                                        progressDialog!!.dismiss()
+////
+////                                        See.toast(this@AddProdukActivity, "Upload produk update to Server $apiMessage")
+////                                        finish()
+////                                    } else {
+////                                        progressDialog!!.dismiss()
+////                                        See.toast(this@AddProdukActivity, "Upload produk update to Server $apiMessage")
+////
+////                                    }
+////
+////                                }
+////
+////                                override fun onError(anError: ANError?) {
+////                                    progressDialog?.dismiss()
+////                                    See.log("onError errorCode insertKategori : ${anError?.errorCode}")
+////                                    See.log("onError errorBody insertKategori: ${anError?.errorBody}")
+////                                    See.log("onError errorDetail insertKategori: ${anError?.errorDetail}")
+////                                }
+////
+////                            })
+////
+////                    }
+//
+//
+//                    See.log("update = ${update} isCheck")
+//                        /*Update produk*/
+//                        updateProduk(produkId)
+//
+//
+//                        /*Insert produk*/
+////                        insertProduk()
+//
+//
+////                    Toast.makeText(this, "Produk berhasil disimpan!", Toast.LENGTH_SHORT).show()
+////                    finish()
+//                }
+//            } else {
+//                /*Simpan tanpa diskon*/
+//                if (checkInput(textInputNamaProduk) && checkInput(spnKategoriProduk)
+//                    && checkInput(textInputHargaProduk) && checkInput(textInputStok) && checkInput(
+//                        spnSatuan
+//                    )
+//                ) {
+//
+//                    if (cbDiskon.isChecked) {
+//                    } else {
+//                        /*insert tanpa diskon*/
+//
+//                        AndroidNetworking.upload(MyConstant.Urlprodukcreate)
+//                            .addHeaders("Authorization", "Bearer$token")
+//                            .addMultipartFile("foto", NameFile)
+//                            .addMultipartParameter("diskon", null)
+//                            .addMultipartParameter(
+//                                "harga",
+//                                textInputHargaProduk.editText?.text.toString().trim()
+//                            )
+//                            .addMultipartParameter("kategori", kategoriId.trim())
+//                            .addMultipartParameter("minimal_pembelian", null)
+//                            .addMultipartParameter("nama", textInputNamaProduk.editText?.text.toString().trim())
+//                            .addMultipartParameter("satuan", spnSatuan.selectedItem as String)
+//                            .addMultipartParameter("stok", textInputStok.editText?.text.toString())
+//                            .addMultipartParameter("username", username.trim())
+//                            .setPriority(Priority.MEDIUM)
+//                            .build()
+//                            .getAsJSONObject(object : JSONObjectRequestListener {
+//                                override fun onResponse(response: JSONObject?) {
+//                                    val respon = response?.toString()
+//                                    See.log("respon insert produk : $respon")
+//                                    val json = JSONObject(respon)
+//                                    val apiStatus = json.getInt(MyConstant.API_STATUS)
+//                                    val apiMessage = json.getString(MyConstant.API_MESSAGE)
+//                                    if (apiStatus.equals(1)) {
+//                                        progressDialog!!.dismiss()
+//
+//                                        See.toast(this@AddProdukActivity, "Upload produk to Server $apiMessage")
+//                                        finish()
+//                                    } else {
+//                                        progressDialog!!.dismiss()
+//                                        See.toast(this@AddProdukActivity, "Upload produk to Server $apiMessage")
+//
+//                                    }
+//
+//                                }
+//
+//                                override fun onError(anError: ANError?) {
+//
+//                                    progressDialog?.dismiss()
+//                                    val json = JSONObject(anError?.errorBody)
+//                                    val apiMessage = json.getString(MyConstant.API_MESSAGE)
+//                                    if (apiMessage != null) {
+//                                        if (apiMessage.equals(MyConstant.FORBIDDEN)) {
+//                                            getToken(this@AddProdukActivity)
+//                                        }
+//                                    }
+//
+//                                    See.log("onError getProduk errorCode : ${anError?.errorCode}")
+//                                    See.log("onError getProduk errorBody : ${anError?.errorBody}")
+//                                    See.log("onError getProduk errorDetail : ${anError?.errorDetail}")
+//                                }
+//
+//                            })
+//
+//
+//                    }
+//
+//
+//
+//                    /*Insert produk*/
+//                        insertProduk()
+//                    See.log("insert Produk")
+//
+////                    Toast.makeText(this, "Produk berhasil disimpan!", Toast.LENGTH_SHORT).show()
+////                    finish()
+//                }
+//            }
+//
+//        }
+
+//        if (produkId != 0) {
+//            Glide.with(this).load(foto).fitCenter()
+//                .placeholder(R.drawable.logo)
+//                .into(imgFoto)
+//            textInputNamaProduk.editText?.setText(nama)
+//            textInputHargaProduk.editText?.setText(harga?.toInt().toString())
+////            spnKategoriProduk.selectedItem = adapterKategori.getView(kategori)
+//            spnKategoriProduk.setSelection(See.getIndex(arrayList,spnKategoriProduk,kategori.toString()))
+//            textInputStok.editText?.setText(stok.toString())
+//            spnSatuan.selection = adapterSpinnerSatuan.getPosition(satuan)
+//            if (diskon != null) {
+//                showDiskonInput()
+//                cbDiskon.isChecked = true
+//                textInputDiskon.editText?.setText(diskon.toString())
+//                textInputMinimalPembelian.editText?.setText(minimal_pembelian.toString())
+//            }
+//        }
+//
+//        /*CheckBox Diskon Listener*/
+//        cbDiskon.setOnCheckedChangeListener { _, isChecked ->
+//            /*Tampilkan diskon input*/
+//            if (isChecked) showDiskonInput()
+//            /*Sembunyikan diskon input*/
+//            else hideDiskonInput()
         }
     }
 
+    private fun addProdukId() {
+        val FilePath: String = "${file}/${fileName}"
+        val NameFile = File(FilePath)
+        val vSpn = spnKategoriProduk.selectedItem.toString()
+        See.log("file upload : ${NameFile}  nilai sPnKt : ${vSpn}")
+        val diskon = textInputDiskon.editText?.text.toString().trim()
+        val minimal_pembelian = textInputMinimalPembelian.editText?.text.toString().trim()
+
+        progressDialog?.show()
+        AndroidNetworking.upload(MyConstant.Urlprodukcreate)
+            .addHeaders("Authorization", "Bearer$token")
+            .addMultipartFile("foto", if (fileName.isNullOrEmpty()) null else NameFile)
+            .addMultipartParameter("diskon", if (diskon.isNullOrEmpty()) 0.toString() else diskon)
+            .addMultipartParameter(
+                "harga",
+                textInputHargaProduk.editText?.text.toString().trim()
+            )
+            .addMultipartParameter("kategori", kategoriId.trim())
+            .addMultipartParameter(
+                "minimal_pembelian",
+                if (minimal_pembelian.isNullOrEmpty()) 0.toString() else minimal_pembelian
+            )
+
+            .addMultipartParameter("nama", textInputNamaProduk.editText?.text.toString().trim())
+            .addMultipartParameter("satuan", spnSatuan.selectedItem as String)
+            .addMultipartParameter("stok", textInputStok.editText?.text.toString())
+            .addMultipartParameter("username", username.trim())
+            .setPriority(Priority.MEDIUM)
+            .build()
+            .getAsJSONObject(object : JSONObjectRequestListener {
+                override fun onResponse(response: JSONObject?) {
+                    val respon = response?.toString()
+                    See.log("respon insert produk : $respon")
+                    val json = JSONObject(respon)
+                    val apiStatus = json.getInt(MyConstant.API_STATUS)
+                    val apiMessage = json.getString(MyConstant.API_MESSAGE)
+                    if (apiStatus.equals(1)) {
+                        progressDialog!!.dismiss()
+
+                        See.toast(this@AddProdukActivity, "Upload produk to Server $apiMessage")
+                        finish()
+                    } else {
+                        progressDialog!!.dismiss()
+                        See.toast(this@AddProdukActivity, "Upload produk to Server $apiMessage")
+
+                    }
+
+                }
+
+                override fun onError(anError: ANError?) {
+
+                    progressDialog?.dismiss()
+                    val json = JSONObject(anError?.errorBody)
+                    val apiMessage = json.getString(MyConstant.API_MESSAGE)
+                    if (apiMessage != null) {
+                        if (apiMessage.equals(MyConstant.FORBIDDEN)) {
+                            getToken(this@AddProdukActivity)
+                        }
+                    }
+
+                    See.log("onError getProduk errorCode : ${anError?.errorCode}")
+                    See.log("onError getProduk errorBody : ${anError?.errorBody}")
+                    See.log("onError getProduk errorDetail : ${anError?.errorDetail}")
+                }
+
+            })
+
+    }
+
+    private fun updateProdukId() {
+        val FilePath: String = "${file}/${fileName}"
+        val NameFile = File(FilePath)
+        val vSpn = spnKategoriProduk.selectedItem.toString()
+        See.log("file upload : ${NameFile}  nilai sPnKt : ${vSpn}")
+//        val diskon = textInputDiskon.editText?.text.toString().trim()
+//        val minimal_pembelian =  textInputMinimalPembelian.editText?.text.toString().trim()
+        progressDialog?.show()
+        AndroidNetworking.upload(MyConstant.Urlprodukupdateid)
+            .addHeaders(MyConstant.AUTHORIZATION, MyConstant.BEARER + token)
+            .addMultipartParameter(MyConstant.ID, produkId.toString())
+            .addMultipartParameter(
+                MyConstant.DISKON,
+                if (diskon == 0) 0.toString() else textInputDiskon.editText?.text.toString()
+            )
+            .addMultipartFile(MyConstant.FOTO, if (fileName.isNullOrEmpty()) null else NameFile)
+            .addMultipartParameter(MyConstant.HARGA, textInputHargaProduk.editText?.text.toString())
+            .addMultipartParameter(MyConstant.KATEGORI,kategoriId)
+            .addMultipartParameter(MyConstant.MINIMAL_PEMBELIAN, if (minimal_pembelian == 0) 0.toString() else textInputMinimalPembelian.editText?.text.toString())
+            .addMultipartParameter(MyConstant.NAMA, textInputNamaProduk.editText?.text.toString())
+            .addMultipartParameter(MyConstant.SATUAN,  spnSatuan.selectedItem as String)
+            .addMultipartParameter(MyConstant.STOK, textInputStok.editText?.text.toString())
+            .addMultipartParameter(MyConstant.USERNAME, username)
+            .setPriority(Priority.MEDIUM)
+            .build()
+            .getAsJSONObject(object : JSONObjectRequestListener{
+                override fun onResponse(response: JSONObject?) {
+                    val respon = response.toString()
+                    See.log("response update produk $respon")
+                    val json = JSONObject(respon)
+                    val apiMessage = json.getString(MyConstant.API_MESSAGE)
+                    val apiStatus = json.getInt(MyConstant.API_STATUS)
+                    if (apiStatus.equals(1)){
+                        progressDialog?.dismiss()
+                        See.toast(this@AddProdukActivity, "Upload produk to Server $apiMessage")
+                        finish()
+                    }
+                    else {
+                        See.toast(this@AddProdukActivity, "Upload produk to Server $apiMessage")
+                    }
+
+                }
+
+                override fun onError(anError: ANError?) {
+                    progressDialog?.dismiss()
+                    val json = JSONObject(anError?.errorBody)
+                    val apiMessage = json.getString(MyConstant.API_MESSAGE)
+                    if (apiMessage != null) {
+                        if (apiMessage.equals(MyConstant.FORBIDDEN)) {
+                            getToken(this@AddProdukActivity)
+                        }
+                    }
+
+                    See.log("onError update errorCode : ${anError?.errorCode}")
+                    See.log("onError update errorBody : ${anError?.errorBody}")
+                    See.log("onError update errorDetail : ${anError?.errorDetail}")
+
+                }
+
+            })
+
+
+    }
 
 
     fun insertProduk(): Boolean {
-
 
 
         /*insert dengan diskon*/
@@ -581,8 +689,6 @@ class AddProdukActivity : AppCompatActivity() {
 
 
     fun updateProduk(produkId: Int): Boolean {
-
-
 
 
 //
@@ -628,7 +734,6 @@ class AddProdukActivity : AppCompatActivity() {
 //        stok.save()
         return true
     }
-
 
 
     fun showDiskonInput() {

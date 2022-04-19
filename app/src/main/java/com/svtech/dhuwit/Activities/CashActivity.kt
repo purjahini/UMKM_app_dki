@@ -1,6 +1,5 @@
 package com.svtech.dhuwit.Activities
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ProgressDialog
 import android.bluetooth.BluetoothAdapter
@@ -25,14 +24,14 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.gson.Gson
 import com.orm.SugarRecord
 import com.pattra.pattracardsdk.*
-import com.pattra.pattracardsdk.PattraCardConfig.ConfigCallback
 import com.pattra.pattracardsdk.Service.SyncService
 import com.svtech.dhuwit.Models.ItemTransaksi
 import com.svtech.dhuwit.Models.Profile
 import com.svtech.dhuwit.Models.Transaksi
 import com.svtech.dhuwit.R
 import com.svtech.dhuwit.Utils.*
-import com.svtech.dhuwit.modelOnline.ResponseConfig
+import com.svtech.dhuwit.modelOnline.ProdukOnline
+import com.svtech.dhuwit.modelOnline.ResponseId
 import kotlinx.android.synthetic.main.activity_cash.*
 import kotlinx.android.synthetic.main.sheet_config.view.*
 import org.json.JSONObject
@@ -61,9 +60,17 @@ class CashActivity : AppCompatActivity() {
     var saldoawal = 0
     var saldoakhir = 0
     var tid = ""
+    var invoice = ""
+
+    var now = Calendar.getInstance()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cash)
+        val currentYear: Int = now.get(Calendar.YEAR)
+        val currentMonth: Int = now.get(Calendar.MONTH) + 1
+        val currentDay: Int = now.get(Calendar.DAY_OF_MONTH)
+        val currentMill:Int = now.get(Calendar.MILLISECOND)
+        invoice = "INV$currentYear$currentMonth$currentDay$currentMill"
 
         /*Setting toolbar*/
         setToolbar(this, "Transaksi CashCard")
@@ -258,7 +265,10 @@ class CashActivity : AppCompatActivity() {
 
     private fun UploadToServer() {
 
-            val transaksi =
+
+
+
+        val transaksi =
                 SugarRecord.find(Transaksi::class.java, "status = ?", "1").firstOrNull()
             if (transaksi != null) {
                 transaksi.status = false
@@ -271,8 +281,13 @@ class CashActivity : AppCompatActivity() {
                     .addBodyParameter("diskon",transaksi?.diskon?.toInt().toString().trim())
                     .addBodyParameter("nama_pembeli",transaksi?.namaPembeli.toString().trim() )
                     .addBodyParameter("status",0.toString().trim() )
-                    .addBodyParameter("tanggal_transaksi",transaksi?.tanggalTrasaksi.toString().trim() )
                     .addBodyParameter("total_pembayaran",transaksi?.totalPembayaran?.toInt().toString().trim() )
+                    .addBodyParameter("invoice",invoice)
+                    .addBodyParameter("bank",bank)
+                    .addBodyParameter("nokartu", nokartu)
+                    .addBodyParameter("saldoawal", saldoawal.toString())
+                    .addBodyParameter("saldoakhir", saldoakhir.toString())
+                    .addBodyParameter("tid", tid)
                     .addBodyParameter("username", username.trim())
                     .setPriority(Priority.MEDIUM)
                     .build()
@@ -285,6 +300,13 @@ class CashActivity : AppCompatActivity() {
                             val apiMessage = json.getString(MyConstant.API_MESSAGE)
                             if (apiStatus.equals(1)) {
                                 progressDialog!!.dismiss()
+
+                                val data = Gson().fromJson(respon, ResponseId::class.java).data
+
+                                val itemTransaksi =
+
+
+
 
 
 
@@ -413,6 +435,8 @@ class CashActivity : AppCompatActivity() {
                 printer.printText(profile.alamatToko!!, BluetoothPrinterUtils.ALIGN_CENTER)
                 printer.printNewLine()
                 printer.printText(transaksi?.tanggalTrasaksi!!, BluetoothPrinterUtils.ALIGN_RIGHT)
+                printer.printText(invoice,BluetoothPrinterUtils.ALIGN_RIGHT)
+                printer.printText("Kasir : $username", BluetoothPrinterUtils.ALIGN_LEFT)
                 printer.printLine()
 //                val item = java.lang.String.format(
 //                    "%1$-12s %2$-12s %3$-5s %4$-12s",
@@ -438,7 +462,7 @@ class CashActivity : AppCompatActivity() {
                 }
                 printer.printLine()
                 var str = java.lang.String.format(
-                    "%1$-10s %2$-12s %3$-18s",
+                    "%1$-10s %2$-10s %3$-20s",
                     " ",
                     "Total",
                     numberToCurrency(transaksi.totalPembayaran!!)

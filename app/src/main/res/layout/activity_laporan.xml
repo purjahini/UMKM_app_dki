@@ -22,7 +22,7 @@
         android:drawableLeft="@drawable/ic_laporan"
         android:drawableRight="@drawable/ic_arrow_forward"
         android:drawableTint="@color/white"
-        android:text="@string/lap_todays"
+        android:text="@string/lap_rekap_jual"
         android:textAlignment="textStart"
         android:textAllCaps="false"
         android:visibility="visible" />
@@ -42,7 +42,7 @@
         android:drawableLeft="@drawable/ic_laporan"
         android:drawableRight="@drawable/ic_arrow_forward"
         android:drawableTint="@color/white"
-        android:text="@string/lap_detail"
+        android:text="@string/lap_rekap_detail"
         android:textAlignment="textStart"
         android:textAllCaps="false"
         android:visibility="visible" />

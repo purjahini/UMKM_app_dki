@@ -33,7 +33,8 @@ class StrukActivity : AppCompatActivity() {
         username =
             com.svtech.dhuwit.Utils.getPreferences(this).getString(MyConstant.CURRENT_USER, "")
                 .toString()
-        See.log("token Kategori : $token")
+        tvNamaKasir.text = "Kasir : $username"
+        See.log("token struk : $token")
         progressDialog = ProgressDialog(this)
         progressDialog!!.setTitle("Proses")
         progressDialog!!.setMessage("Mohon Menunggu...")

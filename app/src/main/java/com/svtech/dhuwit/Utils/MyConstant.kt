@@ -17,6 +17,7 @@ object MyConstant{
     const val AUTHORIZATION ="Authorization"
     const val DATE_FROM = "from"
     const val DATE_TO = "to"
+    const val STATUSPARAM = "status"
 
     const val TOKEN = "token"
     const val BEARER = "Bearer"
@@ -35,7 +36,22 @@ object MyConstant{
     const val  PASSWORD= "password"
     const val ROLE = "role"
     const val ID = "id"
+    const val DISKON = "diskon"
+    const val HARGA = "harga"
+    const val MINIMAL_PEMBELIAN = "minimal_pembelian"
+    const val SATUAN = "satuan"
+    const val STOK = "stok"
+    const val diskon_produk = "diskon_produk"
+    const val foto_produk = "foto_produk"
+    const val harga_produk = "harga_produk"
+    const val JUMLAH = "jumlah"
+    const val nama_produk = "nama_produk"
+    const val stok_produk = "stok_produk"
+    const val produk_id = "produk_id"
+
     const val FOTO = "foto"
+
+
 
     const val urlToko = "$url/tokoregister"
     const val urlUser = "$url/userregister"
@@ -65,6 +81,9 @@ object MyConstant{
     const val Urltransaksigetstatus = "$url/transaksigetstatus"
     const val Urltransaksiinput = "$url/transaksiinput"
     const val Urltransaksipertanggal = "$url/transaksipertanggal"
+    const val Urltransaksistatus= "$url/transaksistatus"
+    const val Urltransaksicreatestatus= "$url/transaksicreatestatus"
+    const val Urltransaksiupdateid= "$url/transaksiupdateid"
 
     const val Urllaporandetail = "$url/laporandetail"
     const val Urllaporantodaydetail = "$url/laporantodaydetail"
@@ -74,6 +93,7 @@ object MyConstant{
 
     const val Urlitemtransaksidataidproduk = "$url/itemtransaksidataidproduk"
     const val Urlitem_transaksi_produk_transaksi = "$url/item_transaksi_produk_transaksi"
+    const val Urlitem_transaksi_insert_produk_id = "$url/item_transaksi_insert_produk_id"
 
 
 

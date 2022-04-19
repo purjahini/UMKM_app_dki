@@ -62,7 +62,7 @@ class LaporanHarianActivity : AppCompatActivity() {
         progressDialog!!.setProgressStyle(ProgressDialog.STYLE_SPINNER)
         progressDialog!!.setCancelable(false)
         progressDialog!!.isIndeterminate = true
-        setToolbar(this, "Laporan Penjualan Harian")
+        setToolbar(this, getString(R.string.lap_rekap_jual))
 
         TvReset.setOnClickListener {
             TvTanggalTo.text = ""

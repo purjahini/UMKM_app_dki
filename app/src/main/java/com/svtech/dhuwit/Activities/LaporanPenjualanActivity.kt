@@ -35,7 +35,7 @@ class LaporanPenjualanActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail_laporan_harian)
-        setToolbar(this, "Laporan Penjualan Detail")
+        setToolbar(this, getString(R.string.lap_rekap_detail))
 
         token =
             com.svtech.dhuwit.Utils.getPreferences(this).getString(MyConstant.TOKEN, "").toString()
@@ -49,7 +49,6 @@ class LaporanPenjualanActivity : AppCompatActivity() {
         progressDialog!!.setProgressStyle(ProgressDialog.STYLE_SPINNER)
         progressDialog!!.setCancelable(false)
         progressDialog!!.isIndeterminate = true
-        setToolbar(this, "Laporan Penjualan Detail")
 
         TvReset.setOnClickListener {
             TvTanggalTo.text = ""

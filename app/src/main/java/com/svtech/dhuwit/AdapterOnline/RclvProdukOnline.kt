@@ -25,12 +25,10 @@ import com.svtech.dhuwit.Activities.MenuPembelianActivity
 import com.svtech.dhuwit.Models.ItemTransaksi
 import com.svtech.dhuwit.Models.Transaksi
 import com.svtech.dhuwit.R
-import com.svtech.dhuwit.Utils.MyConstant
-import com.svtech.dhuwit.Utils.See
-import com.svtech.dhuwit.Utils.getPreferences
-import com.svtech.dhuwit.Utils.numberToCurrency
+import com.svtech.dhuwit.Utils.*
 import com.svtech.dhuwit.modelOnline.ItemTransaksiOnline
 import com.svtech.dhuwit.modelOnline.ProdukOnline
+import com.svtech.dhuwit.modelOnline.ResponseId
 import kotlinx.android.synthetic.main.activity_menu_pembelian.*
 import kotlinx.android.synthetic.main.layout_item_produk.view.*
 import kotlinx.android.synthetic.main.layout_total_order.view.*
@@ -47,9 +45,10 @@ class RclvProdukOnline :
     var username = ""
     var TransaksiId = ""
     var ProdukId = ""
+    var transaksiIds = 0
     lateinit var listProduk: MutableList<ProdukOnline.Data?>
 
-    //    lateinit var itemTransaksi: MutableList<ItemTransaksiOnline.Data?>
+    lateinit var itemTransaksi: MutableList<ItemTransaksiOnline.Data?>
     val order: Boolean
     lateinit var saveListProduk: MutableList<ProdukOnline.Data?>
 
@@ -80,6 +79,7 @@ class RclvProdukOnline :
         fun bind(produk: ProdukOnline.Data?, context: Context) {
             if (produk != null) {
                 Glide.with(context).load(produk.foto).fitCenter()
+                    .placeholder(R.drawable.logo)
                     .into(itemView.imgFoto)
                 itemView.tvNamaProduk.text = produk.nama
                 itemView.tvKategori.text = produk.kategori_nama
@@ -111,98 +111,114 @@ class RclvProdukOnline :
             holder.bind(produk, context)
             holder.itemView.setOnClickListener {
                 if (order) {
+
                     /*return jika stok habis*/
                     if (produk?.stok == 0) {
-                        Toast.makeText(context, "Maaf.. Stok Produk Habis", Toast.LENGTH_SHORT).show()
+
+                        Toast.makeText(context, "Maaf.. Stok Produk Habis ${produk?.stok}", Toast.LENGTH_SHORT).show()
+
                         return@setOnClickListener
                     }
-//                    AndroidNetworking.post(MyConstant.Urltransaksigetstatus)
-//                        .addHeaders(MyConstant.AUTHORIZATION, MyConstant.BEARER+token)
-//                        .addBodyParameter(MyConstant.STATUSPARAM, "1")
-//                        .addBodyParameter(MyConstant.USERNAME, username)
-//                        .setPriority(Priority.HIGH)
-//                        .build()
-//                        .getAsJSONObject(object : JSONObjectRequestListener {
-//                            override fun onResponse(response: JSONObject?) {
-//                                progressDialog?.dismiss()
-//                                if (response != null) {
-//                                    val respon = response?.toString()
-//                                    See.log("respon getDataTransaksiStatus: \n $respon")
-//                                    val json = JSONObject(respon)
-//                                    val apiStatus = json.getInt(MyConstant.API_STATUS)
-//                                    if (apiStatus.equals(1)) {
-//                                        val data = Gson().fromJson(respon, ProdukOnline::class.java)
-//                                        val listProdukRespon = data.data
-//                                        if (listProdukRespon != null) {
-//                                            listProduk = listProdukRespon
-//                                            listProdukRespon?.map {
-//                                                TransaksiId = it?.id.toString()
-//                                            }
-//                                        }
-//
-//                                    }
-//
-//                                }
-//                            }
-//
-//                            override fun onError(anError: ANError?) {
-//                                progressDialog?.dismiss()
-//                            }
-//
-//                        })
 
-//                    AndroidNetworking.post(MyConstant.Urlitemtransaksidataidproduk)
-//                        .addHeaders(MyConstant.AUTHORIZATION, "Bearer${token}")
-//                        .addBodyParameter(MyConstant.ID_TRANSAKSI, TransaksiId)
-//                        .addBodyParameter(MyConstant.PRODUK_ID, ProdukId)
-//                        .addBodyParameter(MyConstant.USERNAME, username)
-//                        .setPriority(Priority.HIGH)
-//                        .build()
-//                        .getAsJSONObject(object : JSONObjectRequestListener {
-//                            override fun onResponse(response: JSONObject?) {
-//                                progressDialog?.dismiss()
-//                                if (response != null) {
-//                                    val respon = response?.toString()
-//                                    See.log("respon getDataTransaksiStatus: \n $respon")
-//                                    val json = JSONObject(respon)
-//                                    val apiStatus = json.getInt(MyConstant.API_STATUS)
-//                                    val apiMessage = json.getString(MyConstant.API_MESSAGE)
-//                                    if (apiStatus.equals(1)) {
-//                                        val data =
-//                                            Gson().fromJson(respon, ItemTransaksiOnline::class.java)
-//                                        val listItemTransaksiOnlineRespon = data.data
-//                                        if (listItemTransaksiOnlineRespon != null) {
-//
-////                                        itemTransaksi = listItemTransaksiOnlineRespon
-//
-//                                        }
-//
-//                                    } else {
-//                                        if (apiMessage.equals(MyConstant.FORBIDDEN)) {
-//
-//
-//                                        }
-//                                        See.toast(context, apiMessage)
-//                                    }
-//
-//                                }
-//                            }
-//
-//                            override fun onError(anError: ANError?) {
-//                                progressDialog?.dismiss()
-//                            }
-//
-//                        })
+                    AndroidNetworking.post(MyConstant.Urltransaksigetstatus)
+                        .addHeaders(MyConstant.AUTHORIZATION, MyConstant.BEARER+token)
+                        .addBodyParameter(MyConstant.STATUSPARAM, "1")
+                        .addBodyParameter(MyConstant.USERNAME, username)
+                        .setPriority(Priority.HIGH)
+                        .build()
+                        .getAsJSONObject(object : JSONObjectRequestListener {
+                            override fun onResponse(response: JSONObject?) {
+                                progressDialog?.dismiss()
+                                if (response != null) {
+                                    val respon = response?.toString()
+                                    See.log("respon getDataTransaksiStatus: \n $respon")
+                                    val json = JSONObject(respon)
+                                    val apiStatus = json.getInt(MyConstant.API_STATUS)
+                                    if (apiStatus.equals(1)) {
+                                        val data = Gson().fromJson(respon, ProdukOnline::class.java)
+                                        val listProdukRespon = data.data
+                                        if (listProdukRespon != null) {
+                                            listProduk = listProdukRespon
+                                            listProdukRespon?.map {
+                                                TransaksiId = it?.id.toString()
+                                            }
+                                        }
+
+                                    }
+
+                                }
+                            }
+
+                            override fun onError(anError: ANError?) {
+                                progressDialog?.dismiss()
+                                val json = JSONObject(anError?.errorBody)
+                                val apiMessage = json.getString(MyConstant.API_MESSAGE)
+                                if (apiMessage != null) {
+                                    if (apiMessage.equals(MyConstant.FORBIDDEN)) {
+                                        getTokenContext(context)
+                                    }
+                                }
+
+                                See.log("onError getProduk errorCode : ${anError?.errorCode}")
+                            }
+
+                        })
+
+                    AndroidNetworking.post(MyConstant.Urlitemtransaksidataidproduk)
+                        .addHeaders(MyConstant.AUTHORIZATION, "Bearer${token}")
+                        .addBodyParameter(MyConstant.ID_TRANSAKSI, TransaksiId)
+                        .addBodyParameter(MyConstant.ID, produk?.id.toString())
+                        .addBodyParameter(MyConstant.USERNAME, username)
+                        .setPriority(Priority.HIGH)
+                        .build()
+                        .getAsJSONObject(object : JSONObjectRequestListener {
+                            override fun onResponse(response: JSONObject?) {
+                                progressDialog?.dismiss()
+                                if (response != null) {
+                                    val respon = response?.toString()
+                                    See.log("respon getDataTransaksiStatus: \n $respon")
+                                    val json = JSONObject(respon)
+                                    val apiStatus = json.getInt(MyConstant.API_STATUS)
+                                    val apiMessage = json.getString(MyConstant.API_MESSAGE)
+                                    if (apiStatus.equals(1)) {
+                                        val data =
+                                            Gson().fromJson(respon, ItemTransaksiOnline::class.java)
+                                        val listItemTransaksiOnlineRespon = data.data
+                                        if (listItemTransaksiOnlineRespon != null) {
+                                            listItemTransaksiOnlineRespon.forEach {
+                                                itemTransaksi = it as MutableList<ItemTransaksiOnline.Data?>
+
+                                            }
 
 
-                    val transaksi =
-                        SugarRecord.find(Transaksi::class.java, "status = ?", "1").firstOrNull()
-                    val itemTransaksi = SugarRecord.find(
-                        ItemTransaksi::class.java,
-                        "produk_id = ? and id_transaksi = ?",
-                        produk.id.toString(),
-                        transaksi?.id.toString()
-                    ).firstOrNull()
+
+                                        }
+
+                                    } else {
+                                        if (apiMessage.equals(MyConstant.FORBIDDEN)) {
+
+
+                                        }
+                                        See.toast(context, apiMessage)
+                                    }
+
+                                }
+                            }
+
+                            override fun onError(anError: ANError?) {
+                                progressDialog?.dismiss()
+                                val json = JSONObject(anError?.errorBody)
+                                val apiMessage = json.getString(MyConstant.API_MESSAGE)
+                                if (apiMessage != null) {
+                                    if (apiMessage.equals(MyConstant.FORBIDDEN)) {
+                                        getTokenContext(context)
+                                    }
+                                }
+
+                                See.log("onError getProduk errorCode : ${anError?.errorCode}")
+                            }
+
+                        })
 
 
                     val activity = context as MenuPembelianActivity
@@ -215,136 +231,136 @@ class RclvProdukOnline :
                         .setView(view)
                         .setNegativeButton("Batal") { dialogInterface, _ -> dialogInterface.dismiss() }
                         .setPositiveButton("Tambah") { _, _ ->
-                            /*Cek apakah sudah mencapai stok maksimum*/
 
-                            if (itemTransaksi != null){
-                                if (view.tvJumlah.text.toString().toInt() < produk.stok!!) {
+                            /*Cek apakah sudah mencapai stok maksimum*/
+                            if (itemTransaksi != null) {
+                                itemTransaksi.map {
+                                if (  it?.jumlah!!.plus(view.tvJumlah.text.toString().toInt()) > produk.stok!! ) {
                                     Toast.makeText(
                                         context,
-                                        "Maaf..Penjualan Sudah melebihi Stok.",
+                                        "Pembelian telah mencapai batas maksimum !!!",
                                         Toast.LENGTH_LONG
                                     )
                                         .show()
                                     return@setPositiveButton
                                 }
+                                }
+
                             }
 
 
-                            if (transaksi == null) {
-                                val transaksi = Transaksi(
-                                    status = true,
-                                    tanggalTrasaksi = SimpleDateFormat("dd/MM/yyyy hh:mm:ss").format(
-                                        Date().time
-                                    )
-                                )
-                                transaksi.save()
-                                val item = ItemTransaksi(
-                                    jumlah = view.tvJumlah.text.toString().toInt(),
-                                    namaProduk = produk.nama,
-                                    hargaProduk = produk.harga?.toDouble(),
-                                    fotoProduk = produk.foto,
-                                    kategori = produk.kategori_nama,
-                                    minimalPembelianProduk = produk.minimal_pembelian,
-                                    diskonProduk = produk.diskon?.toDouble(),
-                                    stokProduk = produk.stok,
-                                    satuan = produk.satuan,
-                                    produkId = produk.id?.toLong(),
-                                    idTransaksi = transaksi.id
-                                )
-                                item.save()
-                                transaksi.totalPembayaran = item.jumlah!! * item.hargaProduk!!
-                                /*jika ada diskon*/
-                                if (item.minimalPembelianProduk != null && item.jumlah!! >= item.minimalPembelianProduk!!) {
-                                    transaksi.diskon =
-                                        (item.jumlah!! * item.hargaProduk!!) * (item.diskonProduk!! / 100)
-                                    transaksi.totalPembayaran =
-                                        transaksi.totalPembayaran?.minus(transaksi.diskon!!)
-                                }
-                                transaksi.save()
-                            } else {
-                                /*Tambah item yang sudah ada di keranjang*/
-                                if (itemTransaksi != null) {
-                                    val tempJumlah = itemTransaksi.jumlah;
-                                    val jumlahItemTambahan = view.tvJumlah.text.toString().toInt()
-                                    itemTransaksi.jumlah =
-                                        itemTransaksi.jumlah?.plus(jumlahItemTambahan)
-                                    itemTransaksi.save()
-                                    transaksi?.totalPembayaran =
-                                        transaksi?.totalPembayaran?.plus(
-                                            (jumlahItemTambahan * itemTransaksi.hargaProduk!!)
-                                        )
-//                                    /*jika ada diskon*/
-                                    if (itemTransaksi.minimalPembelianProduk != null && itemTransaksi.jumlah!! >= itemTransaksi.minimalPembelianProduk!!) {
-                                        /*jika item sebelumnya sudah di diskon*/
-                                        if (tempJumlah!! >= itemTransaksi.minimalPembelianProduk!!) {
-                                            val diskonTambahan =
-                                                (jumlahItemTambahan * itemTransaksi.hargaProduk!!) * (itemTransaksi.diskonProduk!! / 100)
-                                            transaksi?.diskon =
-                                                transaksi?.diskon?.plus(diskonTambahan)
-                                            transaksi?.totalPembayaran =
-                                                transaksi?.totalPembayaran?.minus(diskonTambahan)
-                                        } else {
-                                            val diskon =
-                                                (itemTransaksi.jumlah!! * itemTransaksi.hargaProduk!!) * (itemTransaksi.diskonProduk!! / 100)
-                                            transaksi?.diskon = transaksi?.diskon?.plus(diskon)
-                                            transaksi?.totalPembayaran =
-                                                transaksi?.totalPembayaran?.minus(diskon)
+                            if (listProduk == null) {
+//                                val transaksi = Transaksi(
+//                                    status = true,
+//                                    tanggalTrasaksi = SimpleDateFormat("dd/MM/yyyy hh:mm:ss").format(
+//                                        Date().time
+//                                    )
+//                                )
+//                                transaksi.save()
+                                progressDialog?.show()
+                                AndroidNetworking.post(MyConstant.Urltransaksicreatestatus)
+                                    .addHeaders(MyConstant.AUTHORIZATION, MyConstant.BEARER+token)
+                                    .addBodyParameter(MyConstant.STATUS, "1")
+                                    .addBodyParameter(MyConstant.USERNAME,username )
+                                    .setPriority(Priority.MEDIUM)
+                                    .build()
+                                    .getAsJSONObject(object : JSONObjectRequestListener{
+                                        override fun onResponse(response: JSONObject?) {
+                                           progressDialog?.dismiss()
+                                            val data = Gson().fromJson(response.toString(), ResponseId::class.java)
+                                          transaksiIds = data.data.id
+
                                         }
 
-                                    }
-                                    transaksi?.save()
-                                }
-                                else {
-                                    val item = ItemTransaksi(
-                                        jumlah = view.tvJumlah.text.toString().toInt(),
-                                        idTransaksi = transaksi?.id,
-                                        namaProduk = produk.nama,
-                                        hargaProduk = produk.harga?.toDouble(),
-                                        fotoProduk = produk.foto,
-                                        minimalPembelianProduk = produk.minimal_pembelian,
-                                        diskonProduk = produk.diskon?.toDouble(),
-                                        stokProduk = produk.stok,
-                                        satuan = produk.satuan,
-                                        produkId = produk.id?.toLong(),
-                                        kategori = produk.kategori_nama
-                                    )
-                                    item.save()
-                                    transaksi?.totalPembayaran =
-                                        transaksi?.totalPembayaran?.plus((item.jumlah!! * item.hargaProduk!!))
-                                    /*jika ada diskon*/
-                                    if (item.minimalPembelianProduk != null && item.jumlah!! >= item.minimalPembelianProduk!!) {
-                                        transaksi?.diskon =
-                                            transaksi?.diskon?.plus((item.jumlah!! * item.hargaProduk!!) * (item.diskonProduk!! / 100))
-                                        transaksi?.totalPembayaran =
-                                            transaksi?.totalPembayaran?.minus(transaksi.diskon!!)
-                                    }
-                                    transaksi?.save()
-                                }
+                                        override fun onError(anError: ANError?) {
+                                             progressDialog?.dismiss()
+                                            val json = JSONObject(anError?.errorBody)
+                                            val apiMessage = json.getString(MyConstant.API_MESSAGE)
+                                            if (apiMessage != null) {
+                                                if (apiMessage.equals(MyConstant.FORBIDDEN)) {
+                                                    getToken(activity)
+                                                }
+                                            }
+
+                                            See.log("onError getProduk errorCode : ${anError?.errorCode}")
+                                        }
+
+                                    })
+
+                                AndroidNetworking.post(MyConstant.Urlitem_transaksi_insert_produk_id)
+                                    .addHeaders(MyConstant.AUTHORIZATION, MyConstant.BEARER+token)
+                                    .addBodyParameter(MyConstant.diskon_produk, produk.diskon.toString())
+                                    .addBodyParameter(MyConstant.harga_produk, produk.harga.toString())
+                                    .addBodyParameter(MyConstant.ID_TRANSAKSI, transaksiIds.toString())
+                                    .addBodyParameter(MyConstant.JUMLAH, view.tvJumlah.text.toString().toInt().toString())
+                                    .addBodyParameter(MyConstant.KATEGORI, produk.kategori.toString())
+                                    .addBodyParameter(MyConstant.MINIMAL_PEMBELIAN, produk.minimal_pembelian.toString())
+                                    .addBodyParameter(MyConstant.nama_produk, produk.nama)
+                                    .addBodyParameter(MyConstant.SATUAN, produk.satuan)
+                                    .addBodyParameter(MyConstant.stok_produk, produk.stok.toString())
+                                    .addBodyParameter(MyConstant.produk_id, produk.id.toString())
+                                    .addBodyParameter(MyConstant.USERNAME, username)
+                                    .setPriority(Priority.MEDIUM)
+                                    .build()
+                                    .getAsJSONObject(object :JSONObjectRequestListener{
+                                        override fun onResponse(response: JSONObject?) {
+                                            val respon = response.toString()
+                                            See.log("Respon insert item $respon")
+                                            val json= JSONObject(respon)
+                                            val apiStatusItem = json.getInt(MyConstant.API_STATUS)
+                                            val apiMessageItem = json.getString(MyConstant.API_MESSAGE)
+                                            if (apiStatusItem.equals(1)) {
+                                                val data = Gson().fromJson(respon, ResponseId::class.java)
+                                                val list = data.data.id
+                                            }
+
+                                        }
+
+                                        override fun onError(anError: ANError?) {
+
+                                            progressDialog?.dismiss()
+                                            val json = JSONObject(anError?.errorBody)
+                                            val apiMessage = json.getString(MyConstant.API_MESSAGE)
+                                            if (apiMessage != null) {
+                                                if (apiMessage.equals(MyConstant.FORBIDDEN)) {
+                                                    getToken(activity)
+                                                }
+                                            }
+
+                                            See.log("onError getProduk errorCode : ${anError?.errorCode}")
+                                        }
+
+                                    })
+
 
                             }
                             activity.setBadgeKeranjang()
                         }.show()
 
                     view.btnPlus.setOnClickListener {
-                        val jumlahDiKeranjang =
-                            if (itemTransaksi == null) 0 else itemTransaksi.jumlah
-                        val jumlahTambahan = view.tvJumlah.text.toString().toInt()
-                        val jumlahTotal = jumlahDiKeranjang?.plus(jumlahTambahan)
+                        itemTransaksi.forEach {
+                            val jumlahDiKeranjang =
+                                if (itemTransaksi == null) 0 else it?.jumlah
+                            val jumlahTambahan = view.tvJumlah.text.toString().toInt()
+                            val jumlahTotal = jumlahDiKeranjang?.plus(jumlahDiKeranjang)
 
-                        Log.d("jumlah", jumlahTotal.toString())
+                            Log.d("jumlah", jumlahTotal.toString())
 
-                        /*Cek apakah sudah mencapai stok maksimum*/
-                        if (jumlahTotal!! < produk.stok!!) {
-                            view.tvJumlah.text =
-                                (view.tvJumlah.text.toString().toInt() + 1).toString()
-                        } else {
-                            Toast.makeText(
-                                context,
-                                "Pembelian telah mencapai batas maksimum !!!",
-                                Toast.LENGTH_LONG
-                            )
-                                .show()
+                            /*Cek apakah sudah mencapai stok maksimum*/
+                            if (jumlahTotal!! < produk.stok!!) {
+                                view.tvJumlah.text =
+                                    (view.tvJumlah.text.toString().toInt() + 1).toString()
+                            } else {
+                                Toast.makeText(
+                                    context,
+                                    "Pembelian telah mencapai batas maksimum !!!",
+                                    Toast.LENGTH_LONG
+                                )
+                                    .show()
+                            }
                         }
+
+
                     }
                     view.btnMinus.setOnClickListener {
                         if (view.tvJumlah.text.toString().toInt() != 1) {

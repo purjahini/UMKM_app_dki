@@ -75,7 +75,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/_16sdp"
                 android:layout_marginStart="@dimen/_16sdp"
-                android:text="nama kasir : 123456"
+                android:text="nama kasir :"
                 android:textSize="@dimen/_12sdp" />
 
             <TextView

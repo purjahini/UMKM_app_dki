@@ -33,8 +33,8 @@
     <string name="labelto">To</string>
     <string name="label_reset">Reset</string>
     <string name="labelsubmit">Submit</string>
-    <string name="lap_todays">Laporan Penjualan Harian</string>
-    <string name="lap_detail">Laporan Detail</string>
+    <string name="lap_rekap_jual">Laporan Rekap Penjualan</string>
+    <string name="lap_rekap_detail">Laporan Detail Penjualan</string>
     <string name="lap_stoks">Laporan Stok</string>
     <string name="lap_detail_invoice">Detail</string>
 </resources>

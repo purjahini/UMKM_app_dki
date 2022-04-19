@@ -10,6 +10,7 @@ import com.androidnetworking.AndroidNetworking
 import com.androidnetworking.common.Priority
 import com.androidnetworking.error.ANError
 import com.androidnetworking.interfaces.JSONObjectRequestListener
+import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import com.svtech.dhuwit.Models.Produk
 import com.svtech.dhuwit.Models.Profile
@@ -31,6 +32,9 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+        Glide.with(this)
+            .load(R.drawable.logo1)
+            .into(ImgLogoLogin)
         AndroidNetworking.initialize(applicationContext)
 
         token = com.svtech.dhuwit.Utils.getPreferences(this).getString(MyConstant.TOKEN, "")!!

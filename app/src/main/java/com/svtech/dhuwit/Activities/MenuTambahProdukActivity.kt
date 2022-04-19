@@ -247,7 +247,6 @@ class MenuTambahProdukActivity : AppCompatActivity() {
 
     fun setToRecyclerView(): Boolean {
 
-//        val listProduk = SugarRecord.listAll(Produk::class.java)
         progressDialog?.show()
         AndroidNetworking.post(MyConstant.Urlproduklistdata)
             .addHeaders("Authorization", "Bearer${token}")
