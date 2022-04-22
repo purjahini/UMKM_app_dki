@@ -27,14 +27,11 @@ import com.orm.SugarRecord
 import com.svtech.dhuwit.Models.*
 import com.svtech.dhuwit.R
 import com.svtech.dhuwit.Utils.*
-import kotlinx.android.synthetic.main.activity_add_kategori.*
 import kotlinx.android.synthetic.main.activity_checkout.*
 import kotlinx.android.synthetic.main.layout_table_row.view.*
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.io.IOException
-import java.text.DateFormat
-import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
 

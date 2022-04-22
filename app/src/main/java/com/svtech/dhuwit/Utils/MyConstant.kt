@@ -23,6 +23,7 @@ object MyConstant{
     const val BEARER = "Bearer"
 
     const val FORBIDDEN = "Forbidden Access!"
+    const val SUCCESS = "success"
     const val TIME = "time"
     const val url = "http://203.210.87.95:8014/umkm_core/public/api"
 
@@ -75,6 +76,7 @@ object MyConstant{
 
     const val Urlprodukhapusid= "$url/produkhapusid"
     const val Urlproduklistdata = "$url/produklistdata"
+    const val Urlproduk_list_data_id_transaksi = "$url/produk_list_data_id_transaksi"
     const val Urlprodukcreate = "$url/produkcreate"
     const val Urlprodukupdateid = "$url/produkupdateid"
 

@@ -82,10 +82,10 @@
 
         <meta-data
             android:name="DATABASE"
-            android:value="db_cafe.db" />
+            android:value="umkm_app.db" />
         <meta-data
             android:name="VERSION"
-            android:value="4" />
+            android:value="1" />
         <meta-data
             android:name="QUERY_LOG"
             android:value="false" />

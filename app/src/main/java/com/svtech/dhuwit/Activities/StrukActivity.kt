@@ -33,7 +33,8 @@ class StrukActivity : AppCompatActivity() {
         username =
             com.svtech.dhuwit.Utils.getPreferences(this).getString(MyConstant.CURRENT_USER, "")
                 .toString()
-        tvNamaKasir.text = "Kasir : $username"
+        val nama = com.svtech.dhuwit.Utils.getPreferences(this).getString(MyConstant.NAMA, "").toString()
+        tvNamaKasir.text = "Kasir : $nama"
         See.log("token struk : $token")
         progressDialog = ProgressDialog(this)
         progressDialog!!.setTitle("Proses")
@@ -76,7 +77,7 @@ class StrukActivity : AppCompatActivity() {
                             tvNamaCafe.text = it.nama_toko
                                 tvInvoice.text = it.invoice
                             tvAlamatCafe.text = it.alamat_toko
-                            tvTanggal.text = it.tanggal_transaksi
+                            tvTanggal.text = it.created_at
                             tvBank.text = it.bank
                             tvNoBank.text = it.nokartu
                                 val saldoAwal = if (it.saldoawal.isNullOrEmpty()) 0 else it.saldoawal

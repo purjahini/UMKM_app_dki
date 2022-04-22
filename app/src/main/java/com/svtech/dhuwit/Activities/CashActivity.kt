@@ -30,8 +30,9 @@ import com.svtech.dhuwit.Models.Profile
 import com.svtech.dhuwit.Models.Transaksi
 import com.svtech.dhuwit.R
 import com.svtech.dhuwit.Utils.*
-import com.svtech.dhuwit.modelOnline.ProdukOnline
+import com.svtech.dhuwit.modelOnline.ItemTransaksiJsonOnline
 import com.svtech.dhuwit.modelOnline.ResponseId
+import com.svtech.dhuwit.modelOnline.item_transaksi_get_id_transaksi
 import kotlinx.android.synthetic.main.activity_cash.*
 import kotlinx.android.synthetic.main.sheet_config.view.*
 import org.json.JSONObject
@@ -53,7 +54,8 @@ class CashActivity : AppCompatActivity() {
     var token = ""
     var username = ""
     var progressDialog : ProgressDialog? = null
-    var amount = ""
+    var amount = 0.0
+    var total = 0
     var message = ""
     var bank = ""
     var nokartu = ""
@@ -61,6 +63,9 @@ class CashActivity : AppCompatActivity() {
     var saldoakhir = 0
     var tid = ""
     var invoice = ""
+    var nama = ""
+
+    var id_transaksi = 0
 
     var now = Calendar.getInstance()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,6 +76,10 @@ class CashActivity : AppCompatActivity() {
         val currentDay: Int = now.get(Calendar.DAY_OF_MONTH)
         val currentMill:Int = now.get(Calendar.MILLISECOND)
         invoice = "INV$currentYear$currentMonth$currentDay$currentMill"
+        amount = intent.getDoubleExtra("Total", 0.0)
+        See.log("total amount ${amount.toInt()}")
+        total = amount.toInt()
+
 
         /*Setting toolbar*/
         setToolbar(this, "Transaksi CashCard")
@@ -86,6 +95,9 @@ class CashActivity : AppCompatActivity() {
 
         token = com.svtech.dhuwit.Utils.getPreferences(this).getString(MyConstant.TOKEN, "").toString()
         username = com.svtech.dhuwit.Utils.getPreferences(this).getString(MyConstant.CURRENT_USER, "").toString()
+        nama = com.svtech.dhuwit.Utils.getPreferences(this).getString(MyConstant.NAMA,"").toString()
+
+
 
         btnConnectBluetooth.setOnClickListener {
             if (btnConnectBluetooth.text.equals("Connect")) {
@@ -118,11 +130,12 @@ class CashActivity : AppCompatActivity() {
 
         }
 
+
         val myIntent = Intent(this, SyncService::class.java)
         startService(myIntent)
 
 //        amount = intent.getStringExtra("Total").toString()
-        balance_pay_total.text = "1"
+        balance_pay_total.text = "$total"
 
         val manager = getSystemService(NFC_SERVICE) as NfcManager
         val nfcAdapter = manager.defaultAdapter
@@ -242,7 +255,12 @@ class CashActivity : AppCompatActivity() {
             }
 
             override fun onPingSuccess() {
-                btn_pay.setEnabled(true)
+                if (btnConnectBluetooth.text.equals("Disconnect")){
+                    btn_pay.setEnabled(true)
+                } else {
+                    See.toast(this@CashActivity, "Mohon Connectkan Printer..")
+                }
+
             }
 
             override fun onLoading(loadingDialog: LoadingDialog) {
@@ -255,7 +273,7 @@ class CashActivity : AppCompatActivity() {
         }
         pattraCardSDK = PattraCardSDK(this, cardCallback, "203.210.87.98", "didik")
         btn_pay.setOnClickListener {
-            pattraCardSDK!!.startPurchase(1, "", "android test", false)
+            pattraCardSDK!!.startPurchase(total, invoice, username, false)
 
 //            UploadToServer()
         }
@@ -264,9 +282,6 @@ class CashActivity : AppCompatActivity() {
     }
 
     private fun UploadToServer() {
-
-
-
 
         val transaksi =
                 SugarRecord.find(Transaksi::class.java, "status = ?", "1").firstOrNull()
@@ -303,12 +318,8 @@ class CashActivity : AppCompatActivity() {
 
                                 val data = Gson().fromJson(respon, ResponseId::class.java).data
 
-                                val itemTransaksi =
 
-
-
-
-
+                                UploadItemTranksaksi(transaksi.id,data.id)
 
                                 See.toast(this@CashActivity, "Upload Trx to Server $apiMessage")
                             } else {
@@ -346,6 +357,115 @@ class CashActivity : AppCompatActivity() {
 
     }
 
+    private fun UploadItemTranksaksi(id: Long?,id_transaksi: Int?) {
+        val itemTransaksi =
+            SugarRecord.find(ItemTransaksi::class.java, "id_transaksi = ?", "${id}")
+        var arrayList: ArrayList<ItemTransaksiJsonOnline> = ArrayList()
+            itemTransaksi.forEach {
+                arrayList.add(
+                    ItemTransaksiJsonOnline(it.diskonProduk?.toInt(),
+                    it.fotoProduk,
+                    it.hargaProduk?.toInt(),
+                    id_transaksi,
+                    it.jumlah,
+                    it.minimalPembelianProduk,
+                    it.namaProduk,
+                    it.produkId?.toInt(),
+                    it.satuan,
+                    it.stokProduk,
+                    username
+                )
+                )
+
+        }
+
+        val json = Gson().toJson(arrayList)
+        See.log("data json $json")
+
+        AndroidNetworking.post(MyConstant.url+"/item_transaksi_produk_transaksi_insert")
+            .addHeaders(MyConstant.AUTHORIZATION, MyConstant.BEARER+token)
+            .addBodyParameter("data_produk",json)
+            .setPriority(Priority.MEDIUM)
+            .build()
+            .getAsJSONObject(object : JSONObjectRequestListener{
+                override fun onResponse(response: JSONObject?) {
+                    val apiStatus = response?.getInt(MyConstant.API_STATUS)
+                    val apiMessage = response?.getString(MyConstant.API_MESSAGE)
+                    if (apiStatus!!.equals(0)) {
+                        See.toast(this@CashActivity, apiMessage!!)
+
+                        UpdateProdukStok(id_transaksi)
+
+
+                    }
+                }
+
+                override fun onError(anError: ANError?) {
+
+                    progressDialog?.dismiss()
+                    val json = JSONObject(anError?.errorBody)
+                    val apiMessage = json.getString(MyConstant.API_MESSAGE)
+                    if (apiMessage != null) {
+                        if (apiMessage.equals(MyConstant.FORBIDDEN)) {
+                            getToken(this@CashActivity)
+                        }
+                    }
+
+                    See.log("onError keranjang errorCode : ${anError?.errorCode}")
+                }
+
+            })
+
+
+
+    }
+
+    private fun UpdateProdukStok(id_transaksi: Int?) {
+        progressDialog?.show()
+
+        AndroidNetworking.post(MyConstant.url+"/item_transaksi_get_id_transaksi")
+            .addHeaders(MyConstant.AUTHORIZATION, MyConstant.BEARER+token)
+            .addBodyParameter(MyConstant.ID_TRANSAKSI, id_transaksi.toString())
+            .addBodyParameter(MyConstant.USERNAME, username)
+            .setPriority(Priority.MEDIUM)
+            .build()
+            .getAsJSONObject(object : JSONObjectRequestListener{
+
+                override fun onResponse(response: JSONObject?) {
+                    progressDialog?.dismiss()
+                  val respon = response.toString()
+                    See.log("respon item id $id_transaksi : respon")
+                    val json = JSONObject(respon)
+                    val apiStatus = json.getInt(MyConstant.API_STATUS)
+                    val apiMessage = json.getString(MyConstant.API_MESSAGE)
+                    if (apiStatus.equals(1)) {
+                     See.toast(this@CashActivity, apiMessage)
+                    }
+                    else {
+                        See.toast(this@CashActivity, apiMessage)
+                    }
+
+                }
+
+                override fun onError(anError: ANError?) {
+
+                    progressDialog?.dismiss()
+                    val json = JSONObject(anError?.errorBody)
+                    val apiMessage = json.getString(MyConstant.API_MESSAGE)
+                    if (apiMessage != null) {
+                        if (apiMessage.equals(MyConstant.FORBIDDEN)) {
+                            getToken(this@CashActivity)
+                        }
+                    }
+
+                    See.log("onError keranjang errorCode : ${anError?.errorCode}")
+                }
+
+            })
+
+    }
+
+
     private fun checkPairedDevice() {
         if (mBluetoothAdapter == null) Toast.makeText(
             this,
@@ -379,7 +499,7 @@ class CashActivity : AppCompatActivity() {
                             e.printStackTrace()
                             closeSocket(mBluetoothSocket)
                         } finally {
-                            Thread.sleep(7000)
+                            Thread.sleep(3000)
                             if (!mBluetoothSocket.isConnected) {
                                 mBluetoothConnectProgressDialog.dismiss()
                                 runOnUiThread {
@@ -436,7 +556,7 @@ class CashActivity : AppCompatActivity() {
                 printer.printNewLine()
                 printer.printText(transaksi?.tanggalTrasaksi!!, BluetoothPrinterUtils.ALIGN_RIGHT)
                 printer.printText(invoice,BluetoothPrinterUtils.ALIGN_RIGHT)
-                printer.printText("Kasir : $username", BluetoothPrinterUtils.ALIGN_LEFT)
+                printer.printText("Kasir : $nama", BluetoothPrinterUtils.ALIGN_LEFT)
                 printer.printLine()
 //                val item = java.lang.String.format(
 //                    "%1$-12s %2$-12s %3$-5s %4$-12s",
@@ -505,7 +625,7 @@ class CashActivity : AppCompatActivity() {
                 printer.printString(str, BluetoothPrinterUtils.ALIGN_RIGHT)
 
                 printer.printNewLines(2)
-                printer.printText(transaksi.namaPembeli!!, BluetoothPrinterUtils.ALIGN_CENTER)
+//                printer.printText(transaksi.namaPembeli!!, BluetoothPrinterUtils.ALIGN_CENTER)
                 printer.printText("Terimakasih Sudah Berbelanja", BluetoothPrinterUtils.ALIGN_CENTER)
                 printer.printNewLines(3)
 
@@ -516,12 +636,7 @@ class CashActivity : AppCompatActivity() {
             }
         }.start()
 
-
-
-
     }
-
-
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

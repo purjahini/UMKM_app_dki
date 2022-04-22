@@ -94,6 +94,7 @@ class LoginActivity : AppCompatActivity() {
 
                             if (list != null) {
                                 usernameToko = list.username.toString()
+                                savePreferences(this@LoginActivity,MyConstant.NAMA, list.nama.toString())
                                 User(
                                     id = list.id,
                                     nama = list.nama,
