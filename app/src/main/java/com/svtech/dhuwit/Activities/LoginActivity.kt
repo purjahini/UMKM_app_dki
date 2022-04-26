@@ -10,6 +10,7 @@ import com.androidnetworking.AndroidNetworking
 import com.androidnetworking.common.Priority
 import com.androidnetworking.error.ANError
 import com.androidnetworking.interfaces.JSONObjectRequestListener
+import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import com.svtech.dhuwit.Models.Produk
 import com.svtech.dhuwit.Models.Profile
@@ -26,10 +27,14 @@ import org.json.JSONObject
 class LoginActivity : AppCompatActivity() {
     var progressDialog: ProgressDialog? = null
     var token = ""
+    var usernameToko = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+        Glide.with(this)
+            .load(R.drawable.logo1)
+            .into(ImgLogoLogin)
         AndroidNetworking.initialize(applicationContext)
 
         token = com.svtech.dhuwit.Utils.getPreferences(this).getString(MyConstant.TOKEN, "")!!
@@ -41,6 +46,12 @@ class LoginActivity : AppCompatActivity() {
         progressDialog!!.setProgressStyle(ProgressDialog.STYLE_SPINNER)
         progressDialog!!.setCancelable(false)
         progressDialog!!.isIndeterminate = true
+
+        btnRegisDevice.setOnClickListener {
+            val intent = Intent(this, RegisterDeviceActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            startActivity(intent)
+        }
 
         TvToRegister.setOnClickListener {
             val intent = Intent(this, RegisterActivity::class.java)
@@ -63,7 +74,7 @@ class LoginActivity : AppCompatActivity() {
             val password = textInputPassword.editText?.text.toString().trim()
             AndroidNetworking.post(MyConstant.UrlLoginUser)
                 .addHeaders("Authorization", "Bearer${token}")
-                .addBodyParameter("username", username)
+                .addBodyParameter("kontak", username)
                 .addBodyParameter("password", password)
                 .setPriority(Priority.HIGH)
                 .build()
@@ -80,7 +91,10 @@ class LoginActivity : AppCompatActivity() {
                             val data = Gson().fromJson(respon, UserOnline::class.java)
                             val list = data.data
 
+
                             if (list != null) {
+                                usernameToko = list.username.toString()
+                                savePreferences(this@LoginActivity,MyConstant.NAMA, list.nama.toString())
                                 User(
                                     id = list.id,
                                     nama = list.nama,
@@ -89,31 +103,36 @@ class LoginActivity : AppCompatActivity() {
                                 ).save()
                                 See.log("respon user : ${list.nama}, ${list.username} , ${list.role}")
                             }
+
                             getLoginToko()
 
 
                         } else {
                             progressDialog?.dismiss()
                             Toast.makeText(
-                                applicationContext,
+                                this@LoginActivity,
                                 apiMessage,
                                 Toast.LENGTH_SHORT
                             ).show()
 
-                            See.log("api status 0 : " + respon.toString())
+                            See.log("api status 0 : " + apiMessage)
                         }
                     }
 
                     override fun onError(anError: ANError?) {
+
                         progressDialog?.dismiss()
-                        Toast.makeText(
-                            applicationContext,
-                            anError?.errorCode!!,
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        See.log("anError btnMasuk errorCode : ${anError?.errorCode}")
-                        See.log("anError btnMasuk errorBody : ${anError?.errorBody}")
-                        See.log("anError btnMasuk errorDetail : ${anError?.errorDetail}")
+                        val json = JSONObject(anError?.errorBody)
+                        val apiMessage = json.getString(MyConstant.API_MESSAGE)
+                        if (apiMessage != null) {
+                            if (apiMessage.equals(MyConstant.FORBIDDEN)) {
+                                getToken(this@LoginActivity)
+                            }
+                        }
+
+                        See.log("onError getProduk errorCode : ${anError?.errorCode}")
+                        See.log("onError getProduk errorBody : ${anError?.errorBody}")
+                        See.log("onError getProduk errorDetail : ${anError?.errorDetail}")
                     }
 
                 })
@@ -126,11 +145,9 @@ class LoginActivity : AppCompatActivity() {
     private fun getLoginToko() {
         progressDialog?.show()
         if (checkInputUsername(textInputUsername) && checkInputPassword(textInputPassword)) {
-            val username = textInputUsername.editText?.text.toString().trim()
-
             AndroidNetworking.post(MyConstant.UrlLoginToko)
                 .addHeaders("Authorization", "Bearer${token}")
-                .addBodyParameter("username", username)
+                .addBodyParameter("username", usernameToko)
                 .setPriority(Priority.HIGH)
                 .build()
                 .getAsJSONObject(object : JSONObjectRequestListener {
@@ -153,19 +170,26 @@ class LoginActivity : AppCompatActivity() {
                                     namaToko = list.nama_toko,
                                     USERNAME = list.username
                                 ).save()
-                                savePreferences(applicationContext, MyConstant.CURRENT_USER, username)
-                                startActivity(Intent(applicationContext, DashboardActivity::class.java))
+                                savePreferences(
+                                    applicationContext,
+                                    MyConstant.CURRENT_USER,
+                                    usernameToko
+                                )
+                                startActivity(
+                                    Intent(
+                                        applicationContext,
+                                        DashboardActivity::class.java
+                                    )
+                                )
                                 finish()
 //                                InsertProduks()
                             }
 
 
-
-
                         } else {
                             progressDialog?.dismiss()
                             Toast.makeText(
-                                applicationContext,
+                                this@LoginActivity,
                                 "Login gagal user / password salah!",
                                 Toast.LENGTH_SHORT
                             ).show()
@@ -175,9 +199,21 @@ class LoginActivity : AppCompatActivity() {
                     }
 
                     override fun onError(anError: ANError?) {
+
                         progressDialog?.dismiss()
-                        See.log("aanError getLoginToko : ${anError?.errorCode}, ${anError?.errorBody}, ${anError?.errorDetail}")
+                        val json = JSONObject(anError?.errorBody)
+                        val apiMessage = json.getString(MyConstant.API_MESSAGE)
+                        if (apiMessage != null) {
+                            if (apiMessage.equals(MyConstant.FORBIDDEN)) {
+                                getToken(this@LoginActivity)
+                            }
+                        }
+
+                        See.log("onError getProduk errorCode : ${anError?.errorCode}")
+                        See.log("onError getProduk errorBody : ${anError?.errorBody}")
+                        See.log("onError getProduk errorDetail : ${anError?.errorDetail}")
                     }
+
 
                 })
 

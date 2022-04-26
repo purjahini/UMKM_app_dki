@@ -55,6 +55,7 @@
                 android:includeFontPadding="false"
                 android:insetLeft="0dp"
                 android:insetTop="0dp"
+                android:visibility="invisible"
                 android:insetRight="0dp"
                 android:insetBottom="0dp"
                 android:paddingLeft="8dp"

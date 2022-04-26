@@ -16,19 +16,35 @@
 
     <application xmlns:tools="http://schemas.android.com/tools"
         android:name="com.orm.SugarApp"
-        android:allowBackup="true"
         android:extractNativeLibs="true"
+        android:hardwareAccelerated="true"
         android:icon="@drawable/logo"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
-        android:usesCleartextTraffic="true"
         android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true"
         tools:replace="android:icon">
         <activity
-            android:name=".Activities.CashActivity"
+            android:name=".Activities.StrukActivity"
             android:exported="false" />
+        <activity
+            android:name=".Activities.RegisterDeviceActivity"
+            android:exported="false"
+            android:label="Status Device" />
+        <activity android:name=".Activities.CashActivity">
+            <intent-filter>
+                <action android:name="android.nfc.action.TAG_DISCOVERED" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.nfc.action.TECH_DISCOVERED"
+                android:resource="@xml/nfc_tech_filter" />
+        </activity>
         <activity android:name=".Activities.RegisterActivity" />
         <activity
             android:name=".MainActivity"
@@ -37,7 +53,7 @@
         <activity android:name=".Activities.DetailLaporanHarianActivity" />
         <activity android:name=".Activities.LaporanHarianActivity" />
         <activity android:name=".Activities.LaporanActivity" />
-        <activity android:name=".Activities.LaporanStokActivity" />
+        <activity android:name=".Activities.LaporanStokActivity"/>
 
         <meta-data
             android:name="com.google.android.actions"
@@ -66,10 +82,10 @@
 
         <meta-data
             android:name="DATABASE"
-            android:value="db_cafe.db" />
+            android:value="umkm_app.db" />
         <meta-data
             android:name="VERSION"
-            android:value="4" />
+            android:value="1" />
         <meta-data
             android:name="QUERY_LOG"
             android:value="false" />
@@ -88,13 +104,11 @@
         <activity android:name=".Activities.DashboardActivity" />
 
         <service android:name="org.eclipse.paho.android.service.MqttService" />
-
         <service
             android:name="com.pattra.pattracardsdk.Service.SyncService"
             android:enabled="true"
             android:exported="true"
             android:stopWithTask="false" />
-
     </application>
 
 </manifest>

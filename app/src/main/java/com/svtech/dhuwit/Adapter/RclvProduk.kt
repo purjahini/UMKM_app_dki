@@ -3,7 +3,6 @@ package com.svtech.dhuwit.Adapter
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
-import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View

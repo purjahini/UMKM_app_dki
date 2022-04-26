@@ -23,6 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Cash"
+        android:visibility="gone"
         android:textAlignment="textStart"
         app:icon="@drawable/ic_baseline_money_24" />
 
@@ -31,8 +32,9 @@
         style="@style/Widget.MaterialComponents.Button.Icon"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Cashless"
+        android:text="CashCard"
         android:textAlignment="textStart"
+        android:textAllCaps="false"
         app:icon="@drawable/ic_baseline_credit_card_24" />
 
 

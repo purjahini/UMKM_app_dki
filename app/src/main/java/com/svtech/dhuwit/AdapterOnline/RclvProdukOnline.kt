@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
 import android.widget.Toast
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.androidnetworking.AndroidNetworking
 import com.androidnetworking.common.Priority
@@ -18,7 +17,6 @@ import com.androidnetworking.error.ANError
 import com.androidnetworking.interfaces.JSONObjectRequestListener
 import com.bumptech.glide.Glide
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.gson.Gson
 import com.orm.SugarRecord
 import com.svtech.dhuwit.Activities.AddProdukActivity
 import com.svtech.dhuwit.Activities.MenuPembelianActivity
@@ -29,9 +27,7 @@ import com.svtech.dhuwit.Utils.MyConstant
 import com.svtech.dhuwit.Utils.See
 import com.svtech.dhuwit.Utils.getPreferences
 import com.svtech.dhuwit.Utils.numberToCurrency
-import com.svtech.dhuwit.modelOnline.ItemTransaksiOnline
 import com.svtech.dhuwit.modelOnline.ProdukOnline
-import kotlinx.android.synthetic.main.activity_menu_pembelian.*
 import kotlinx.android.synthetic.main.layout_item_produk.view.*
 import kotlinx.android.synthetic.main.layout_total_order.view.*
 import org.json.JSONObject
@@ -80,6 +76,7 @@ class RclvProdukOnline :
         fun bind(produk: ProdukOnline.Data?, context: Context) {
             if (produk != null) {
                 Glide.with(context).load(produk.foto).fitCenter()
+                    .placeholder(R.drawable.logo)
                     .into(itemView.imgFoto)
                 itemView.tvNamaProduk.text = produk.nama
                 itemView.tvKategori.text = produk.kategori_nama
@@ -111,6 +108,7 @@ class RclvProdukOnline :
             holder.bind(produk, context)
             holder.itemView.setOnClickListener {
                 if (order) {
+
                     /*return jika stok habis*/
                     if (produk?.stok == 0) {
                         Toast.makeText(context, "Maaf.. Stok Produk Habis", Toast.LENGTH_SHORT).show()
@@ -215,10 +213,10 @@ class RclvProdukOnline :
                         .setView(view)
                         .setNegativeButton("Batal") { dialogInterface, _ -> dialogInterface.dismiss() }
                         .setPositiveButton("Tambah") { _, _ ->
-                            /*Cek apakah sudah mencapai stok maksimum*/
 
-                            if (itemTransaksi != null){
-                                if (view.tvJumlah.text.toString().toInt() < produk.stok!!) {
+                            /*Cek apakah sudah mencapai stok maksimum*/
+                            if (itemTransaksi != null) {
+                                if (produk.stok!! < view.tvJumlah.text.toString().toInt()) {
                                     Toast.makeText(
                                         context,
                                         "Maaf..Penjualan Sudah melebihi Stok.",
@@ -227,7 +225,7 @@ class RclvProdukOnline :
                                         .show()
                                     return@setPositiveButton
                                 }
-                            }
+                                }
 
 
                             if (transaksi == null) {
@@ -249,7 +247,9 @@ class RclvProdukOnline :
                                     stokProduk = produk.stok,
                                     satuan = produk.satuan,
                                     produkId = produk.id?.toLong(),
-                                    idTransaksi = transaksi.id
+                                    idTransaksi = transaksi.id,
+
+
                                 )
                                 item.save()
                                 transaksi.totalPembayaran = item.jumlah!! * item.hargaProduk!!
@@ -259,7 +259,7 @@ class RclvProdukOnline :
                                         (item.jumlah!! * item.hargaProduk!!) * (item.diskonProduk!! / 100)
                                     transaksi.totalPembayaran =
                                         transaksi.totalPembayaran?.minus(transaksi.diskon!!)
-                                }
+                                        }
                                 transaksi.save()
                             } else {
                                 /*Tambah item yang sudah ada di keranjang*/
@@ -289,11 +289,11 @@ class RclvProdukOnline :
                                             transaksi?.diskon = transaksi?.diskon?.plus(diskon)
                                             transaksi?.totalPembayaran =
                                                 transaksi?.totalPembayaran?.minus(diskon)
-                                        }
+                                            }
 
-                                    }
+                                        }
                                     transaksi?.save()
-                                }
+                                            }
                                 else {
                                     val item = ItemTransaksi(
                                         jumlah = view.tvJumlah.text.toString().toInt(),
@@ -306,7 +306,8 @@ class RclvProdukOnline :
                                         stokProduk = produk.stok,
                                         satuan = produk.satuan,
                                         produkId = produk.id?.toLong(),
-                                        kategori = produk.kategori_nama
+                                        kategori = produk.kategori_nama,
+
                                     )
                                     item.save()
                                     transaksi?.totalPembayaran =
@@ -317,35 +318,35 @@ class RclvProdukOnline :
                                             transaksi?.diskon?.plus((item.jumlah!! * item.hargaProduk!!) * (item.diskonProduk!! / 100))
                                         transaksi?.totalPembayaran =
                                             transaksi?.totalPembayaran?.minus(transaksi.diskon!!)
-                                    }
+                                        }
                                     transaksi?.save()
-                                }
+                                            }
 
                             }
                             activity.setBadgeKeranjang()
                         }.show()
 
                     view.btnPlus.setOnClickListener {
-                        val jumlahDiKeranjang =
+                            val jumlahDiKeranjang =
                             if (itemTransaksi == null) 0 else itemTransaksi.jumlah
-                        val jumlahTambahan = view.tvJumlah.text.toString().toInt()
+                            val jumlahTambahan = view.tvJumlah.text.toString().toInt()
                         val jumlahTotal = jumlahDiKeranjang?.plus(jumlahTambahan)
 
-                        Log.d("jumlah", jumlahTotal.toString())
+                            Log.d("jumlah", jumlahTotal.toString())
 
-                        /*Cek apakah sudah mencapai stok maksimum*/
-                        if (jumlahTotal!! < produk.stok!!) {
-                            view.tvJumlah.text =
-                                (view.tvJumlah.text.toString().toInt() + 1).toString()
-                        } else {
-                            Toast.makeText(
-                                context,
-                                "Pembelian telah mencapai batas maksimum !!!",
-                                Toast.LENGTH_LONG
-                            )
-                                .show()
+                            /*Cek apakah sudah mencapai stok maksimum*/
+                            if (jumlahTotal!! < produk.stok!!) {
+                                view.tvJumlah.text =
+                                    (view.tvJumlah.text.toString().toInt() + 1).toString()
+                            } else {
+                                Toast.makeText(
+                                    context,
+                                    "Pembelian telah mencapai batas maksimum !!!",
+                                    Toast.LENGTH_LONG
+                                )
+                                    .show()
+                            }
                         }
-                    }
                     view.btnMinus.setOnClickListener {
                         if (view.tvJumlah.text.toString().toInt() != 1) {
                             view.tvJumlah.text =

@@ -9,7 +9,6 @@ import com.svtech.dhuwit.Models.Transaksi
 import com.svtech.dhuwit.R
 import com.svtech.dhuwit.Utils.numberToCurrency
 import com.svtech.dhuwit.Utils.setToolbar
-import kotlinx.android.synthetic.main.activity_detail_laporan_harian.*
 import kotlinx.android.synthetic.main.activity_detail_laporan_penjualan.table
 import kotlinx.android.synthetic.main.activity_detail_laporan_penjualan.tvTotalPendapatan
 import kotlinx.android.synthetic.main.activity_detail_laporan_penjualan.tvTotalProduk
@@ -53,7 +52,7 @@ class DetailLaporanHarianActivity : AppCompatActivity() {
             }
 
             val date = SimpleDateFormat("dd/MM/yyyy").parse(tanggal)
-            tvTanggal.text = ": " +SimpleDateFormat("dd MMMM yyyy").format(date)
+//            tvTanggal.text = ": " +SimpleDateFormat("dd MMMM yyyy").format(date)
             tvTotalPendapatan.text = ": " +numberToCurrency(total)
             tvTotalProduk.text = ": " +totalProduk.toString() + " Produk"
         }

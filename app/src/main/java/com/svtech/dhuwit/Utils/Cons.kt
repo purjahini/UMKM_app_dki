@@ -2,12 +2,15 @@ package com.svtech.dhuwit.Utils
 
 interface Cons {
     companion object {
-        val TAG = "DhuwitApp"
+        val TAG = "umkmApp"
 
 
 
         val BASE_URL = "http://192.168.43.17/dhuwitapp/public/api/"
         val API_STATUS = "api_status"
+        val STATUS = "status"
+        val CODE = "code"
+        val MESSAGE = "message"
         val API_MESSAGE = "api_message"
         val INT_STATUS = 1
         val ERROR_NETWORK = "error network"

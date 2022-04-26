@@ -46,7 +46,7 @@ class RclvLaporanPenjualan(val context: Context, var listTransaksi : MutableList
         }
 
         holder.itemView.btnSavePdf.setOnClickListener {
-            (context as LaporanPenjualanActivity).savePDF(transaksi)
+//            (context as LaporanPenjualanActivity).savePDF(transaksi)
         }
     }
 }

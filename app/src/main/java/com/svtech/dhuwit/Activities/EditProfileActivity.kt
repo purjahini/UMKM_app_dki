@@ -21,6 +21,8 @@ class EditProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_profile)
         setToolbar(this, "Ubah Profil")
+
+        textUid.text = "UID : "+getDeviceId(this)
         /*Setting data profile*/
         val username = getPreferences(this).getString(MyConstant.CURRENT_USER,"")
         val token = getPreferences(this).getString(MyConstant.TOKEN,"")

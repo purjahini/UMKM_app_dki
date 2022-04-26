@@ -1,69 +1,106 @@
 package com.svtech.dhuwit.Activities
 
+import android.R.array
+import android.app.ProgressDialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.androidnetworking.AndroidNetworking
+import com.androidnetworking.common.Priority
+import com.androidnetworking.error.ANError
+import com.androidnetworking.interfaces.JSONObjectRequestListener
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.gson.Gson
+import com.google.gson.JsonObject
 import com.orm.SugarRecord
 import com.svtech.dhuwit.Adapter.RclvItemTransaksi
 import com.svtech.dhuwit.Models.ItemTransaksi
 import com.svtech.dhuwit.Models.Transaksi
 import com.svtech.dhuwit.R
 import com.svtech.dhuwit.Utils.*
+import com.svtech.dhuwit.modelOnline.ItemTransaksiJsonOnline
 import kotlinx.android.synthetic.main.activity_menu_keranjang.*
 import kotlinx.android.synthetic.main.layout_input_dialog.view.*
 import kotlinx.android.synthetic.main.sheet.view.*
+import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
 
-class MenuKeranjangActivity : AppCompatActivity() {
 
+class MenuKeranjangActivity : AppCompatActivity() {
+    var progressDialog: ProgressDialog? = null
+    var token = ""
+    var username = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_menu_keranjang)
+        token =
+            com.svtech.dhuwit.Utils.getPreferences(this).getString(MyConstant.TOKEN, "").toString()
+        username =
+            com.svtech.dhuwit.Utils.getPreferences(this).getString(MyConstant.CURRENT_USER, "")
+                .toString()
+        See.log("token Kategori : $token")
+        See.log("token addProduk : $token")
+        progressDialog = ProgressDialog(this)
+        progressDialog!!.setTitle("Proses")
+        progressDialog!!.setMessage("Mohon Menunggu...")
+        progressDialog!!.setProgressStyle(ProgressDialog.STYLE_SPINNER)
+        progressDialog!!.setCancelable(false)
+        progressDialog!!.isIndeterminate = true
         /*Setting toolbar*/
         setToolbar(this, "Keranjang")
 
         /*Menapilkan list item produk di keranjang*/
         setRecyclerView(SugarRecord.find(Transaksi::class.java, "status = ?", "1").firstOrNull())
 
+
+
         btnCheckout.setOnClickListener {
             val transaksi = SugarRecord.find(Transaksi::class.java, "status = ?", "1").firstOrNull()
             if (transaksi != null) {
-                /*Mengupdate tanggal transaksi */
-                transaksi.tanggalTrasaksi =
-                    android.text.format.DateFormat.format("dd/MM/yyyy hh:mm:ss", Date().time)
-                        .toString()
-                transaksi.save()
+                if (transaksi.totalPembayaran!! >= transaksi.bayar!!) {
+                    /*Mengupdate tanggal transaksi */
+                    transaksi.tanggalTrasaksi =
+                        android.text.format.DateFormat.format("dd/MM/yyyy hh:mm:ss", Date().time)
+                            .toString()
+                    transaksi.save()
+
+
+                    val btnSheet = layoutInflater.inflate(R.layout.sheet, null)
+                    val dialog = BottomSheetDialog(this)
+                    val btnCash = btnSheet.btnCash
+                    val btnCashless = btnSheet.btnCashless
+                    btnCash.setOnClickListener {
+
+                        startActivity(Intent(this, CheckoutActivity::class.java))
+                    }
+                    btnCashless.setOnClickListener {
+//                        startActivity(Intent(this, CheckoutActivity::class.java))
+                        val intent = Intent(this, CashActivity::class.java)
+                        intent.putExtra("Total", transaksi?.totalPembayaran)
+                        startActivity(intent)
+                    }
+                    dialog.setContentView(btnSheet)
+                    dialog.show()
+
+                } else {
+                    See.toast(this, "Silahkkan masukan nominal pembayaran..")
+                }
+
             }
 
 
 
             See.Companion.log("Total ${transaksi?.totalPembayaran}")
 
-            val btnSheet = layoutInflater.inflate(R.layout.sheet, null)
-            val dialog = BottomSheetDialog(this)
-            val btnCash = btnSheet.btnCash
-            val btnCashless = btnSheet.btnCashless
-            btnCash.setOnClickListener {
-            startActivity(Intent(this, CheckoutActivity::class.java))
-            }
-            btnCashless.setOnClickListener {
-            val intent = Intent(this, CashActivity::class.java)
-            intent.putExtra("Total", transaksi?.totalPembayaran)
-            startActivity(intent)
-            }
-            dialog.setContentView(btnSheet)
-            dialog.show()
 
 
 
@@ -229,3 +266,5 @@ class MenuKeranjangActivity : AppCompatActivity() {
         return super.dispatchTouchEvent(ev)
     }
 }
+
+

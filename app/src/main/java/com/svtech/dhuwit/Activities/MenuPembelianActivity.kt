@@ -2,12 +2,12 @@ package com.svtech.dhuwit.Activities
 
 import android.app.ProgressDialog
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.MotionEvent
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.androidnetworking.AndroidNetworking
 import com.androidnetworking.common.Priority
@@ -15,7 +15,6 @@ import com.androidnetworking.error.ANError
 import com.androidnetworking.interfaces.JSONObjectRequestListener
 import com.google.gson.Gson
 import com.orm.SugarRecord
-
 import com.svtech.dhuwit.AdapterOnline.RclvProdukOnline
 import com.svtech.dhuwit.Models.ItemTransaksi
 import com.svtech.dhuwit.Models.Transaksi
@@ -23,11 +22,6 @@ import com.svtech.dhuwit.R
 import com.svtech.dhuwit.Utils.*
 import com.svtech.dhuwit.modelOnline.ProdukOnline
 import kotlinx.android.synthetic.main.activity_menu_pembelian.*
-import kotlinx.android.synthetic.main.activity_menu_pembelian.edtPencarian
-import kotlinx.android.synthetic.main.activity_menu_pembelian.rclvPenjualan
-import kotlinx.android.synthetic.main.activity_menu_pembelian.tvEmpty
-import kotlinx.android.synthetic.main.activity_menu_tambah_kategori.*
-import kotlinx.android.synthetic.main.activity_menu_tambah_produk.*
 import org.json.JSONObject
 
 class MenuPembelianActivity : AppCompatActivity() {
@@ -45,7 +39,7 @@ class MenuPembelianActivity : AppCompatActivity() {
         username =
             com.svtech.dhuwit.Utils.getPreferences(this).getString(MyConstant.CURRENT_USER, "")
                 .toString()
-        See.log("token addProduk : $token")
+        See.log("token penjualan : $token")
         progressDialog = ProgressDialog(this)
         progressDialog!!.setTitle("Proses")
         progressDialog!!.setMessage("Mohon Menunggu...")
@@ -102,7 +96,7 @@ class MenuPembelianActivity : AppCompatActivity() {
 
     private fun searchItem(search: String) {
         val adapter = rclvPenjualan.adapter
-        if(adapter != null){
+        if (adapter != null) {
             adapter as RclvProdukOnline
             adapter.searchItem(search)
         }
@@ -110,23 +104,24 @@ class MenuPembelianActivity : AppCompatActivity() {
 
     private fun sortItem(sort: String) {
         val adapter = rclvPenjualan.adapter
-        if(adapter != null){
+        if (adapter != null) {
             adapter as RclvProdukOnline
             adapter.sortItem(sort)
         }
     }
 
     fun setToRecyclerView(): Boolean {
+        progressDialog?.show()
         AndroidNetworking.post(MyConstant.Urlproduklistdata)
             .addHeaders("Authorization", "Bearer${token}")
             .addBodyParameter("username", username)
             .setPriority(Priority.HIGH)
             .build()
-            .getAsJSONObject( object: JSONObjectRequestListener {
+            .getAsJSONObject(object : JSONObjectRequestListener {
                 override fun onResponse(response: JSONObject?) {
                     progressDialog?.dismiss()
 
-                    if (response != null ) {
+                    if (response != null) {
                         val respon = response?.toString()
                         See.log("respon getProduk: \n $respon")
                         val json = JSONObject(respon)
@@ -141,7 +136,8 @@ class MenuPembelianActivity : AppCompatActivity() {
                                 tvEmpty.visibility = View.VISIBLE
                             } else {
                                 tvEmpty.visibility = View.GONE
-                                val rclvadapter = RclvProdukOnline(this@MenuPembelianActivity,list,true, true)
+                                val rclvadapter =
+                                    RclvProdukOnline(this@MenuPembelianActivity, list, true, true)
                                 rclvPenjualan.apply {
                                     adapter = rclvadapter
                                     layoutManager = GridLayoutManager(context, 2)
@@ -155,8 +151,16 @@ class MenuPembelianActivity : AppCompatActivity() {
                 }
 
                 override fun onError(anError: ANError?) {
+
                     progressDialog?.dismiss()
-                    See.toast(this@MenuPembelianActivity, anError?.errorBody.toString())
+                    val json = JSONObject(anError?.errorBody)
+                    val apiMessage = json.getString(MyConstant.API_MESSAGE)
+                    if (apiMessage != null) {
+                        if (apiMessage.equals(MyConstant.FORBIDDEN)) {
+                            getToken(this@MenuPembelianActivity)
+                        }
+                    }
+
                     See.log("onError getProduk errorCode : ${anError?.errorCode}")
                     See.log("onError getProduk errorBody : ${anError?.errorBody}")
                     See.log("onError getProduk errorDetail : ${anError?.errorDetail}")
@@ -164,17 +168,6 @@ class MenuPembelianActivity : AppCompatActivity() {
 
             })
 
-//        if (listProduk.isEmpty()) {
-//            tvEmpty.visibility = View.VISIBLE
-//        } else {
-//            tvEmpty.visibility = View.GONE
-//            val rclvadapter = RclvProduk(this, listProduk, true, true)
-//            rclv.apply {
-//                adapter = rclvadapter
-//                layoutManager = GridLayoutManager(context, calculateNoOfColumns(context, 180F))
-//                setHasFixedSize(true)
-//            }
-//        }
         return true
     }
 
@@ -191,6 +184,7 @@ class MenuPembelianActivity : AppCompatActivity() {
                 count += item.jumlah!!
             }
             btnKeranjang.count = count
+
         } else {
             btnKeranjang.count = 0
         }

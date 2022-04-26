@@ -5,22 +5,25 @@ package com.svtech.dhuwit.Utils
 
 
 import android.Manifest
+import android.R
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.database.sqlite.SQLiteDatabase
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.net.Uri
 import android.os.Environment
+import android.provider.Settings
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.startActivity
 import androidx.core.view.drawToBitmap
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -33,13 +36,14 @@ import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
-import com.pattra.pattracardsdk.Service.SyncService
-import com.svtech.dhuwit.Activities.LoginActivity
+import com.orm.SugarApp.getSugarContext
+import com.orm.SugarRecord
 import com.svtech.dhuwit.Activities.SplashScreenActivity
+import com.svtech.dhuwit.Models.Profile
+import com.svtech.dhuwit.Models.User
 import kotlinx.android.synthetic.main.layout_toolbar_with_back.*
 import java.io.ByteArrayOutputStream
 import java.io.File
-import java.net.URI
 import java.text.NumberFormat
 import java.util.*
 
@@ -69,6 +73,13 @@ fun numberToCurrency(number: Int): String {
         .removeSuffix(",00").replace("Rp", "Rp. ")
 }
 
+fun getURLForResource(resourceId: Int): String? {
+    //use BuildConfig.APPLICATION_ID instead of R.class.getPackage().getName() if both are not same
+    return Uri.parse("android.resource://" + R::class.java.getPackage().name + "/" + resourceId)
+        .toString()
+}
+
+
 fun calculateNoOfColumns(
     context: Context,
     columnWidthDp: Float
@@ -76,6 +87,10 @@ fun calculateNoOfColumns(
     val displayMetrics: DisplayMetrics = context.getResources().getDisplayMetrics()
     val screenWidthDp = displayMetrics.widthPixels / displayMetrics.density
     return (screenWidthDp / columnWidthDp + 0.5).toInt()
+}
+
+fun getDeviceId(activity: Context) : String {
+    return Settings.Secure.getString(activity.contentResolver, Settings.Secure.ANDROID_ID)
 }
 
 /*Fungsi untuk memilih gambar*/
@@ -139,6 +154,60 @@ fun setToolbar(
         activity.onBackPressed()
     }
     activity.tvTitle.setText(title)
+}
+
+fun getToken(activity: Activity) {
+    val username = getPreferences(activity).getString(MyConstant.CURRENT_USER,"")
+    val token = getPreferences(activity).getString(MyConstant.TOKEN,"")
+    if (username != null) {
+        deletePreferences(activity,username)
+        See.log("username deletePref $username")
+    }
+
+    if (token != null) {
+        deletePreferences(activity,token)
+        See.log("token deletePref $token")
+    }
+
+    val users = SugarRecord.find(User::class.java, "USERNAME =?",username).firstOrNull()
+    See.log("respon user ${users}")
+    users?.delete()
+
+    val profil = SugarRecord.find(Profile::class.java,"USERNAME=?",username).firstOrNull()
+    See.log("respon profil ${profil}")
+    profil?.delete()
+
+    val intent = Intent(activity, SplashScreenActivity::class.java)
+    activity.startActivity(intent)
+    activity.finish()
+
+}
+
+fun getTokenContext(context: Context) {
+    val username = getPreferences(context).getString(MyConstant.CURRENT_USER,"")
+    val token = getPreferences(context).getString(MyConstant.TOKEN,"")
+    if (username != null) {
+        deletePreferences(context,username)
+        See.log("username deletePref $username")
+    }
+
+    if (token != null) {
+        deletePreferences(context,token)
+        See.log("token deletePref $token")
+    }
+
+    val users = SugarRecord.find(User::class.java, "USERNAME =?",username).firstOrNull()
+    See.log("respon user ${users}")
+    users?.delete()
+
+    val profil = SugarRecord.find(Profile::class.java,"USERNAME=?",username).firstOrNull()
+    See.log("respon profil ${profil}")
+    profil?.delete()
+
+    val intent = Intent(context, SplashScreenActivity::class.java)
+    context.startActivity(intent)
+    (context as Activity).finish()
+
 }
 
 /*Fungsi untuk mengambil screen shoot*/
@@ -263,6 +332,8 @@ fun getPreferences(context: Context): SharedPreferences {
     return context.getSharedPreferences("prefs", 0)
 
 }
+
+
 
 
 

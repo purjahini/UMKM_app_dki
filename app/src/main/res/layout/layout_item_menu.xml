@@ -7,6 +7,7 @@
     android:layout_marginStart="8dp"
     android:layout_marginEnd="8dp"
     android:layout_marginBottom="13dp"
+    android:background="@drawable/gradient_180"
     android:layout_marginTop="3dp"
     app:cardElevation="7dp">
     <LinearLayout

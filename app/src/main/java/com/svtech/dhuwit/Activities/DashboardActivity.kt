@@ -2,7 +2,6 @@ package com.svtech.dhuwit.Activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Base64
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.viewpager.widget.ViewPager
@@ -16,9 +15,13 @@ import com.svtech.dhuwit.Models.User
 import com.svtech.dhuwit.R
 import com.svtech.dhuwit.Utils.MyConstant
 import kotlinx.android.synthetic.main.activity_dashboard.*
+import java.util.*
 
 class DashboardActivity : AppCompatActivity() {
+    //...
+
     lateinit var vpSlider: ViewPager
+    lateinit var timer: Timer
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dashboard)
@@ -31,6 +34,18 @@ class DashboardActivity : AppCompatActivity() {
 
         val adapterSlider = AdapterSlider(arrSlider, this)
         vpSlider.adapter = adapterSlider
+
+
+        val timerTask: TimerTask = object : TimerTask() {
+            override fun run() {
+                vpSlider.post(Runnable { vpSlider.setCurrentItem((vpSlider.getCurrentItem() + 1) % arrSlider.size) })
+            }
+        }
+        timer = Timer()
+        timer.schedule(timerTask, 3000, 3000)
+
+
+
 
         /*Setting menu*/
         val username = com.svtech.dhuwit.Utils.getPreferences(this).getString(MyConstant.CURRENT_USER,"")
@@ -61,7 +76,7 @@ class DashboardActivity : AppCompatActivity() {
                 Menu(R.drawable.icon5,"Pegawai"),
                 Menu(R.drawable.icon6,"Laporan")
             )
-            imgEditProfile.setImageDrawable(getDrawable(R.drawable.edit))
+            imgEditProfile.setImageDrawable(getDrawable(R.drawable.ic_user))
         }else{
             colSpan = 4
             listMenu = mutableListOf(
@@ -70,7 +85,7 @@ class DashboardActivity : AppCompatActivity() {
                 Menu(R.drawable.icon3,"Kategori"),
                 Menu(R.drawable.icon4,"Produk")
             )
-            imgEditProfile.setImageDrawable(getDrawable(R.drawable.off))
+            imgEditProfile.setImageDrawable(getDrawable(R.drawable.ic_user))
         }
 
         rclvPenjualan.apply {
@@ -95,6 +110,12 @@ class DashboardActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         initProfile()
+    }
+
+    override fun onDestroy() {
+        timer.cancel()
+        super.onDestroy()
+
     }
 
 

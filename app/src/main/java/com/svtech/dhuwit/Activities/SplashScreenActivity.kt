@@ -8,6 +8,7 @@ import com.androidnetworking.AndroidNetworking
 import com.androidnetworking.common.Priority
 import com.androidnetworking.error.ANError
 import com.androidnetworking.interfaces.JSONObjectRequestListener
+import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import com.orm.SugarRecord
 import com.svtech.dhuwit.Models.Profile
@@ -15,10 +16,12 @@ import com.svtech.dhuwit.Models.Profile
 import com.svtech.dhuwit.R
 import com.svtech.dhuwit.Utils.MyConstant
 import com.svtech.dhuwit.Utils.See
+import com.svtech.dhuwit.Utils.getDeviceId
 
 import com.svtech.dhuwit.Utils.savePreferences
 import org.json.JSONObject
 import com.svtech.dhuwit.modelOnline.TokenModel
+import kotlinx.android.synthetic.main.activity_splash_screen.*
 
 
 class SplashScreenActivity : AppCompatActivity() {
@@ -28,8 +31,13 @@ class SplashScreenActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
+        Glide.with(this)
+            .load(R.drawable.logo1)
+            .into(ivImageSplash)
         AndroidNetworking.initialize(applicationContext)
         val timeRightnow :Long = System.currentTimeMillis()/1000
+
+        val idDevice = getDeviceId(this)
 
         time = com.svtech.dhuwit.Utils.getPreferences(this).getLong(MyConstant.TIME,0)
 
@@ -37,7 +45,7 @@ class SplashScreenActivity : AppCompatActivity() {
             hitToken()
         }
 
-        See.log("jam sekararang $timeRightnow , waktu  expiry $time")
+        See.log("jam sekararang $timeRightnow , waktu  expiry $time , idDevice : $idDevice")
 
         /*Insert data default ke database*/
         val profile = SugarRecord.listAll(Profile::class.java).firstOrNull()

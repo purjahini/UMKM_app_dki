@@ -247,6 +247,7 @@
                     android:background="?attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
+                    android:visibility="invisible"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp">
 
@@ -265,6 +266,7 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
+                        android:visibility="invisible"
                         android:id="@+id/tvBayar"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -281,6 +283,7 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="0.5dp"
+                        android:visibility="invisible"
                         android:background="@color/primary_text"
                         app:layout_constraintBottom_toBottomOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -291,10 +294,12 @@
                     android:background="?attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
+                    android:visibility="invisible"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp">
 
                     <TextView
+                        android:visibility="invisible"
                         android:id="@+id/textView6"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -309,6 +314,7 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
+                        android:visibility="invisible"
                         android:id="@+id/tvKembalian"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -324,6 +330,7 @@
 
 
                     <View
+                        android:visibility="invisible"
                         android:layout_width="match_parent"
                         android:layout_height="0.5dp"
                         android:background="@color/primary_text"
