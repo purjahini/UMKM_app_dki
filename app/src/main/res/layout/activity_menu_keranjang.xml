@@ -92,7 +92,7 @@
                         android:layout_marginEnd="8dp"
                         android:paddingTop="8dp"
                         android:paddingBottom="8dp"
-                        android:text="n/a"
+                        android:text="a/n"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -138,7 +138,7 @@
                         android:layout_marginEnd="8dp"
                         android:paddingTop="8dp"
                         android:paddingBottom="8dp"
-                        android:text="n/a"
+                        android:text="a/n"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />

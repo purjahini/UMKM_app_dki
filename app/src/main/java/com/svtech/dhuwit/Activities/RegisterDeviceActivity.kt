@@ -39,7 +39,9 @@ class RegisterDeviceActivity : AppCompatActivity() {
 
         pattraCardConfig = PattraCardConfig(object : PattraCardConfig.ConfigCallback {
             override fun ConfigError(s: String) {
-                See.log("Config Error $s")
+                See.log("Config Error $s  and DeviceId ${getDeviceId(this@RegisterDeviceActivity)}")
+                TvMessageStatus.setText(": $s")
+
 
             }
 
@@ -123,6 +125,7 @@ class RegisterDeviceActivity : AppCompatActivity() {
         })
 
         pattraCardConfig!!.getConfig("203.210.87.98", getDeviceId(this))
+
 
 
 

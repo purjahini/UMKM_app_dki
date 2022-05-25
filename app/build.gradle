@@ -105,5 +105,4 @@ dependencies {
     implementation files('libs/pattracardsdk-release.aar')
     implementation 'com.amitshekhar.android:android-networking:1.0.2'
 
-
 }

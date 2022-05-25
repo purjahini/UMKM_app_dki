@@ -223,7 +223,8 @@ class CashActivity : AppCompatActivity() {
                     saldoakhir = purchaseData?.lastBalance.toInt()
                     tid = purchaseData?.tid
 
-                    print()
+//                    print()
+                    UploadToServer()
                     showAlertDialog(
                         purchaseData?.cardNumber!!,
                         purchaseData?.debitAmount,
@@ -724,6 +725,9 @@ class CashActivity : AppCompatActivity() {
         alert.show()
         btnDialogClose.setOnClickListener {
             finish()
+            val intent = Intent(this, StrukActivity::class.java)
+
+
             startActivity(Intent(this, DashboardActivity::class.java))
         }
 
