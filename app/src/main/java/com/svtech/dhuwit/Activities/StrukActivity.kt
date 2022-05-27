@@ -58,6 +58,8 @@ class StrukActivity : AppCompatActivity() {
     var tid = ""
     var invoice = ""
     var nama = ""
+    var totalPembayaran = 0
+
    lateinit var item_produk: List<ResponseStruk.ItemProduk>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -190,7 +192,7 @@ class StrukActivity : AppCompatActivity() {
                     "%1$-10s %2$-10s %3$-20s",
                     " ",
                     "Total",
-                    numberToCurrency(transaksi.totalPembayaran!!)
+                    numberToCurrency(totalPembayaran)
                 )
                 printer.printString(str, BluetoothPrinterUtils.ALIGN_RIGHT)
                 str = java.lang.String.format(
@@ -386,6 +388,14 @@ class StrukActivity : AppCompatActivity() {
                                 val saldoAkhir = if (it.saldoakhir.isNullOrEmpty()) 0 else it.saldoakhir
                             tvSaldoAkhir.text = numberToCurrency(saldoAkhir.toString().toInt())
                             tvTid.text = it.tid
+
+                                invoice = it.invoice
+                                totalPembayaran = it.total_pembayaran
+                                bank = it.bank
+                                nokartu = it.nokartu
+                                saldoawal = it.saldoawal.toInt()
+                                saldoakhir = it.saldoakhir.toInt()
+                                tid = it.tid
 
                         }
 

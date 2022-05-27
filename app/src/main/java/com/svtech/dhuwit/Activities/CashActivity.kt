@@ -321,6 +321,7 @@ class CashActivity : AppCompatActivity() {
 
 
                                 UploadItemTranksaksi(transaksi.id,data.id)
+                                id_transaksi = data.id
 
                                 See.toast(this@CashActivity, "Upload Trx to Server $apiMessage")
                             } else {
@@ -441,6 +442,7 @@ class CashActivity : AppCompatActivity() {
                     val apiMessage = json.getString(MyConstant.API_MESSAGE)
                     if (apiStatus.equals(1)) {
                      See.toast(this@CashActivity, apiMessage)
+
                     }
                     else {
                         See.toast(this@CashActivity, apiMessage)
@@ -726,9 +728,12 @@ class CashActivity : AppCompatActivity() {
         btnDialogClose.setOnClickListener {
             finish()
             val intent = Intent(this, StrukActivity::class.java)
+            intent.putExtra(MyConstant.ID_TRANSAKSI, id_transaksi)
+            startActivity(intent)
 
 
-            startActivity(Intent(this, DashboardActivity::class.java))
+
+//            startActivity(Intent(this, DashboardActivity::class.java))
         }
 
     }
