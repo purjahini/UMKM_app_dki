@@ -59,6 +59,7 @@ class StrukActivity : AppCompatActivity() {
     var invoice = ""
     var nama = ""
     var totalPembayaran = 0
+    var tanggalTransaksi = ""
 
    lateinit var item_produk: List<ResponseStruk.ItemProduk>
 
@@ -147,7 +148,7 @@ class StrukActivity : AppCompatActivity() {
                 printer.printText(profile?.namaToko!!, BluetoothPrinterUtils.ALIGN_CENTER)
                 printer.printText(profile.alamatToko!!, BluetoothPrinterUtils.ALIGN_CENTER)
                 printer.printNewLine()
-                printer.printText(transaksi?.tanggalTrasaksi!!, BluetoothPrinterUtils.ALIGN_RIGHT)
+                printer.printText(tanggalTransaksi, BluetoothPrinterUtils.ALIGN_RIGHT)
                 printer.printText(invoice,BluetoothPrinterUtils.ALIGN_RIGHT)
                 printer.printText("Kasir : $nama", BluetoothPrinterUtils.ALIGN_LEFT)
                 printer.printLine()
@@ -163,10 +164,10 @@ class StrukActivity : AppCompatActivity() {
                 for (it in item_produk) {
                     val items = java.lang.String.format(
                         "%1s \n %2s X %3s %4$-5s",
-                        if (it.nama_produk.toString().length >= 20) it.nama_produk?.substring(
+                        if (it.nama_produk.length >= 20) it.nama_produk?.substring(
                             0,
                             20
-                        ) else it.nama_produk.toString(),
+                        ) else it.nama_produk,
                         numberToCurrency(it.harga_produk!!).removePrefix("Rp. "),
                         it.jumlah.toString(),
                         numberToCurrency(it.jumlah?.times(it.harga_produk!!)!!).removePrefix("Rp. ")
@@ -396,6 +397,7 @@ class StrukActivity : AppCompatActivity() {
                                 saldoawal = it.saldoawal.toInt()
                                 saldoakhir = it.saldoakhir.toInt()
                                 tid = it.tid
+                                tanggalTransaksi = it.tanggal_transaksi
 
                         }
 

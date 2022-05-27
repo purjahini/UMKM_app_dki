@@ -441,7 +441,9 @@ class CashActivity : AppCompatActivity() {
                     val apiStatus = json.getInt(MyConstant.API_STATUS)
                     val apiMessage = json.getString(MyConstant.API_MESSAGE)
                     if (apiStatus.equals(1)) {
-                     See.toast(this@CashActivity, apiMessage)
+                        See.toast(this@CashActivity, apiMessage)
+                        startActivity(Intent(this@CashActivity,StrukActivity::class.java))
+
 
                     }
                     else {
