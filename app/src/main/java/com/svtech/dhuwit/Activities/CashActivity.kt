@@ -180,7 +180,7 @@ class CashActivity : AppCompatActivity() {
 
                     when (cardResult?.bank) {
                         "DKI" -> {
-                            card_background.setBackgroundResource(R.drawable.dki)
+                            card_background.setBackgroundResource(R.drawable.jakcard)
                         }
                         "BNI" -> {
                             card_background.setBackgroundResource(R.drawable.tapcash)
@@ -223,7 +223,8 @@ class CashActivity : AppCompatActivity() {
                     saldoakhir = purchaseData?.lastBalance.toInt()
                     tid = purchaseData?.tid
 
-                    print()
+//                    print()
+                    UploadToServer()
                     showAlertDialog(
                         purchaseData?.cardNumber!!,
                         purchaseData?.debitAmount,
@@ -255,11 +256,11 @@ class CashActivity : AppCompatActivity() {
             }
 
             override fun onPingSuccess() {
-                if (btnConnectBluetooth.text.equals("Disconnect")){
+//                if (btnConnectBluetooth.text.equals("Disconnect")){
                     btn_pay.setEnabled(true)
-                } else {
-                    See.toast(this@CashActivity, "Mohon Connectkan Printer..")
-                }
+//                } else {
+//                    See.toast(this@CashActivity, "Mohon Connectkan Printer..")
+//                }
 
             }
 
@@ -304,6 +305,7 @@ class CashActivity : AppCompatActivity() {
                     .addBodyParameter("saldoakhir", saldoakhir.toString())
                     .addBodyParameter("tid", tid)
                     .addBodyParameter("username", username.trim())
+                    .addBodyParameter("casier", nama.trim())
                     .setPriority(Priority.MEDIUM)
                     .build()
                     .getAsJSONObject(object : JSONObjectRequestListener {
@@ -320,6 +322,7 @@ class CashActivity : AppCompatActivity() {
 
 
                                 UploadItemTranksaksi(transaksi.id,data.id)
+                                id_transaksi = data.id
 
                                 See.toast(this@CashActivity, "Upload Trx to Server $apiMessage")
                             } else {
@@ -439,7 +442,7 @@ class CashActivity : AppCompatActivity() {
                     val apiStatus = json.getInt(MyConstant.API_STATUS)
                     val apiMessage = json.getString(MyConstant.API_MESSAGE)
                     if (apiStatus.equals(1)) {
-                     See.toast(this@CashActivity, apiMessage)
+                        See.toast(this@CashActivity, apiMessage)
                     }
                     else {
                         See.toast(this@CashActivity, apiMessage)
@@ -724,7 +727,13 @@ class CashActivity : AppCompatActivity() {
         alert.show()
         btnDialogClose.setOnClickListener {
             finish()
-            startActivity(Intent(this, DashboardActivity::class.java))
+            val intent = Intent(this, StrukActivity::class.java)
+            intent.putExtra(MyConstant.ID_TRANSAKSI, id_transaksi)
+            startActivity(intent)
+
+
+
+//            startActivity(Intent(this, DashboardActivity::class.java))
         }
 
     }

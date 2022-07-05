@@ -141,6 +141,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <androidx.appcompat.widget.AppCompatButton
+        android:text="Export"
+        android:id="@+id/btnExport"
+        android:visibility="gone"
+        android:textColor="@color/colorPrimary"
+        android:drawableLeft="@drawable/ic_baseline_picture_as_pdf_24"
+        android:drawablePadding="@dimen/_5sdp"
+        android:layout_width="wrap_content"
+        android:layout_gravity="right|bottom"
+        android:layout_height="wrap_content"
+        />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rclvPenjualan"
         android:layout_width="match_parent"
@@ -151,6 +163,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView12" />
+
 
     <TextView
         android:id="@+id/tvVersi"

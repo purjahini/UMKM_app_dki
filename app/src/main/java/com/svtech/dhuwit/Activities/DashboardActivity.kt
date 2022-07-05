@@ -74,6 +74,8 @@ class DashboardActivity : AppCompatActivity() {
                 Menu(R.drawable.icon3,"Kategori"),
                 Menu(R.drawable.icon4,"Produk"),
                 Menu(R.drawable.icon5,"Pegawai"),
+                Menu(R.drawable.ic_chart, "Neraca"),
+                Menu(R.drawable.ic_account,"TOPUP"),
                 Menu(R.drawable.icon6,"Laporan")
             )
             imgEditProfile.setImageDrawable(getDrawable(R.drawable.ic_user))

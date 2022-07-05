@@ -17,6 +17,7 @@ import android.graphics.Color
 import android.net.Uri
 import android.os.Environment
 import android.provider.Settings
+import android.text.format.DateFormat
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
@@ -332,6 +333,7 @@ fun getPreferences(context: Context): SharedPreferences {
     return context.getSharedPreferences("prefs", 0)
 
 }
+
 
 
 

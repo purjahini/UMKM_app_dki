@@ -30,6 +30,9 @@ object MyConstant{
     const val ID_TRANSAKSI = "id_transaksi"
     const val PRODUK_ID = "produk_id"
 
+    const val NAMA_TOKO ="nama_toko"
+    const val ALAMAT_TOKO = "alamat_toko"
+
     const val USERNAME ="username"
     const val KATEGORI ="kategori"
     const val KONTAK = "kontak"
@@ -89,6 +92,7 @@ object MyConstant{
 
     const val Urllaporandetail = "$url/laporandetail"
     const val Urllaporantodaydetail = "$url/laporantodaydetail"
+    const val Urllapdetailcetak = "$url/lapdetailcetak"
 
     const val Urlstokgetdata = "$url/stokgetdata"
 

@@ -26,20 +26,44 @@ import kotlinx.android.synthetic.main.layout_item_kategori.view.*
 import org.json.JSONObject
 
 /*Adapter recycler view untuk menapilkan item kategori*/
-class RclvKategoriOnline(val context: Context, var listKategori: MutableList<KategoriOnline.Data?>?): RecyclerView.Adapter<RclvKategoriOnline.ViewHolder>() {
+class RclvKategoriOnline : RecyclerView.Adapter<RclvKategoriOnline.ViewHolder> {
+    val context: Context
     var progressDialog: ProgressDialog? = null
     var token = ""
     var username = ""
+    val order: Boolean
+    lateinit var saveListKategori: MutableList<KategoriOnline.Data?>
+    lateinit var listKategori: MutableList<KategoriOnline.Data?>
+
+    constructor(
+        context: Context,
+        listKategori: MutableList<KategoriOnline.Data?>?,
+        sort: Boolean,
+        order: Boolean
+
+        ): super() {
+        this.context = context
+        if (listKategori != null) {
+            this.listKategori =
+                if (sort) listKategori.sortBy { it?.kategori_nama } as MutableList<KategoriOnline.Data?> else listKategori
+        }
+        this.order = order
+        if (listKategori != null) {
+            this.saveListKategori = listKategori
+        }
+
+    }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
 
         fun bind(kategori: KategoriOnline.Data?, context: Context){
-
+            if (kategori != null) {
                 Glide.with(context).load(kategori?.kategori_gambar)
                     .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                     .placeholder(R.drawable.logo).fitCenter().into(itemView.imgFoto)
                 itemView.tvKategori.text = kategori?.kategori_nama
+            }
 
         }
     }
@@ -48,10 +72,10 @@ class RclvKategoriOnline(val context: Context, var listKategori: MutableList<Kat
         return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.layout_item_kategori, parent, false))
     }
 
-    override fun getItemCount(): Int = listKategori!!.size
+    override fun getItemCount(): Int = this.listKategori!!.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val kategori = listKategori?.get(position)
+        val kategori = this.listKategori?.get(position)
         holder.bind(kategori, context)
         holder.itemView.setOnClickListener {
             val popupMenu = PopupMenu(context, it)
@@ -82,7 +106,7 @@ class RclvKategoriOnline(val context: Context, var listKategori: MutableList<Kat
         See.log("token addProduk : $token id hapus kt : ${kategori?.id}")
         MaterialAlertDialogBuilder(context).setTitle("Hapus").setMessage("Apakah anda yakin ingin menghapus?")
             .setPositiveButton("Hapus", DialogInterface.OnClickListener { dialogInterface, i ->
-                listKategori?.remove(kategori)
+                this.listKategori?.remove(kategori)
                 AndroidNetworking.post(MyConstant.Urlkategorihapus)
                     .addHeaders("Authorization", "Bearer$token")
                     .addBodyParameter("id", kategori?.id.toString().trim())
@@ -123,6 +147,34 @@ class RclvKategoriOnline(val context: Context, var listKategori: MutableList<Kat
             })
             .setNegativeButton("Batal", DialogInterface.OnClickListener { dialogInterface, i ->  dialogInterface.dismiss()})
             .show()
+    }
+
+    fun sortItem(sort: String) {
+        when (sort) {
+            "Asc" -> {
+                listKategori.sortBy { it?.kategori_nama }
+                notifyDataSetChanged()
+            }
+            "Dsc" -> {
+                listKategori.sortBy { it?.kategori_nama }
+                listKategori.reverse()
+                notifyDataSetChanged()
+            }
+        }
+    }
+
+    fun searchItem(search: String) {
+        if (search.isNotEmpty()) {
+            val search = saveListKategori.filter { produk ->
+                produk?.kategori_nama!!.trim().toLowerCase()
+                    .toLowerCase().contains(search.trim().toLowerCase())
+            }
+            this.listKategori = search as MutableList<KategoriOnline.Data?>
+            notifyDataSetChanged()
+        } else {
+            this.listKategori = saveListKategori
+            notifyDataSetChanged()
+        }
     }
 
     private fun editItem(kategori: KategoriOnline.Data?) {

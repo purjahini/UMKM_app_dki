@@ -10,6 +10,7 @@
         <entry key="app/src/main/res/drawable-xxxhdpi/gradient_180.xml" value="0.131" />
         <entry key="app/src/main/res/drawable/gradient.xml" value="0.131" />
         <entry key="app/src/main/res/drawable/gradient_180.xml" value="0.131" />
+        <entry key="app/src/main/res/drawable/ic_account.xml" value="0.1245" />
         <entry key="app/src/main/res/drawable/ic_add_circle_24.xml" value="0.131" />
         <entry key="app/src/main/res/drawable/ic_arrow_back.xml" value="0.131" />
         <entry key="app/src/main/res/drawable/ic_arrow_downward_24.xml" value="0.194" />
@@ -23,6 +24,7 @@
         <entry key="app/src/main/res/drawable/ic_baseline_money_24.xml" value="0.131" />
         <entry key="app/src/main/res/drawable/ic_baseline_signal_wifi_statusbar_4_bar_24.xml" value="0.174609375" />
         <entry key="app/src/main/res/drawable/ic_baseline_toko.xml" value="0.131" />
+        <entry key="app/src/main/res/drawable/ic_chart.xml" value="0.1245" />
         <entry key="app/src/main/res/drawable/ic_menu_slideshow.xml" value="0.131" />
         <entry key="app/src/main/res/drawable/ic_name.xml" value="0.131" />
         <entry key="app/src/main/res/drawable/ic_print_24.xml" value="0.131" />
@@ -50,7 +52,7 @@
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.19270833333333334" />
         <entry key="app/src/main/res/layout/activity_menu_keranjang.xml" value="0.22" />
         <entry key="app/src/main/res/layout/activity_menu_pembelian.xml" value="0.146875" />
-        <entry key="app/src/main/res/layout/activity_menu_tambah_kategori.xml" value="0.146875" />
+        <entry key="app/src/main/res/layout/activity_menu_tambah_kategori.xml" value="0.22" />
         <entry key="app/src/main/res/layout/activity_menu_tambah_pegawai.xml" value="0.146875" />
         <entry key="app/src/main/res/layout/activity_menu_tambah_produk.xml" value="0.146875" />
         <entry key="app/src/main/res/layout/activity_produk_custome.xml" value="0.21" />
@@ -79,6 +81,7 @@
         <entry key="app/src/main/res/layout/sheet_config.xml" value="0.25" />
         <entry key="app/src/main/res/xml/network_security_config.xml" value="0.16983695652173914" />
         <entry key="app/src/main/res/xml/nfc_tech_filter.xml" value="0.19270833333333334" />
+        <entry key="app/src/main/res/xml/provider_paths.xml" value="0.19270833333333334" />
       </map>
     </option>
   </component>

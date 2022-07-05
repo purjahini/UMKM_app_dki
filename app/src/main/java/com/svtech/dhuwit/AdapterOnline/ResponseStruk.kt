@@ -17,7 +17,8 @@ data class ResponseStruk(
         val tanggal_transaksi: String,
         val tid: String,
         val created_at : String,
-        val total_pembayaran: Int
+        val total_pembayaran: Int,
+        val casier : String
     )
 
     data class ItemProduk(
