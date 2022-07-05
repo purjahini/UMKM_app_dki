@@ -326,8 +326,17 @@
                     />
 
 
-            </LinearLayout>
 
+
+            </LinearLayout>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnPrint"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginBottom="@dimen/_15sdp"
+                android:text="Print" />
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -335,19 +344,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <com.google.android.material.button.MaterialButton
-                    android:layout_weight="1"
-                    android:id="@+id/btnPrint"
-                    android:layout_width="match_parent"
+                   android:visibility="gone"
+                    android:layout_width="wrap_content"
                     android:layout_height="@dimen/_50sdp"
-                    android:layout_marginStart="@dimen/_16sdp"
+            android:layout_gravity="right"
                     android:layout_marginTop="@dimen/_5sdp"
-                    android:layout_marginEnd="@dimen/_16sdp"
                     android:layout_marginBottom="@dimen/_15sdp"
                     android:text="Print" />
 
                 <com.google.android.material.button.MaterialButton
-                    android:layout_weight="1"
-                    android:id="@+id/btnSelesai"
+                  android:id="@+id/btnSelesai"
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_50sdp"
                     android:layout_marginStart="@dimen/_16sdp"

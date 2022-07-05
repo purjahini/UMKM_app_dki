@@ -259,6 +259,18 @@ class MenuKeranjangActivity : AppCompatActivity() {
         setInfoTransaksi(transaksi)
     }
 
+    override fun onResume() {
+        super.onResume()
+        setRecyclerView(SugarRecord.find(Transaksi::class.java, "status = ?", "1").firstOrNull())
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        setRecyclerView(SugarRecord.find(Transaksi::class.java, "status = ?", "1").firstOrNull())
+    }
+
+
+
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
         if (currentFocus != null) {
             this.hideSoftKeyboard()

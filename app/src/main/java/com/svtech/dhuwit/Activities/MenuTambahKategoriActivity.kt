@@ -3,6 +3,8 @@ package com.svtech.dhuwit.Activities
 import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
@@ -12,13 +14,20 @@ import com.androidnetworking.error.ANError
 import com.androidnetworking.interfaces.JSONObjectRequestListener
 import com.google.gson.Gson
 import com.svtech.dhuwit.AdapterOnline.RclvKategoriOnline
+import com.svtech.dhuwit.AdapterOnline.RclvProdukOnline
 import com.svtech.dhuwit.R
 import com.svtech.dhuwit.Utils.MyConstant
 import com.svtech.dhuwit.Utils.See
 import com.svtech.dhuwit.Utils.getToken
 import com.svtech.dhuwit.Utils.setToolbar
 import com.svtech.dhuwit.modelOnline.KategoriOnline
+import kotlinx.android.synthetic.main.activity_menu_pembelian.*
 import kotlinx.android.synthetic.main.activity_menu_tambah_kategori.*
+import kotlinx.android.synthetic.main.activity_menu_tambah_kategori.btnAdd
+import kotlinx.android.synthetic.main.activity_menu_tambah_kategori.edtPencarian
+import kotlinx.android.synthetic.main.activity_menu_tambah_kategori.rclvPenjualan
+import kotlinx.android.synthetic.main.activity_menu_tambah_kategori.tvEmpty
+import kotlinx.android.synthetic.main.activity_menu_tambah_produk.*
 import org.json.JSONObject
 
 
@@ -48,6 +57,28 @@ class MenuTambahKategoriActivity : AppCompatActivity() {
         btnAdd.setOnClickListener {
             startActivity(Intent(this, AddKategoriActivity::class.java))
         }
+
+        edtPencarian.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+                searchItem(p0.toString())
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+        })
+
+    }
+    private fun searchItem(search: String) {
+        val adapter = rclvPenjualan.adapter
+        if (adapter != null) {
+            adapter as RclvKategoriOnline
+            adapter.searchItem(search)
+        }
     }
 
 
@@ -73,7 +104,7 @@ class MenuTambahKategoriActivity : AppCompatActivity() {
                             tvEmpty.visibility = View.VISIBLE
                         }else {
                             tvEmpty.visibility = View.GONE
-                            val rclvadapter = RclvKategoriOnline(this@MenuTambahKategoriActivity, data.data)
+                            val rclvadapter = RclvKategoriOnline(this@MenuTambahKategoriActivity, data.data, false, false)
                             rclvPenjualan.apply {
                                 adapter = rclvadapter
                                 layoutManager = GridLayoutManager(context, 2)

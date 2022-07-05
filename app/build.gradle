@@ -10,9 +10,9 @@ android {
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 3
-        versionName "1.1"
+        versionName "0.0.8.6"
         multiDexEnabled = true
-
+        archivesBaseName = "UMKM ver." + versionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 

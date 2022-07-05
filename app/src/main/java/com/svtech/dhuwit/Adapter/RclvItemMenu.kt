@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.svtech.dhuwit.Activities.*
 import com.svtech.dhuwit.Models.Menu
 import com.svtech.dhuwit.R
+import com.svtech.dhuwit.Utils.See
 import kotlinx.android.synthetic.main.layout_item_menu.view.*
 
 /*Adapter recycler view untuk menu dashboard*/
@@ -57,6 +58,13 @@ class RclvItemMenu(val context: Context, var listItemMenu: MutableList<Menu>) :
                 "Laporan" ->{
                     context.startActivity(Intent(context,LaporanActivity::class.java))
                 }
+                "Neraca" -> {
+                    See.toast(context,context.getString(R.string.label_underdevelopment))
+                }
+                "TOPUP" -> {
+                    See.toast(context,context.getString(R.string.label_underdevelopment))
+                }
+
             }
         }
     }

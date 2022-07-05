@@ -163,6 +163,8 @@ class LoginActivity : AppCompatActivity() {
                             val list = data.data
 
                             if (list != null) {
+                                savePreferences(this@LoginActivity,MyConstant.ALAMAT_TOKO, list.alamat_toko.toString())
+                                savePreferences(this@LoginActivity,MyConstant.NAMA_TOKO, list.nama_toko.toString())
                                 Profile(
                                     id = list.id,
                                     alamatToko = list.alamat_toko,

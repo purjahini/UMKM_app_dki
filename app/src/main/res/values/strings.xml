@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">UMKM ver 0.0.8.3</string>
+    <string name="app_name">UMKM ver 0.0.8.4</string>
     <string name="nama_toko">svtech Pos</string>
     <string name="alamat_toko">www.svtech.com</string>
     <string name="title_activity_main">MainActivity</string>
@@ -32,6 +32,7 @@
     <string name="labelfrom">From</string>
     <string name="labelto">To</string>
     <string name="label_reset">Reset</string>
+    <string name="label_underdevelopment">Dalam masa pengembangan</string>
     <string name="labelsubmit">Submit</string>
     <string name="lap_rekap_jual">Laporan Rekap Penjualan</string>
     <string name="lap_rekap_detail">Laporan Detail Penjualan</string>

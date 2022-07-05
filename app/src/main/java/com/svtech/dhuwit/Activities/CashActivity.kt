@@ -180,7 +180,7 @@ class CashActivity : AppCompatActivity() {
 
                     when (cardResult?.bank) {
                         "DKI" -> {
-                            card_background.setBackgroundResource(R.drawable.dki)
+                            card_background.setBackgroundResource(R.drawable.jakcard)
                         }
                         "BNI" -> {
                             card_background.setBackgroundResource(R.drawable.tapcash)
@@ -256,11 +256,11 @@ class CashActivity : AppCompatActivity() {
             }
 
             override fun onPingSuccess() {
-                if (btnConnectBluetooth.text.equals("Disconnect")){
+//                if (btnConnectBluetooth.text.equals("Disconnect")){
                     btn_pay.setEnabled(true)
-                } else {
-                    See.toast(this@CashActivity, "Mohon Connectkan Printer..")
-                }
+//                } else {
+//                    See.toast(this@CashActivity, "Mohon Connectkan Printer..")
+//                }
 
             }
 
@@ -305,6 +305,7 @@ class CashActivity : AppCompatActivity() {
                     .addBodyParameter("saldoakhir", saldoakhir.toString())
                     .addBodyParameter("tid", tid)
                     .addBodyParameter("username", username.trim())
+                    .addBodyParameter("casier", nama.trim())
                     .setPriority(Priority.MEDIUM)
                     .build()
                     .getAsJSONObject(object : JSONObjectRequestListener {
@@ -442,9 +443,6 @@ class CashActivity : AppCompatActivity() {
                     val apiMessage = json.getString(MyConstant.API_MESSAGE)
                     if (apiStatus.equals(1)) {
                         See.toast(this@CashActivity, apiMessage)
-                        startActivity(Intent(this@CashActivity,StrukActivity::class.java))
-
-
                     }
                     else {
                         See.toast(this@CashActivity, apiMessage)

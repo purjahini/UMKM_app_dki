@@ -61,6 +61,7 @@ class StrukActivity : AppCompatActivity() {
     var totalPembayaran = 0
     var tanggalTransaksi = ""
 
+
    lateinit var item_produk: List<ResponseStruk.ItemProduk>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,8 +80,8 @@ class StrukActivity : AppCompatActivity() {
         username =
             com.svtech.dhuwit.Utils.getPreferences(this).getString(MyConstant.CURRENT_USER, "")
                 .toString()
-        val nama = com.svtech.dhuwit.Utils.getPreferences(this).getString(MyConstant.NAMA, "").toString()
-        tvNamaKasir.text = "Kasir : $nama"
+//        nama = com.svtech.dhuwit.Utils.getPreferences(this).getString(MyConstant.NAMA, "").toString()
+
         See.log("token struk : $token")
         progressDialog = ProgressDialog(this)
         progressDialog!!.setTitle("Proses")
@@ -91,6 +92,9 @@ class StrukActivity : AppCompatActivity() {
 
         btnSelesai.setOnClickListener {
             onBackPressed()
+            val intent = Intent(this, DashboardActivity::class.java)
+           intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+           startActivity(intent)
         }
 
         setToRecyclerView()
@@ -389,6 +393,10 @@ class StrukActivity : AppCompatActivity() {
                                 val saldoAkhir = if (it.saldoakhir.isNullOrEmpty()) 0 else it.saldoakhir
                             tvSaldoAkhir.text = numberToCurrency(saldoAkhir.toString().toInt())
                             tvTid.text = it.tid
+
+                                tvNamaKasir.text = "Kasir : ${it.casier}"
+
+                                nama = it.casier
 
                                 invoice = it.invoice
                                 totalPembayaran = it.total_pembayaran

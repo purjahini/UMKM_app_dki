@@ -59,6 +59,16 @@
             android:name="com.google.android.actions"
             android:resource="@xml/provider_path" />
 
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
+
         <activity android:name=".Activities.DetailLaporanPenjualanActivity" />
         <activity android:name=".Activities.MenuTambahPegawaiActivity" />
         <activity android:name=".Activities.LaporanPenjualanActivity" />

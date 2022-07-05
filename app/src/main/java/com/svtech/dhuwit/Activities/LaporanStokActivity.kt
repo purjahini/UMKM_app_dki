@@ -1,37 +1,65 @@
 package com.svtech.dhuwit.Activities
 
+import android.app.Activity
 import android.app.ProgressDialog
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.Environment
+import android.text.format.DateFormat
+import android.view.Gravity
 import android.view.View
 import android.widget.AdapterView
+import android.widget.FrameLayout
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.androidnetworking.AndroidNetworking
 import com.androidnetworking.common.Priority
 import com.androidnetworking.error.ANError
 import com.androidnetworking.interfaces.JSONObjectRequestListener
+import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
+import com.itextpdf.text.pdf.PdfPTable
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.MultiplePermissionsReport
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.svtech.dhuwit.Adapter.RclvLaporanStok
 import com.svtech.dhuwit.AdapterOnline.SpinnerAdapterCustom
 import com.svtech.dhuwit.R
-import com.svtech.dhuwit.Utils.MyConstant
-import com.svtech.dhuwit.Utils.See
-import com.svtech.dhuwit.Utils.getToken
-import com.svtech.dhuwit.Utils.setToolbar
+import com.svtech.dhuwit.Utils.*
 import com.svtech.dhuwit.modelOnline.ItemOption
 import com.svtech.dhuwit.modelOnline.ResponseLapStok
+import kotlinx.android.synthetic.main.activity_laporan_harian.*
 import kotlinx.android.synthetic.main.activity_laporan_stok.*
+import kotlinx.android.synthetic.main.activity_laporan_stok.btnExport
+import kotlinx.android.synthetic.main.activity_laporan_stok.rclvPenjualan
 import org.json.JSONObject
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 class LaporanStokActivity : AppCompatActivity() {
     var token = ""
     var username = ""
+    var nama = ""
+
     var progressDialog: ProgressDialog? = null
 
     var kategoriId = ""
 
+    var time = ""
+    var dateNow = Calendar.getInstance()
+    var namaToko = ""
+    var alamatToko = ""
+
 
     var arrayList: ArrayList<ItemOption> = ArrayList()
+    lateinit var lists : List<ResponseLapStok.Data>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +68,7 @@ class LaporanStokActivity : AppCompatActivity() {
 
         token =
             com.svtech.dhuwit.Utils.getPreferences(this).getString(MyConstant.TOKEN, "").toString()
+        nama = com.svtech.dhuwit.Utils.getPreferences(this).getString(MyConstant.NAMA, "").toString()
         username =
             com.svtech.dhuwit.Utils.getPreferences(this).getString(MyConstant.CURRENT_USER, "")
                 .toString()
@@ -78,15 +107,6 @@ class LaporanStokActivity : AppCompatActivity() {
                             val aItmOpt = ItemOption(kategoriIdName, kategoriName)
                             arrayList.add(aItmOpt)
 
-
-
-
-//                        KategoriList.add(kategoriName)
-//                        KategoriListId.add(kategoriId)
-//                        KategoriAdapter = ArrayAdapter(
-//                            this@AddProdukActivity,
-//                            android.R.layout.simple_spinner_item,
-//                            KategoriList)
 
 
                         }
@@ -147,7 +167,7 @@ class LaporanStokActivity : AppCompatActivity() {
                 See.log("itemOption label : ", ItemOptionModel.optLabel)
                 kategoriId = ItemOptionModel.optId
 
-
+                progressDialog?.show()
                 AndroidNetworking.post(MyConstant.Urlstokgetdata)
                     .addHeaders(MyConstant.AUTHORIZATION,MyConstant.BEARER+token)
                     .addBodyParameter(MyConstant.USERNAME, username)
@@ -166,7 +186,14 @@ class LaporanStokActivity : AppCompatActivity() {
                                 tvEmpty.visibility = View.GONE
                                 val data = Gson().fromJson(respon, ResponseLapStok::class.java)
                                 val dataToko = data.data_toko
+                                time = DateFormat.format(
+                                    "dd-MM-yyyy HH:mm:ss",
+                                    dateNow.timeInMillis
+                                ).toString()
+                                TvTanggalCetak.setText("Date Print : "+time)
                                 dataToko.forEach {
+                                    namaToko = it.nama_toko
+                                    alamatToko = it.alamat_toko
                                     tvNamaToko.text = "Nama Toko : ${it.nama_toko}"
                                     tvAlamatToko.text = "Alamat Toko : ${it.alamat_toko}"
 
@@ -174,9 +201,16 @@ class LaporanStokActivity : AppCompatActivity() {
                                 if (data.data.isEmpty()){
                                     tvEmpty.visibility = View.VISIBLE
                                     rclvPenjualan.visibility = View.GONE
+                                    btnExport.visibility = View.GONE
                                 } else {
+                                    btnExport.visibility = View.VISIBLE
                                     rclvPenjualan.visibility = View.VISIBLE
                                     val listData = data.data.reversed()
+                                    lists = data.data
+                                    btnExport.setOnClickListener {
+                                        savePDF()
+                                    }
+
                                     rclvPenjualan.apply {
                                         adapter = RclvLaporanStok(this@LaporanStokActivity, listData as MutableList<ResponseLapStok.Data>)
                                         layoutManager = LinearLayoutManager(this@LaporanStokActivity)
@@ -212,6 +246,115 @@ class LaporanStokActivity : AppCompatActivity() {
 
 
 
+    }
+
+    fun savePDF() {
+
+        Dexter.withContext(this)
+            .withPermissions(
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                android.Manifest.permission.READ_EXTERNAL_STORAGE
+            )
+            .withListener(object : MultiplePermissionsListener {
+                override fun onPermissionsChecked(p0: MultiplePermissionsReport?) {
+                    if (p0?.areAllPermissionsGranted()!!) {
+                        createPDF()
+                    }
+                }
+
+                override fun onPermissionRationaleShouldBeShown(
+                    p0: MutableList<PermissionRequest>?,
+                    p1: PermissionToken?
+                ) {
+                    p1?.continuePermissionRequest()
+                }
+
+            })
+            .check()
+
+    }
+
+    fun createPDF() {
+
+
+
+        val pointColumnWidths = floatArrayOf(50f,150f, 175f, 150f)
+        val folder =
+            File(Environment.getExternalStorageDirectory(), getString(R.string.lap_stoks))
+        if (!folder.exists()) folder.mkdir()
+
+
+        val fileName = "Lap_stok_$time.pdf"
+        val file = File(folder.absolutePath, fileName)
+        val doc = PdfUtils(file.absolutePath)
+
+        doc.addParagraf("Laporan Stok", PdfUtils.fontTitle, PdfUtils.align_center)
+        doc.addParagraf("Toko : $namaToko", PdfUtils.fontNormal, PdfUtils.align_center)
+        doc.addParagraf("Alamat : $alamatToko", PdfUtils.fontNormal, PdfUtils.align_center)
+        doc.addNewEnter()
+        doc.addNewEnter()
+
+        var table = PdfPTable(4)
+        table.addCell(doc.createCell("NO", PdfUtils.fontHeader, PdfUtils.no_border))
+        table.addCell(doc.createCell("Kategori", PdfUtils.fontHeader, PdfUtils.no_border))
+        table.addCell(doc.createCell("Produk", PdfUtils.fontHeader, PdfUtils.no_border))
+        table.addCell(doc.createCell("Stok Akhir", PdfUtils.fontHeader, PdfUtils.no_border))
+
+        var no = 0
+        lists.forEach {
+            no+=1
+            table.addCell(doc.createCell(no.toString(), PdfUtils.fontNormal, PdfUtils.no_border))
+            table.addCell(doc.createCell(it.kategori_nama, PdfUtils.fontNormal, PdfUtils.no_border))
+            table.addCell(doc.createCell(it.nama_produk, PdfUtils.fontNormal, PdfUtils.no_border))
+            table.addCell(doc.createCell(it.stok.toString(), PdfUtils.fontNormal, PdfUtils.no_border))
+        }
+
+
+        doc.addTable(table, pointColumnWidths, PdfUtils.align_center)
+
+        doc.addNewEnter()
+        doc.addParagraf("Tanggal Cetak : $time", PdfUtils.fontNormal, PdfUtils.align_left)
+        doc.addParagraf("Dicetak Oleh : $nama", PdfUtils.fontNormal, PdfUtils.align_left)
+        doc.close()
+        val snackbar =
+            Snackbar.make(
+                rclvPenjualan.rootView,
+                "Laporan berhasil tersimpan!",
+                Snackbar.LENGTH_INDEFINITE
+            )
+        val view = snackbar.view
+        val params = view.layoutParams as FrameLayout.LayoutParams
+        params.gravity = Gravity.TOP
+        params.topMargin = 75
+        view.layoutParams = params
+
+        snackbar.setAction("Tampilkan", View.OnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.setType("application/pdf")
+            val list =
+                packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
+            if (list.isNotEmpty()) {
+                val uri = FileProvider.getUriForFile(this, packageName + ".provider", file)
+                val intent = Intent(Intent.ACTION_VIEW)
+                intent.setDataAndType(uri, "application/pdf")
+                intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                startActivity(intent)
+            } else {
+                Toast.makeText(this, "Tidak ada aplikasi untuk membuka file!", Toast.LENGTH_SHORT)
+                    .show()
+            }
+
+        }).show()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK && requestCode == MyConstant.REQUEST_OPEN_FILE) {
+//            if (lists != null) {
+//
+//                Toast.makeText(this, "Laporan berhasil tersimpan di ${file.absolutePath}", Toast.LENGTH_LONG).show()
+//            }
+        }
     }
 
     override fun onBackPressed() {
