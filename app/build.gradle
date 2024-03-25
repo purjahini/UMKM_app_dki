@@ -1,15 +1,16 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'com.google.gms.google-services'
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 33
 
     defaultConfig {
-        applicationId 'com.svtech.dhuwit'
+        applicationId 'com.svtech.mandiri'
         minSdkVersion 21
-        targetSdkVersion 30
-        versionCode 3
+        targetSdkVersion 33
+        versionCode 4
         versionName "0.0.8.6"
         multiDexEnabled = true
         archivesBaseName = "UMKM ver." + versionName
@@ -40,6 +41,7 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    namespace 'com.svtech.mandiri'
 }
 
 dependencies {
@@ -48,9 +50,10 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.1.0'
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-//    testImplementation 'junit:junit:4.12'
-//    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-//    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    implementation 'com.google.firebase:firebase-messaging:23.4.1'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation 'com.google.android.material:material:1.3.0-alpha02'
     implementation 'com.github.satyan:sugar:1.3'
     implementation 'com.github.dhaval2404:imagepicker:1.7.4'
@@ -79,6 +82,7 @@ dependencies {
     implementation 'com.intuit.sdp:sdp-android:1.0.6'
 
     //card View
+    //noinspection GradleCompatible
     implementation 'com.android.support:cardview-v7:30.0.0'
 
 // retrofit, gson
@@ -88,12 +92,9 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.google.code.gson:gson:2.8.6'
 
+    //barcode
+    implementation 'com.google.zxing:core:3.4.0'
 
-
-    //firebase
-    implementation platform('com.google.firebase:firebase-bom:27.1.0')
-    implementation 'com.google.firebase:firebase-analytics-ktx'
-    implementation 'com.google.firebase:firebase-messaging-ktx'
 
     //loader
     implementation 'com.tuyenmonkey:mkloader:1.4.0'
@@ -103,6 +104,10 @@ dependencies {
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
 
     implementation files('libs/pattracardsdk-release.aar')
+
     implementation 'com.amitshekhar.android:android-networking:1.0.2'
+
+    //mpchart
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
 }

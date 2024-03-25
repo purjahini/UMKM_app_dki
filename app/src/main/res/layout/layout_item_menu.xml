@@ -21,6 +21,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/photo"
             android:adjustViewBounds="true"
+            android:tint="@color/primary"
             android:scaleType="fitCenter"
             android:maxHeight="150dp"
             android:padding="10dp"/>

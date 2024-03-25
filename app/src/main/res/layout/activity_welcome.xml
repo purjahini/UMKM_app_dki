@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/primary">
+
+    <TextView
+        android:id="@+id/TvLogoName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:fontFamily="@font/roboto_bold"
+        android:layout_above="@id/ivLogo"
+        android:textSize="@dimen/_20sdp"
+        android:textColor="@color/white"
+        android:shadowColor="@android:color/black"
+        android:shadowDy="10"
+        android:elevation="4dp"
+        android:shadowRadius="4"/>
+
+    <ImageView
+        android:id="@+id/ivLogo"
+        android:layout_width="@dimen/_200sdp"
+        android:layout_height="@dimen/_200sdp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="100dp"
+        android:src="@drawable/logo_umkm" />
+
+    <!-- ProgressBar -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_20sdp"
+        android:layout_below="@id/ivLogo"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="16dp"
+        android:max="100"
+        android:progress="0"
+        android:progressDrawable="@drawable/rounded_progress_bar"
+        android:scrollbarStyle="outsideOverlay" />
+
+<ImageView
+    android:layout_width="@dimen/_100sdp"
+    android:layout_height="@dimen/_80sdp"
+    android:layout_centerHorizontal="true"
+    android:src="@drawable/logo"
+    android:layout_above="@id/TvSupport"/>
+
+
+    <TextView
+        android:id="@+id/TvSupport"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/IvSvt"
+        android:gravity="center"
+        android:text="@string/support"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/IvSvt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/_10sdp"
+        android:src="@drawable/svt" />
+
+</RelativeLayout>

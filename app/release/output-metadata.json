@@ -1,20 +1,20 @@
 {
-  "version": 1,
+  "version": 3,
   "artifactType": {
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.yudesk.funcashier2",
+  "applicationId": "com.svtech.mandiri",
   "variantName": "release",
   "elements": [
     {
       "type": "SINGLE",
       "filters": [],
-      "properties": [],
-      "versionCode": 2,
-      "versionName": "1.1",
-      "enabled": true,
-      "outputFile": "app-release.apk"
+      "attributes": [],
+      "versionCode": 4,
+      "versionName": "0.0.8.6",
+      "outputFile": "UMKM ver.0.0.8.6-release.apk"
     }
-  ]
+  ],
+  "elementType": "File"
 }

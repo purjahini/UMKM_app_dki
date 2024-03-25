@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_versi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/_8sdp"
+        android:gravity="center"
+        android:background="@color/white"/>
+
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:nestedScrollingEnabled="true">
+
+        <include
+            android:id="@+id/include"
+            layout="@layout/toolbar_with_back"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/include">
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_2sdp"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:layout_marginRight="@dimen/_2sdp"
+            android:background="@color/white"
+            app:cardCornerRadius="@dimen/_3sdp"
+            app:cardElevation="7dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_5sdp"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+
+
+                <LinearLayout
+                    android:id="@+id/LlVaDki"
+                    android:visibility="visible"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/TvNoPesananVa"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/_10sdp"
+
+                        android:gravity="center_horizontal"
+                        android:textSize="@dimen/_12sdp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_50sdp"
+                        android:layout_marginLeft="@dimen/_10sdp"
+                        android:layout_marginRight="@dimen/_10sdp"
+                        android:orientation="horizontal"
+                        android:weightSum="10">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="@dimen/_50sdp"
+                            android:layout_weight="5"
+                            android:src="@drawable/logo" />
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_50sdp"
+                            android:layout_weight="5"
+                             />
+
+                    </LinearLayout>
+
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_5sdp"
+
+                        android:text="@string/totalbayar" />
+
+                    <TextView
+                        android:id="@+id/TvTotalTagihan"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_5sdp"
+                        android:layout_marginTop="@dimen/_5sdp"
+                        android:layout_marginRight="@dimen/_20sdp"
+                        android:layout_marginBottom="@dimen/_5sdp"
+                        android:text="-"
+                        android:background="@color/whiteShadow"
+                        android:drawableRight="@drawable/ic_baseline_content_copy_24"
+                        android:drawableTint="@color/colorPrimary"
+
+                        android:padding="@dimen/_10sdp"
+                        android:textSize="@dimen/_14sdp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/TvTanggalBerlaku"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_5sdp"
+                        android:layout_marginRight="@dimen/_20sdp"
+                        android:layout_marginBottom="@dimen/_10sdp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_5sdp"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:text="@string/mohontransfer" />
+
+
+                    <TextView
+                        android:id="@+id/TvVaTagihan"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_5sdp"
+                        android:layout_marginTop="@dimen/_5sdp"
+                        android:layout_marginRight="@dimen/_20sdp"
+                        android:layout_marginBottom="@dimen/_5sdp"
+                        android:background="@color/whiteShadow"
+                        android:drawableRight="@drawable/ic_baseline_content_copy_24"
+                        android:drawableTint="@color/colorPrimary"
+                        android:padding="@dimen/_10sdp"
+                        android:text="11998877665544331100123"
+                        android:textColor="@android:color/holo_red_light"
+                        android:textSize="@dimen/_14sdp"
+                        android:textStyle="bold" />
+
+
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/LlJOPDki"
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/TvNoPesananJop"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/_10sdp"
+                        android:gravity="center_horizontal"
+                        android:textSize="@dimen/_12sdp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_50sdp"
+                        android:layout_marginLeft="@dimen/_10sdp"
+                        android:layout_marginRight="@dimen/_10sdp"
+                        android:layout_marginTop="@dimen/_5sdp"
+                        android:orientation="horizontal"
+                        android:weightSum="10">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="@dimen/_50sdp"
+                            android:layout_weight="5"
+                            android:src="@drawable/logodki" />
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_50sdp"
+                            android:layout_weight="5"
+                            android:src="@drawable/dki" />
+
+                    </LinearLayout>
+
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_5sdp"
+
+                        android:text="@string/totalbayar" />
+
+                    <TextView
+                        android:id="@+id/TvJOPTotalTagihan"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_5sdp"
+                        android:layout_marginTop="@dimen/_5sdp"
+                        android:layout_marginRight="@dimen/_20sdp"
+                        android:layout_marginBottom="@dimen/_5sdp"
+                        android:background="@color/colorPrimaryDark"
+                        android:drawableTint="@color/colorPrimary"
+
+                        android:padding="@dimen/_10sdp"
+                        android:textSize="@dimen/_14sdp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_5sdp"
+                        android:layout_marginTop="@dimen/_10sdp"
+
+                        android:text="No. Referensi" />
+
+
+                    <TextView
+                        android:id="@+id/TvJOPReff"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_5sdp"
+                        android:layout_marginTop="@dimen/_5sdp"
+                        android:layout_marginRight="@dimen/_20sdp"
+                        android:layout_marginBottom="@dimen/_5sdp"
+                        android:background="@color/colorPrimaryDark"
+
+                        android:drawableTint="@color/colorPrimary"
+
+                        android:padding="@dimen/_10sdp"
+                        android:textColor="@android:color/holo_red_light"
+                        android:textSize="@dimen/_14sdp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_5sdp"
+                        android:layout_marginTop="@dimen/_10sdp"
+
+                        android:text="Status Pembayaran" />
+
+
+                    <TextView
+                        android:id="@+id/TvStatusPayJopTagihan"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_5sdp"
+                        android:layout_marginTop="@dimen/_5sdp"
+                        android:layout_marginRight="@dimen/_20sdp"
+                        android:layout_marginBottom="@dimen/_5sdp"
+                        android:background="@color/colorPrimaryDark"
+                        android:drawableTint="@color/colorPrimary"
+
+                        android:padding="@dimen/_10sdp"
+                        android:textColor="@android:color/holo_red_light"
+                        android:textSize="@dimen/_14sdp"
+                        android:textStyle="bold" />
+
+
+
+
+
+                </LinearLayout>
+
+
+
+
+
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+
+    </ScrollView>
+
+
+</LinearLayout>

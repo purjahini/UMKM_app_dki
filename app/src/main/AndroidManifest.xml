@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.svtech.dhuwit">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission
         android:name="android.permission.READ_PRIVILEGED_PHONE_STATE"
@@ -26,7 +25,20 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
-        tools:replace="android:icon">
+        tools:replace="android:icon"
+       >
+        <activity
+            android:name=".Activities.NeracaActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.WelcomeActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".Activities.StrukActivity"
             android:exported="false" />
@@ -34,7 +46,9 @@
             android:name=".Activities.RegisterDeviceActivity"
             android:exported="false"
             android:label="Status Device" />
-        <activity android:name=".Activities.CashActivity">
+        <activity
+            android:name=".Activities.CashActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.nfc.action.TAG_DISCOVERED" />
 
@@ -46,40 +60,18 @@
                 android:resource="@xml/nfc_tech_filter" />
         </activity>
         <activity android:name=".Activities.RegisterActivity" />
-        <activity
-            android:name=".MainActivity"
-            android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Activities.DetailLaporanHarianActivity" />
         <activity android:name=".Activities.LaporanHarianActivity" />
         <activity android:name=".Activities.LaporanActivity" />
-        <activity android:name=".Activities.LaporanStokActivity"/>
+        <activity android:name=".Activities.LaporanStokActivity" />
 
-        <meta-data
-            android:name="com.google.android.actions"
-            android:resource="@xml/provider_path" />
 
-        <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="${applicationId}.provider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths" />
-        </provider>
 
         <activity android:name=".Activities.DetailLaporanPenjualanActivity" />
         <activity android:name=".Activities.MenuTambahPegawaiActivity" />
         <activity android:name=".Activities.LaporanPenjualanActivity" />
         <activity android:name=".Activities.AddKaryawanActivity" />
-        <activity android:name=".Activities.SplashScreenActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".Activities.SplashScreenActivity"/>
         <activity android:name=".Activities.LoginActivity" />
         <activity android:name=".Activities.BluetoothDeviceListActivity" />
         <activity
@@ -92,19 +84,21 @@
 
         <meta-data
             android:name="DATABASE"
-            android:value="umkm_app.db" />
+            android:value="umkm_mandiri.db" />
         <meta-data
             android:name="VERSION"
-            android:value="1" />
+            android:value="4" />
         <meta-data
             android:name="QUERY_LOG"
             android:value="false" />
         <meta-data
             android:name="DOMAIN_PACKAGE_NAME"
-            android:value="com.svtech.dhuwit" />
+            android:value="com.svtech.mandiri" />
 
         <activity android:name=".Activities.MenuTambahProdukActivity" />
         <activity android:name=".Activities.MenuTambahKategoriActivity" />
+        <activity android:name=".Activities.QrisMockUp" />
+        <activity android:name=".Activities.VaDanQrDKI" />
         <activity
             android:name=".Activities.MenuKeranjangActivity"
             android:configChanges="keyboardHidden|layoutDirection|screenLayout"
@@ -119,6 +113,34 @@
             android:enabled="true"
             android:exported="true"
             android:stopWithTask="false" />
+        <service
+            android:name=".MyFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+<!--        <meta-data-->
+<!--            android:name="com.google.android.actions"-->
+<!--            android:resource="@xml/provider_path" />-->
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/logo" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="@string/notifications_promotions_channel_id" />
     </application>
 
 </manifest>

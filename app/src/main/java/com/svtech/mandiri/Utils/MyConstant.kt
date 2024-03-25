@@ -1,0 +1,127 @@
+package com.svtech.mandiri.Utils
+
+object MyConstant{
+
+    const val REQUEST_CONNECT_DEVICE = 1
+    const val REQUEST_ENABLE_BT = 2
+
+    const val DEVICE_ADDRESS = "DeviceAddress"
+    const val DEVICE_NAME = "DeviceName"
+    const val CURRENT_USER = "CurrentUser"
+    const val FIRST_START = "FirstStart"
+    const val REQUEST_OPEN_FILE = 9999
+    const val SECRET = "350ac8234c7515318253b24fed7aaf5c"
+    const val API_STATUS = "api_status"
+    const val STATUS = "status"
+    const val API_MESSAGE = "api_message"
+    const val AUTHORIZATION ="Authorization"
+    const val DATE_FROM = "from"
+    const val DATE_TO = "to"
+    const val STATUSPARAM = "status"
+
+    const val TOKEN = "token"
+    const val BEARER = "Bearer"
+
+    const val FORBIDDEN = "Forbidden Access!"
+    const val SUCCESS = "success"
+    const val TIME = "time"
+//    const val url = "http://203.210.87.95:8014/umkm_core/public/api"
+    const val url = "http://202.150.155.88:61080/umkm_core/public/api"
+    const val url_image = "http://202.150.155.88:61080/umkm_core/public/"
+    const val url_payment = "http://118.99.71.123:8443/qrisspetmr-prod/v1/transaksi"
+
+    //request device
+    const  val BASE_URL = "http://202.150.155.88:61080/smartwater-v1/public/api"
+    const val API_STATUS_DEVICES = "status"
+    val API_STATUS_DVS = "status"
+    val API_MESSAGE_DEVICE = "message"
+    val API_STATUS_DEVICE = "status_device"
+    val API_SUCCESS = "Success"
+
+
+
+    const val ID_TRANSAKSI = "id_transaksi"
+    const val PRODUK_ID = "produk_id"
+
+    const val NAMA_TOKO ="nama_toko"
+    const val ALAMAT_TOKO = "alamat_toko"
+
+    const val USERNAME ="username"
+    const val KATEGORI ="kategori"
+    const val KONTAK = "kontak"
+    const val NAMA = "nama"
+    const val  PASSWORD= "password"
+    const val ROLE = "role"
+    const val ID = "id"
+    const val DISKON = "diskon"
+    const val HARGA = "harga"
+    const val MINIMAL_PEMBELIAN = "minimal_pembelian"
+    const val SATUAN = "satuan"
+    const val STOK = "stok"
+    const val diskon_produk = "diskon_produk"
+    const val foto_produk = "foto_produk"
+    const val harga_produk = "harga_produk"
+    const val JUMLAH = "jumlah"
+    const val nama_produk = "nama_produk"
+    const val stok_produk = "stok_produk"
+    const val produk_id = "produk_id"
+
+    const val FOTO = "foto"
+
+
+
+    const val urlToko = "$url/tokoregister"
+    const val urlUser = "$url/userregister"
+    const val UrlTOKENS = "$url/get-token"
+    const val UrlLoginToko = "$url/tokologin"
+    const val UrlLoginUser = "$url/userlogin"
+
+    const val Urlkategoricreate = "$url/kategoricreate"
+    const val Urlkategorihapus = "$url/kategorihapus"
+    const val UrlKategoriGetData = "$url/kategorigetdata"
+    const val Urlkategoriupdate = "$url/kategoriupdate"
+
+
+    const val Urlpegawaicreate = "$url/pegawaicreate"
+    const val Urlpegawaigetdata = "$url/pegawaigetdata"
+    const val Urlpegawaihapus = "$url/pegawaihapus"
+    const val Urlpegawaiupdate = "$url/pegawaiupdate"
+
+
+
+
+    const val Urlprodukhapusid= "$url/produkhapusid"
+    const val Urlproduklistdata = "$url/produklistdata"
+    const val Urlproduk_list_data_id_transaksi = "$url/produk_list_data_id_transaksi"
+    const val Urlprodukcreate = "$url/produkcreate"
+    const val Urlprodukupdateid = "$url/produkupdateid"
+
+    const val Urltransaksigetstatus = "$url/transaksigetstatus"
+    const val Urltransaksiinput = "$url/transaksiinput"
+    const val Urltransaksipertanggal = "$url/transaksipertanggal"
+    const val Urltransaksistatus= "$url/transaksistatus"
+    const val Urltransaksicreatestatus= "$url/transaksicreatestatus"
+    const val Urltransaksiupdateid= "$url/transaksiupdateid"
+
+    const val Urllaporandetail = "$url/laporandetail"
+    const val Urllaporantodaydetail = "$url/laporantodaydetail"
+    const val Urllapdetailcetak = "$url/lapdetailcetak"
+
+    const val Urlstokgetdata = "$url/stokgetdata"
+
+    const val Urlmenuneraca = "$url/menu_neraca"
+    const val Urlbilboardsaldo = "$url/bilboardsaldo"
+    const val Urlcreateqr = "$url_payment/createqr"
+
+
+
+
+    const val Urlitemtransaksidataidproduk = "$url/itemtransaksidataidproduk"
+    const val Urlitem_transaksi_produk_transaksi = "$url/item_transaksi_produk_transaksi"
+    const val Urlitem_transaksi_insert_produk_id = "$url/item_transaksi_insert_produk_id"
+
+    val UrlrequestDevice = "/device"
+
+
+
+}

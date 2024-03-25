@@ -34,8 +34,28 @@
         android:layout_height="wrap_content"
         android:text="CashCard"
         android:textAlignment="textStart"
+        android:visibility="gone"
         android:textAllCaps="false"
         app:icon="@drawable/ic_baseline_credit_card_24" />
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnVa"
+        style="@style/Widget.MaterialComponents.Button.Icon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="VA Bank Mandiri"
+        android:textAlignment="textStart"
+        android:textAllCaps="false"
+        app:icon="@drawable/ic_baseline_credit_card_24" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnqr"
+        style="@style/Widget.MaterialComponents.Button.Icon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="QRIS Bank Mandiri"
+        android:textAlignment="textStart"
+        android:textAllCaps="false"
+        app:icon="@drawable/ic_baseline_credit_card_24" />
 
 </LinearLayout>

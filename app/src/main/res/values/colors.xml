@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primary">#536FD1</color>
-    <color name="primary_dark">#536FD1</color>
-    <color name="primary_light">#536FD1</color>
+    <color name="primary">#62DBFB</color>
+    <color name="primary_dark">#62DBFB</color>
+    <color name="primary_light">#62DBFB</color>
     <color name="accent">#536FD1</color>
     <color name="primary_text">#212121</color>
     <color name="secondary_text">#757575</color>
     <color name="icons">#536FD1</color>
     <color name="divider">#536FD1</color>
     <color name="putih">#EAEAEA</color>
+    <color name="merah">#D9EC1B1B</color>
 
 
     <color name="abu_abu">#8f91a8</color>
@@ -36,6 +37,9 @@
     <color name="colorWhiteTransparent">#d1ffffff</color>
     <color name="colorBlack">#000000</color>
     <color name="notWhiteAtAll">#E6E6E6</color>
+
+    <color name="whiteShadow">#E4ECED</color>
+
 
 
 

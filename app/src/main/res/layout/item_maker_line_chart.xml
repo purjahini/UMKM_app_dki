@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/container"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingVertical="5dp"
+    android:paddingHorizontal="10dp"
+    android:clickable="true"
+    android:layout_marginBottom="10dp"
+    android:orientation="vertical">
+
+    <TextView
+    android:id="@+id/TvlabelTrx"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerHorizontal="true"
+    android:text="Income"
+    android:textStyle="bold"
+    android:textColor="@color/colorPrimary"
+    android:singleLine="true"
+    android:textSize="10dp"
+    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+
+    <TextView
+        android:id="@+id/txtTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="Title"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:singleLine="true"
+        android:textSize="10dp"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+
+        <TextView
+            android:id="@+id/square1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="Rp."
+            android:textColor="@color/colorPrimary"
+            android:singleLine="true"
+            android:textSize="10dp"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+        <TextView
+            android:id="@+id/item1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="Item 1"
+            android:textColor="@color/colorPrimary"
+            android:singleLine="true"
+            android:textSize="10dp"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+    </LinearLayout>
+</LinearLayout>

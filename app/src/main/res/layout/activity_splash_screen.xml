@@ -1,41 +1,158 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/lParentContent"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/primary"
+    android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/ivImageSplash"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_margin="@dimen/_25sdp"
-        android:visibility="visible" />
+        android:layout_alignParentTop="true"
+        android:orientation="vertical">
 
-    <com.tuyenmonkey.mkloader.MKLoader
-        android:id="@+id/pbLoading"
-        android:layout_marginBottom="@dimen/_20sdp"
-        android:padding="@dimen/_10sdp"
-        android:layout_centerHorizontal="true"
-        android:layout_width="@dimen/_20sdp"
-        android:layout_height="@dimen/_20sdp"
-        android:layout_alignBottom="@id/ivImageSplash"
-        android:visibility="visible"
-        app:mk_color="@color/colorPrimaryDark"
-        app:mk_type="Whirlpool" />
 
-    <TextView
+        <TextView
+            android:id="@+id/TvNamaApp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_50sdp"
+            android:gravity="center"
+            android:text="@string/app_name"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_30sdp"
+            android:fontFamily="@font/roboto_bold"
+            android:shadowColor="@android:color/black"
+            android:shadowDy="10"
+            android:elevation="4dp"
+            android:shadowRadius="4" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/app_desk_header"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/vp_slider"
+            android:layout_width="@dimen/_250sdp"
+            android:layout_height="@dimen/_200sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_gravity="center"
+            android:elevation="@dimen/_7sdp" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llSupport"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+       android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/logo" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/support"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/svt" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:layout_marginBottom="@dimen/_5sdp"
+            android:textSize="@dimen/_10sdp"
+
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:id="@+id/labelwarning"/>
+
+        <ImageView
+            android:id="@+id/ivImageSplash"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_margin="@dimen/_25sdp"
+            android:visibility="gone" />
+
+
+        <com.tuyenmonkey.mkloader.MKLoader
+            android:id="@+id/pbLoading"
+            android:layout_width="@dimen/_20sdp"
+            android:layout_height="@dimen/_20sdp"
+            android:layout_alignBottom="@id/ivImageSplash"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/_20sdp"
+            android:padding="@dimen/_10sdp"
+            android:visibility="gone"
+            app:mk_color="@color/colorPrimaryDark"
+            app:mk_type="Whirlpool" />
+
+
+    </LinearLayout>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/CardAuth"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:gravity="center"
-        android:textColor="@color/abu_abu"
-        android:layout_marginBottom="@dimen/_10sdp"
-        android:text="@string/app_name"/>
+        android:elevation="@dimen/_5sdp"
+        app:cardCornerRadius="@dimen/_5sdp">
 
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/daftar"
+                android:textAllCaps="false"
+                android:backgroundTint="@color/merah"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginRight="@dimen/_10sdp" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:text="@string/login"
+                android:textAllCaps="false"
+                android:backgroundTint="@color/white"
+                android:layout_height="wrap_content"
+                android:textColor="@color/merah"
+                android:textStyle="bold"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginRight="@dimen/_10sdp"
+                android:layout_marginBottom="@dimen/_10sdp" />
+
+        </LinearLayout>
+
+
+    </androidx.cardview.widget.CardView>
 
 
 </RelativeLayout>

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">UMKM ver 0.0.8.4</string>
+    <string name="app_name">UMKM MANDIRI</string>
     <string name="nama_toko">svtech Pos</string>
     <string name="alamat_toko">www.svtech.com</string>
     <string name="title_activity_main">MainActivity</string>
@@ -12,9 +12,11 @@
     <string name="instruction">Letakkan kartu dibelakang perangkat</string>
     <string name="numberCard">**** **** **** ****</string>
     <string name="saldo">Saldo Anda</string>
+    <string name="mohontransfer">Mohon transfer ke nomor virtual account dibawah ini</string>
     <string name="default_balance">Rp.0,00</string>
     <string name="default_card_number">**** **** **** ****</string>
-
+    <string name="warningScan">Silahkan Scan Pada QrCode Dibawah ini.</string>
+    <string name="totalbayar">Total Pembayaran</string>
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
@@ -38,4 +40,27 @@
     <string name="lap_rekap_detail">Laporan Detail Penjualan</string>
     <string name="lap_stoks">Laporan Stok</string>
     <string name="lap_detail_invoice">Detail</string>
+    <string name="app_desk_header">Aplikasi Wirausaha Kelola Bisnis Jadi Maju</string>
+    <string name="app_desk_footer">Teknologi kami memudahkan anda untuk bertransaksi lebih cepat</string>
+    <string name="support">Support by</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="daftar">Daftar</string>
+
+    <!-- Notifications -->
+    <string name="notification_add_to_cart_button">Like</string>
+    <string name="notifications_promotions_channel_id" translatable="false">Promotions channel id</string>
+    <string name="notifications_promotions_channel_name">Promotions channel</string>
+    <string name="notifications_promotions_channel_description">We send you our best deals!</string>
+    <string name="diagramtrxamonth">Neraca One Month</string>
+    <string name="pendapatan">Pendapatan</string>
+    <string name="pengeluaran">Pengeluaran</string>
+    <string name="Month">Month</string>
+    <string name="saldo_pending">Saldo Pending : Rp.0</string>
+    <string name="saldo_tarik">Saldo Tarik : Rp. 0</string>
+    <string name="debet">Debet</string>
+    <string name="kredit">Kredit</string>
+    <string name="Month_lalu">Bulan Lalu</string>
+    <string name="Month_sekarang">Bulan Sekarang</string>
+    <!-- End Notifications -->
 </resources>

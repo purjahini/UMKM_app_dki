@@ -82,6 +82,35 @@
 
         </RelativeLayout>
 
+        <LinearLayout
+            android:layout_margin="@dimen/_5sdp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/LLSaldo"
+            app:layout_constraintTop_toBottomOf="@id/lLlogo">
+            <TextView
+                android:padding="@dimen/_3sdp"
+                android:id="@+id/TvSaldo"
+                android:fontFamily="@font/bold"
+                android:textColor="@color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/saldo"
+               />
+
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/TvSaldoTarik"
+                android:fontFamily="@font/bold"
+                android:textColor="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/saldo_tarik"/>
+
+
+        </LinearLayout>
+
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/card_slider"
@@ -92,7 +121,7 @@
             android:layout_marginRight="@dimen/_10sdp"
             app:cardCornerRadius="25dp"
             app:cardElevation="7dp"
-            app:layout_constraintTop_toBottomOf="@id/lLlogo">
+            app:layout_constraintTop_toBottomOf="@id/LLSaldo">
 
             <androidx.viewpager.widget.ViewPager
                 android:elevation="@dimen/_7sdp"
