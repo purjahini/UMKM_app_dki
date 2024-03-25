@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "302335370571",
+    "project_id": "umkm-app-mandiri",
+    "storage_bucket": "umkm-app-mandiri.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:302335370571:android:27f7cc3b8c36e8ece9b4ce",
+        "android_client_info": {
+          "package_name": "com.svtech.mandiri"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqunoqIWj5DL_LuIEaoOXSaQhsQVN3QYU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
