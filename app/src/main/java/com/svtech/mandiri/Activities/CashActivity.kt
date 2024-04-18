@@ -1,5 +1,6 @@
 package com.svtech.mandiri.Activities
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ProgressDialog
@@ -7,6 +8,7 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.nfc.NfcManager
 import android.os.Bundle
 import android.os.Handler
@@ -17,6 +19,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import com.androidnetworking.AndroidNetworking
 import com.androidnetworking.common.Priority
 import com.androidnetworking.error.ANError
@@ -121,6 +124,20 @@ class CashActivity : AppCompatActivity() {
             } else if (btnConnectBluetooth.text.equals("Disconnect")) {
                 /*Memutuskan koneksi printer*/
                     btn_pay.visibility = View.INVISIBLE
+                if (ActivityCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.BLUETOOTH_CONNECT
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return@setOnClickListener
+                }
                 if (mBluetoothAdapter != null) mBluetoothAdapter!!.disable()
                 if (mBluetoothSocket.isConnected) closeSocket(mBluetoothSocket)
                 savePreferences(this, MyConstant.DEVICE_ADDRESS, "")
@@ -217,20 +234,20 @@ class CashActivity : AppCompatActivity() {
             override fun purchaseSuccess(purchaseData: PurchaseData) {
                 runOnUiThread {
                     balance_value.setText(purchaseData?.lastBalance)
-                    bank = purchaseData?.bank
-                    nokartu = purchaseData?.cardNumber
-                    saldoawal = purchaseData?.prevBalance.toInt()
-                    saldoakhir = purchaseData?.lastBalance.toInt()
-                    tid = purchaseData?.tid
+                    bank = purchaseData?.bank.toString()
+                    nokartu = purchaseData?.cardNumber.toString()
+                    saldoawal = purchaseData?.prevBalance!!.toInt()
+                    saldoakhir = purchaseData?.lastBalance!!.toInt()
+                    tid = purchaseData?.tid.toString()
 
 //                    print()
                     UploadToServer()
                     showAlertDialog(
                         purchaseData?.cardNumber!!,
-                        purchaseData?.debitAmount,
-                        purchaseData?.prevBalance,
-                        purchaseData?.lastBalance,
-                        purchaseData?.bank
+                        purchaseData?.debitAmount.toString(),
+                        purchaseData?.prevBalance.toString(),
+                        purchaseData?.lastBalance.toString(),
+                        purchaseData?.bank.toString()
                     )
                     btn_pay.isEnabled = false
 
@@ -477,6 +494,20 @@ class CashActivity : AppCompatActivity() {
             Toast.LENGTH_SHORT
         ).show()
         else {
+            if (ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.BLUETOOTH_CONNECT
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return
+            }
             if (!mBluetoothAdapter!!.isEnabled)
                 startActivity(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE))
             else {
@@ -649,6 +680,20 @@ class CashActivity : AppCompatActivity() {
                 if (resultCode == Activity.RESULT_OK) {
                     mBluetoothDevice =
                         mBluetoothAdapter?.getRemoteDevice(data?.getStringExtra(MyConstant.DEVICE_ADDRESS))
+                    if (ActivityCompat.checkSelfPermission(
+                            this,
+                            Manifest.permission.BLUETOOTH_CONNECT
+                        ) != PackageManager.PERMISSION_GRANTED
+                    ) {
+                        // TODO: Consider calling
+                        //    ActivityCompat#requestPermissions
+                        // here to request the missing permissions, and then overriding
+                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                        //                                          int[] grantResults)
+                        // to handle the case where the user grants the permission. See the documentation
+                        // for ActivityCompat#requestPermissions for more details.
+                        return
+                    }
                     deviceName = mBluetoothDevice?.name
                     savePreferences(this, MyConstant.DEVICE_ADDRESS, mBluetoothDevice?.address!!)
                     mBluetoothConnectProgressDialog = ProgressDialog.show(

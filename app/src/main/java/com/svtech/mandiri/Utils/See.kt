@@ -1,6 +1,10 @@
 package com.svtech.mandiri.Utils
 
+import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
+import android.content.Intent
 import android.util.Log
 import android.widget.EditText
 import android.widget.Toast
@@ -10,8 +14,9 @@ import com.svtech.mandiri.modelOnline.ItemOption
 
 
 
-
+private lateinit var alertDialog: AlertDialog
 class See {
+
 
     companion object {
 
@@ -35,6 +40,31 @@ class See {
 
         }
 
+        fun showPopUp(context: Context, title: String, message: String, targetActivity: Class<*> ) {
+            val alertDialogBuilder = AlertDialog.Builder(context)
+            alertDialogBuilder.setTitle(title)
+            alertDialogBuilder.setMessage(message)
+
+            // Tombol OK
+            alertDialogBuilder.setPositiveButton("OK") { dialog, _ ->
+                // Intent untuk memulai aktivitas baru
+                val intent = Intent(context, targetActivity)
+                context.startActivity(intent)
+                dialog.dismiss()
+            }
+
+            // Tombol Cancel
+            alertDialogBuilder.setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
+
+            val alertDialog = alertDialogBuilder.create()
+            alertDialog.show()
+        }
+
+        fun dismissPopUpOnOutsideTouch() {
+            if (::alertDialog.isInitialized && alertDialog.isShowing) {
+                alertDialog.setOnCancelListener(DialogInterface.OnCancelListener { })
+            }
+        }
 
         fun log(key: String, message: String) {
             try {

@@ -88,7 +88,7 @@ class SplashScreenActivity : AppCompatActivity() {
             e.printStackTrace()
         }
 
-        AndroidNetworking.post(MyConstant.BASE_URL+MyConstant.UrlrequestDevice)
+        AndroidNetworking.post(MyConstant.url+MyConstant.UrlrequestDevice)
             .addJSONObjectBody(DeviceData)
             .setPriority(Priority.MEDIUM)
             .build()

@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
     <uses-permission
         android:name="android.permission.READ_PRIVILEGED_PHONE_STATE"
         tools:ignore="ProtectedPermissions" />
@@ -25,8 +27,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
-        tools:replace="android:icon"
-       >
+        tools:replace="android:icon">
+        <activity
+            android:name=".Activities.WalletActivity"
+            android:exported="false" />
         <activity
             android:name=".Activities.NeracaActivity"
             android:exported="false" />
@@ -64,14 +68,11 @@
         <activity android:name=".Activities.LaporanHarianActivity" />
         <activity android:name=".Activities.LaporanActivity" />
         <activity android:name=".Activities.LaporanStokActivity" />
-
-
-
         <activity android:name=".Activities.DetailLaporanPenjualanActivity" />
         <activity android:name=".Activities.MenuTambahPegawaiActivity" />
         <activity android:name=".Activities.LaporanPenjualanActivity" />
         <activity android:name=".Activities.AddKaryawanActivity" />
-        <activity android:name=".Activities.SplashScreenActivity"/>
+        <activity android:name=".Activities.SplashScreenActivity" />
         <activity android:name=".Activities.LoginActivity" />
         <activity android:name=".Activities.BluetoothDeviceListActivity" />
         <activity
@@ -119,12 +120,9 @@
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
-        </service>
-
-<!--        <meta-data-->
-<!--            android:name="com.google.android.actions"-->
-<!--            android:resource="@xml/provider_path" />-->
-
+        </service> <!-- <meta-data -->
+        <!-- android:name="com.google.android.actions" -->
+        <!-- android:resource="@xml/provider_path" /> -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"

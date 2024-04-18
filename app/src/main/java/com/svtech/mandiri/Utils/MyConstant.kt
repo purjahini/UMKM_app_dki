@@ -29,9 +29,11 @@ object MyConstant{
     const val url = "http://202.150.155.88:61080/umkm_core/public/api"
     const val url_image = "http://202.150.155.88:61080/umkm_core/public/"
     const val url_payment = "http://118.99.71.123:8443/qrisspetmr-prod/v1/transaksi"
+    const val url_payment_kaltim = "http://202.150.155.93:8443/qris-prod/index.php/v1/transaksi/createqr"
+
 
     //request device
-    const  val BASE_URL = "http://202.150.155.88:61080/smartwater-v1/public/api"
+//    const  val BASE_URL = "http://202.150.155.88:61080/smartwater-v1/public/api"
     const val API_STATUS_DEVICES = "status"
     val API_STATUS_DVS = "status"
     val API_MESSAGE_DEVICE = "message"
@@ -111,7 +113,7 @@ object MyConstant{
 
     const val Urlmenuneraca = "$url/menu_neraca"
     const val Urlbilboardsaldo = "$url/bilboardsaldo"
-    const val Urlcreateqr = "$url_payment/createqr"
+    const val Urlcreateqr = "$url_payment_kaltim/createqr"
 
 
 

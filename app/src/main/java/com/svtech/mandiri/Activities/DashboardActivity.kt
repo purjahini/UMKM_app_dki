@@ -56,6 +56,11 @@ class DashboardActivity : AppCompatActivity() {
 
         LoadBilboardSaldo()
 
+        LLSaldo.setOnClickListener {
+            LoadBilboardSaldo()
+            timer.cancel()
+        }
+
 //        val arrSlider = ArrayList<Int>()
 //        arrSlider.add(R.drawable.slider1)
 //        arrSlider.add(R.drawable.slider2)
@@ -93,6 +98,7 @@ class DashboardActivity : AppCompatActivity() {
     }
 
     private fun LoadBilboardSaldo() {
+        progressDialog?.show()
         AndroidNetworking.post(MyConstant.Urlbilboardsaldo)
             .setPriority(Priority.MEDIUM)
             .addHeaders("Authorization", "Bearer${token}")
@@ -175,7 +181,7 @@ class DashboardActivity : AppCompatActivity() {
                 Menu(R.drawable.icon4,"Produk"),
                 Menu(R.drawable.icon5,"Pegawai"),
                 Menu(R.drawable.ic_chart, "Neraca"),
-                Menu(R.drawable.ic_account,"TOPUP"),
+                Menu(R.drawable.ic_account,"Wallet"),
                 Menu(R.drawable.icon6,"Laporan")
             )
             imgEditProfile.setImageDrawable(getDrawable(R.drawable.ic_user))

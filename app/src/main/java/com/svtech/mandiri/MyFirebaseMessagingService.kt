@@ -152,7 +152,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             .setStyle(
                 NotificationCompat.BigPictureStyle()
                     .bigPicture(bitmap)
-                    .bigLargeIcon(null)
+//                    .bigLargeIcon(null)
             )
 
     /**

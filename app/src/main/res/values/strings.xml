@@ -62,5 +62,6 @@
     <string name="kredit">Kredit</string>
     <string name="Month_lalu">Bulan Lalu</string>
     <string name="Month_sekarang">Bulan Sekarang</string>
+    <string name="diagramtrxWeek">Diagram Transaksi Mingguan</string>
     <!-- End Notifications -->
 </resources>
