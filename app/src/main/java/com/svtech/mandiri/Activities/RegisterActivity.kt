@@ -53,14 +53,14 @@ class RegisterActivity : AppCompatActivity() {
 
         btnDaftar.setOnClickListener {
             progressDialog!!.show()
-            if (textInputPassword.editText?.text.toString().length != 5) {
+            if (textInputPassword.editText?.text.toString().length != 6) {
                 progressDialog!!.dismiss()
 
-                Toast.makeText(this, "Password Harus 5 Karakter", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Password Harus 6 Karakter", Toast.LENGTH_SHORT).show();
                 return@setOnClickListener
             }
 
-            if (textInputPassword.editText?.text.toString().length == 5 && checkInput(textInputNamaToko) && checkInput(
+            if (textInputPassword.editText?.text.toString().length == 6 && checkInput(textInputNamaToko) && checkInput(
                     textInputAlamatToko
                 )
                 && checkInput(textInputNamaPengguna) && checkInput(textInputUsername) && checkInput(
@@ -147,6 +147,9 @@ class RegisterActivity : AppCompatActivity() {
             .addBodyParameter("nama_toko", textInputNamaToko.editText?.text.toString().trim())
             .addBodyParameter("alamat_toko", textInputAlamatToko.editText?.text.toString().trim())
             .addBodyParameter("username", textInputUsername.editText?.text.toString().trim())
+            .addBodyParameter("bank", textInputNamaBankToko.editText?.text.toString().trim())
+            .addBodyParameter("norek", textInputNoRekeningToko.editText?.text.toString().trim())
+            .addBodyParameter("atasnama", textInputAtasNamaToko.editText?.text.toString().trim())
             .addBodyParameter("kode", randomUUID.trim())
             .setPriority(Priority.MEDIUM)
             .build()

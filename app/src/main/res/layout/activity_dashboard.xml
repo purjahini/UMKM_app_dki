@@ -29,8 +29,11 @@
                 android:layout_width="@dimen/_35sdp"
                 android:layout_height="@dimen/_35sdp"
                 android:layout_marginLeft="@dimen/_10sdp"
+                android:layout_marginRight="@dimen/_10sdp"
                 android:adjustViewBounds="true"
-                android:scaleType="fitCenter"
+                android:scaleType="centerCrop"
+                android:background="@drawable/circle"
+                android:clipToOutline="true"
                 android:src="@drawable/logo" />
 
 
@@ -43,10 +46,7 @@
                 android:text="@string/nama_toko"
                 android:textColor="#ffffff"
                 android:textSize="21sp"
-                android:textStyle="bold"
-
-
-                />
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/tvAlamatCafe"
@@ -76,7 +76,7 @@
                     android:layout_margin="6dp"
                     android:scaleType="fitXY"
                     android:src="@drawable/ic_user"
-                    android:tint="@color/primary" />
+                    app:tint="@color/primary" />
             </com.google.android.material.card.MaterialCardView>
 
 
@@ -101,8 +101,6 @@
                 android:drawablePadding="@dimen/_3sdp"
                />
 
-
-
             <TextView
                 android:visibility="gone"
                 android:id="@+id/TvSaldoTarik"
@@ -111,7 +109,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/saldo_tarik"/>
-
 
         </LinearLayout>
 
@@ -125,6 +122,7 @@
             android:layout_marginRight="@dimen/_10sdp"
             app:cardCornerRadius="25dp"
             app:cardElevation="7dp"
+            android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@id/LLSaldo">
 
             <androidx.viewpager.widget.ViewPager
@@ -134,17 +132,32 @@
                 android:layout_height="@dimen/_100sdp" />
         </com.google.android.material.card.MaterialCardView>
 
+        <com.google.android.material.card.MaterialCardView
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rclvPenjualan"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/_10sdp"
-            android:nestedScrollingEnabled="true"
-            android:overScrollMode="never"
-            app:layout_constraintStart_toStartOf="@id/card_slider"
-            app:layout_constraintTop_toBottomOf="@id/card_slider"
-            />
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginRight="@dimen/_10sdp"
+            app:cardCornerRadius="25dp"
+            app:cardElevation="7dp"
+            android:visibility="visible"
+            app:layout_constraintTop_toBottomOf="@id/LLSaldo">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rclvPenjualan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_10sdp"
+                android:nestedScrollingEnabled="true"
+                android:overScrollMode="never"
+                app:layout_constraintStart_toStartOf="@id/card_slider"
+                app:layout_constraintTop_toBottomOf="@id/card_slider"
+                />
+        </com.google.android.material.card.MaterialCardView>
+
+
+
         <TextView
             android:id="@+id/tvVersi"
             android:layout_width="match_parent"

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">UMKM MANDIRI</string>
+    <string name="app_name">TOKO ONLINE</string>
     <string name="nama_toko">svtech Pos</string>
     <string name="alamat_toko">www.svtech.com</string>
     <string name="title_activity_main">MainActivity</string>
@@ -47,6 +47,13 @@
     <string name="register">Register</string>
     <string name="daftar">Daftar</string>
 
+    <string name="choose_photo_using" translatable="false">Choose photo using …</string>
+    <string name="remove_photo" translatable="false">Remove current photo</string>
+    <string name="reason_permission_location">Allow to get location from your device</string>
+    <string name="reason_permission_camera">You must give permission before you can use the camera and storage</string>
+    <string name="reason_permission_bluetooth">Allow to access bluetooth from your device</string>
+    <string name="reason_permission_write_external">Allow to save pictures to your device</string>
+
     <!-- Notifications -->
     <string name="notification_add_to_cart_button">Like</string>
     <string name="notifications_promotions_channel_id" translatable="false">Promotions channel id</string>
@@ -63,5 +70,13 @@
     <string name="Month_lalu">Bulan Lalu</string>
     <string name="Month_sekarang">Bulan Sekarang</string>
     <string name="diagramtrxWeek">Diagram Transaksi Mingguan</string>
+    <string name="action_close">CLOSE</string>
+    <string name="camera">Camera</string>
+    <string name="gallery">Galery</string>
+    <string name="reason_permission_read_phone_state">You have to give permission to access IMEI from your device</string>
+    <string name="masuk">Masuk</string>
+    <string name="syarat"><![CDATA["Dengan ini saya menyatakan telah membaca & menyetujui Ketentuan dan Kebijakan TOKO ONLINE""]]></string>
+    <string name="lanjut">Lanjut</string>
+    <string name="keluar">Keluar</string>
     <!-- End Notifications -->
 </resources>

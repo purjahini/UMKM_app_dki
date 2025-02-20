@@ -9,6 +9,9 @@
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission
+        android:name="android.permission.CAMERA"
+        tools:ignore="PermissionImpliesUnsupportedChromeOsHardware" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -17,22 +20,48 @@
 
     <application xmlns:tools="http://schemas.android.com/tools"
         android:name="com.orm.SugarApp"
-        android:extractNativeLibs="true"
         android:hardwareAccelerated="true"
-        android:icon="@drawable/logo"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:requestLegacyExternalStorage="true"
-        android:roundIcon="@drawable/logo"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:icon">
         <activity
+            android:name=".Activities.UserProfilActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.RegisterTokoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.KeunganNewActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.ProfilNewActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.LupaSandiActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.LoginNewActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.OTPActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.RegisterNewActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.AddbankActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activities.WalletActivity"
             android:exported="false" />
         <activity
-            android:name=".Activities.NeracaActivity"
+            android:name=".Activities.KeuanganActivity"
             android:exported="false" />
         <activity
             android:name=".Activities.WelcomeActivity"
@@ -88,7 +117,7 @@
             android:value="umkm_mandiri.db" />
         <meta-data
             android:name="VERSION"
-            android:value="4" />
+            android:value="5" />
         <meta-data
             android:name="QUERY_LOG"
             android:value="false" />
@@ -139,6 +168,16 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="@string/notifications_promotions_channel_id" />
+
+        <activity
+            android:name="androidx.test.core.app.InstrumentationActivityInvoker$BootstrapActivity"
+            android:exported="true" />
+        <activity
+            android:name="androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity"
+            android:exported="true" />
+        <activity
+            android:name="androidx.test.core.app.InstrumentationActivityInvoker$EmptyFloatingActivity"
+            android:exported="true" />
     </application>
 
 </manifest>

@@ -16,10 +16,9 @@ class WelcomeActivity : AppCompatActivity() {
         startLoadingAnimation()
 
         Handler(Looper.getMainLooper()).postDelayed({
-                                                    val intent = Intent(this, SplashScreenActivity::class.java)
+            val intent = Intent(this, SplashScreenActivity::class.java)
             startActivity(intent)
             finish()
-
 
         },3000)
 

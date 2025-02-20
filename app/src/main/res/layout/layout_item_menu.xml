@@ -1,18 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardCornerRadius="10dp"
-    android:layout_marginStart="8dp"
-    android:layout_marginEnd="8dp"
-    android:layout_marginBottom="13dp"
-    android:background="@drawable/gradient_180"
-    android:layout_marginTop="3dp"
-    app:cardElevation="7dp">
+
     <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:orientation="vertical"
         android:padding="5dp">
         <ImageView
@@ -21,7 +13,6 @@
             android:layout_height="wrap_content"
             android:src="@drawable/photo"
             android:adjustViewBounds="true"
-            android:tint="@color/primary"
             android:scaleType="fitCenter"
             android:maxHeight="150dp"
             android:padding="10dp"/>
@@ -33,6 +24,3 @@
             android:textAlignment="center"
             android:textSize="12sp"/>
     </LinearLayout>
-
-
-</com.google.android.material.card.MaterialCardView>

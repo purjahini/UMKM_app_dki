@@ -30,14 +30,17 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
         Glide.with(this)
             .load(R.drawable.logo)
             .into(ImgLogoLogin)
+
         AndroidNetworking.initialize(applicationContext)
 
         token = com.svtech.mandiri.Utils.getPreferences(this).getString(MyConstant.TOKEN, "")!!
 
         See.log("token login :  $token")
+
         progressDialog = ProgressDialog(this)
         progressDialog!!.setTitle("Proses")
         progressDialog!!.setMessage("Mohon Menunggu...")

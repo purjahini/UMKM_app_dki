@@ -1,13 +1,13 @@
 package com.svtech.mandiri.Activities
 
-import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.app.ProgressDialog
+import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
+import android.provider.MediaStore
 import android.view.MotionEvent
 import android.view.View
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.androidnetworking.AndroidNetworking
@@ -15,14 +15,6 @@ import com.androidnetworking.common.Priority
 import com.androidnetworking.error.ANError
 import com.androidnetworking.interfaces.JSONObjectRequestListener
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.request.RequestOptions
-import com.github.dhaval2404.imagepicker.ImagePicker
-import com.karumi.dexter.Dexter
-import com.karumi.dexter.MultiplePermissionsReport
-import com.karumi.dexter.PermissionToken
-import com.karumi.dexter.listener.PermissionRequest
-import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.svtech.mandiri.Models.User
 import com.svtech.mandiri.R
 import com.svtech.mandiri.Utils.*
@@ -31,17 +23,23 @@ import org.json.JSONObject
 import java.io.File
 
 
-class AddKaryawanActivity : AppCompatActivity() {
+class AddKaryawanActivity : AppCompatActivity(),ImagePickerCallback {
     var progressDialog: ProgressDialog? = null
     var token = ""
     var username = ""
     var file: File? = null
     var fileName = ""
 
+    private lateinit var imagePickerHelper: ImagePickerHelper
+    private lateinit var imageView: ImageView
+    private var selectedImageUri: Uri? = null
+
     @SuppressLint("ResourceType")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_karyawan)
+        imagePickerHelper = ImagePickerHelper(this,this)
+        imageView = findViewById(R.id.imgFoto)
 
         token =
             com.svtech.mandiri.Utils.getPreferences(this).getString(MyConstant.TOKEN, "").toString()
@@ -60,56 +58,7 @@ class AddKaryawanActivity : AppCompatActivity() {
         setToolbar(this, "Tambah Pegawai")
 
         btnLoadImage.setOnClickListener {
-            var folder = File(Environment.getExternalStorageDirectory(), "UmkmImage")
-            if (!folder.exists()) folder.mkdir()
-            file = File(folder.absolutePath, "Pegawai")
-            See.log("file dir : ${file}")
-            /*Membuka galeri*/
-            Dexter.withActivity(this)
-                .withPermissions(
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    Manifest.permission.READ_EXTERNAL_STORAGE
-                )
-                .withListener(object : MultiplePermissionsListener {
-                    override fun onPermissionsChecked(p0: MultiplePermissionsReport?) {
-                        if (p0?.areAllPermissionsGranted()!!) {
-                            ImagePicker.with(this@AddKaryawanActivity)
-                                .galleryOnly()
-                                .cropSquare()
-                                .compress(1024)
-                                .saveDir(file!!)
-                                .maxResultSize(1080, 1080)
-                                .start { resultCode, data ->
-
-
-                                    if (resultCode == Activity.RESULT_OK) {
-                                        Glide.with(this@AddKaryawanActivity).load(data?.data)
-                                            .apply(RequestOptions.bitmapTransform(RoundedCorners(10F.toInt())))
-                                            .into(imgFoto)
-                                        fileName = File(data?.data?.path).name
-
-                                        See.log(" nama files : $fileName")
-                                    } else if (resultCode == ImagePicker.RESULT_ERROR) {
-                                        Toast.makeText(
-                                            this@AddKaryawanActivity,
-                                            ImagePicker.getError(data),
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                    }
-                                }
-                        }
-                    }
-
-                    override fun onPermissionRationaleShouldBeShown(
-                        p0: MutableList<PermissionRequest>?,
-                        p1: PermissionToken?
-                    ) {
-                        p1?.continuePermissionRequest()
-                    }
-
-                }).check()
-
-            return@setOnClickListener
+           imagePickerHelper.showImagePickerDialog()
         }
 
         val update = intent.getBooleanExtra("update", false)
@@ -124,38 +73,41 @@ class AddKaryawanActivity : AppCompatActivity() {
 
 
         btnSimpan.setOnClickListener {
-            if (update) {
+            selectedImageUri.let { uri ->
+                if (update) {
 
-                if ( checkInput(
-                        textInputNamaPegawai
-                    ) && checkInputUsername(
-                        textInputUsernameAdmin
-                    )
-                ) {
+                    if ( checkInput(
+                            textInputNamaPegawai
+                        ) && checkInputUsername(
+                            textInputUsernameAdmin
+                        )
+                    ) {
 
                         /*Update karyawan*/
-                        updateKaryawan(idUser)
+                        updateKaryawan(idUser,uri)
 
+                    } else {
+                        Toast.makeText(this, "nama / username tidak boleh kosong", Toast.LENGTH_LONG).show()
+                        return@setOnClickListener
+                    }
                 } else {
-                    Toast.makeText(this, "nama / username tidak boleh kosong", Toast.LENGTH_LONG).show()
-                    return@setOnClickListener
-                }
-            } else {
-                if (textInputPasswordAdmin.editText?.text.toString().length == 5 && checkInput(
-                        textInputNamaPegawai
-                    ) && checkInputUsername(
-                        textInputUsernameAdmin
-                    ) && checkInputPassword(textInputPasswordAdmin)
-                ) {
+                    if (textInputPasswordAdmin.editText?.text.toString().length == 6 && checkInput(
+                            textInputNamaPegawai
+                        ) && checkInputUsername(
+                            textInputUsernameAdmin
+                        ) && checkInputPassword(textInputPasswordAdmin)
+                    ) {
 
                         /*Insert karyawan*/
-                        insertKaryawan()
+                        insertKaryawan(uri)
 
-                } else {
-                    Toast.makeText(this, "Password Harus 5 Karakter", Toast.LENGTH_LONG).show()
-                    return@setOnClickListener
+                    } else {
+                        Toast.makeText(this, "Password Harus 6 Karakter", Toast.LENGTH_LONG).show()
+                        return@setOnClickListener
+                    }
                 }
             }
+
 
 
         }
@@ -169,16 +121,15 @@ class AddKaryawanActivity : AppCompatActivity() {
         }
     }
 
-    private fun insertKaryawan() {
+    private fun insertKaryawan(uri: Uri?) {
         progressDialog?.show()
 
-
-        val FilePath: String = "${file}/${fileName}"
+        val NameFile =  File(selectedImageUri?.let { getRealPathFromURI(it) })
 
 
         when {
-            fileName.isEmpty() -> {
-                See.log("filepath : $FilePath")
+            uri.toString().isEmpty() -> {
+
                 AndroidNetworking.upload(MyConstant.Urlpegawaicreate)
                     .addHeaders("Authorization", "Bearer$token")
                     .addMultipartParameter("kontak",textInputUsernameAdmin.editText?.text.toString().trim())
@@ -228,11 +179,11 @@ class AddKaryawanActivity : AppCompatActivity() {
 
 
             }
-            fileName.isNotEmpty() -> {
-                See.log("filepath : $FilePath")
+            uri.toString().isNotEmpty() -> {
+
                 AndroidNetworking.upload(MyConstant.Urlpegawaicreate)
                     .addHeaders("Authorization", "Bearer$token")
-                    .addMultipartFile("foto", File(FilePath))
+                    .addMultipartFile("foto", NameFile)
                     .addMultipartParameter("kontak",textInputUsernameAdmin.editText?.text.toString().trim())
                     .addMultipartParameter("nama",textInputNamaPegawai.editText?.text.toString().trim())
                     .addMultipartParameter("password",textInputPasswordAdmin.editText?.text.toString().trim())
@@ -285,12 +236,12 @@ class AddKaryawanActivity : AppCompatActivity() {
 
     }
 
-    private fun updateKaryawan(userid: Int) {
+    private fun updateKaryawan(userid: Int, uri: Uri?) {
         progressDialog?.show()
-        val FilePath: String = "${file}/${fileName}"
+        val NameFile =  File(selectedImageUri?.let { getRealPathFromURI(it) })
 
         when {
-            textInputPasswordAdmin.editText?.text.toString().isEmpty() && fileName.isEmpty()-> {
+            textInputPasswordAdmin.editText?.text.toString().isEmpty() && uri.toString().isEmpty()-> {
                 AndroidNetworking.upload(MyConstant.Urlpegawaiupdate)
                     .addHeaders("Authorization", "Bearer$token")
                     .addMultipartParameter("kontak",textInputUsernameAdmin.editText?.text.toString().trim())
@@ -339,7 +290,7 @@ class AddKaryawanActivity : AppCompatActivity() {
                     })
 
             }
-            textInputPasswordAdmin.editText?.text.toString().isNotEmpty() && fileName.isEmpty() -> {
+            textInputPasswordAdmin.editText?.text.toString().isNotEmpty() && uri.toString().isEmpty() -> {
                 AndroidNetworking.upload(MyConstant.Urlpegawaiupdate)
                     .addHeaders("Authorization", "Bearer$token")
                     .addMultipartParameter("kontak",textInputUsernameAdmin.editText?.text.toString().trim())
@@ -442,10 +393,10 @@ class AddKaryawanActivity : AppCompatActivity() {
             }
 
 
-            fileName.isNotEmpty() && textInputPasswordAdmin.editText?.text.toString().isNotEmpty()-> {
+            uri.toString().isNotEmpty() && textInputPasswordAdmin.editText?.text.toString().isNotEmpty()-> {
                 AndroidNetworking.upload(MyConstant.Urlpegawaiupdate)
                     .addHeaders("Authorization", "Bearer$token")
-                    .addMultipartFile("foto", File(FilePath))
+                    .addMultipartFile("foto", NameFile)
                     .addMultipartParameter("kontak",textInputUsernameAdmin.editText?.text.toString().trim())
                     .addMultipartParameter("nama",textInputNamaPegawai.editText?.text.toString().trim())
                     .addMultipartParameter("id", userid.toString().trim())
@@ -493,10 +444,10 @@ class AddKaryawanActivity : AppCompatActivity() {
                     })
 
             }
-            fileName.isNotEmpty() && textInputPasswordAdmin.editText?.text.toString().isEmpty()-> {
+            uri.toString().isNotEmpty() && textInputPasswordAdmin.editText?.text.toString().isEmpty()-> {
                 AndroidNetworking.upload(MyConstant.Urlpegawaiupdate)
                     .addHeaders("Authorization", "Bearer$token")
-                    .addMultipartFile("foto", File(FilePath))
+                    .addMultipartFile("foto", NameFile)
                     .addMultipartParameter("kontak",textInputUsernameAdmin.editText?.text.toString().trim())
                     .addMultipartParameter("nama",textInputNamaPegawai.editText?.text.toString().trim())
                     .addMultipartParameter("id", userid.toString().trim())
@@ -553,5 +504,21 @@ class AddKaryawanActivity : AppCompatActivity() {
             hideSoftKeyboard()
         }
         return super.dispatchTouchEvent(ev)
+    }
+
+    override fun onImagePicked(imageUri: Uri) {
+        selectedImageUri = imageUri
+        imageView.setImageURI(imageUri)
+    }
+
+    private fun getRealPathFromURI(uri: Uri): String {
+        var result = ""
+        contentResolver.query(uri, null, null, null, null)?.apply {
+            moveToFirst()
+            val index = getColumnIndex(MediaStore.Images.ImageColumns.DATA)
+            result = getString(index)
+            close()
+        }
+        return result
     }
 }

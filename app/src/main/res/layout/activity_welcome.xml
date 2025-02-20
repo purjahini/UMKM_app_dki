@@ -45,6 +45,7 @@
         android:scrollbarStyle="outsideOverlay" />
 
 <ImageView
+    android:visibility="invisible"
     android:layout_width="@dimen/_100sdp"
     android:layout_height="@dimen/_80sdp"
     android:layout_centerHorizontal="true"
@@ -59,7 +60,7 @@
         android:layout_above="@id/IvSvt"
         android:gravity="center"
         android:text="@string/support"
-        android:textColor="@android:color/white"
+        android:textColor="@android:color/black"
         android:textSize="16sp"
         android:textStyle="bold" />
 

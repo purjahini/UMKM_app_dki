@@ -1,29 +1,20 @@
 package com.svtech.mandiri.Activities
 
-import android.Manifest
-import android.app.Activity
 import android.app.ProgressDialog
+import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
+import android.provider.MediaStore
 import android.view.MotionEvent
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Toast
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.androidnetworking.AndroidNetworking
 import com.androidnetworking.common.Priority
 import com.androidnetworking.error.ANError
 import com.androidnetworking.interfaces.JSONObjectRequestListener
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.request.RequestOptions
-import com.github.dhaval2404.imagepicker.ImagePicker
-import com.karumi.dexter.Dexter
-import com.karumi.dexter.MultiplePermissionsReport
-import com.karumi.dexter.PermissionToken
-import com.karumi.dexter.listener.PermissionRequest
-import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.svtech.mandiri.AdapterOnline.SpinnerAdapterCustom
 import com.svtech.mandiri.R
 import com.svtech.mandiri.Utils.*
@@ -36,7 +27,7 @@ import java.io.File
 
 
 
-class AddProdukActivity : AppCompatActivity() {
+class AddProdukActivity : AppCompatActivity() ,ImagePickerCallback{
     lateinit var adapterSpinnerSatuan: ArrayAdapter<String>
 
     var token = ""
@@ -61,6 +52,10 @@ class AddProdukActivity : AppCompatActivity() {
 
     var arrayList: ArrayList<ItemOption> = ArrayList()
 
+    private lateinit var imagePickerHelper: ImagePickerHelper
+    private lateinit var imageView: ImageView
+    private var selectedImageUri: Uri? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,6 +76,10 @@ class AddProdukActivity : AppCompatActivity() {
 
         /*Setting tombol back dan title*/
         setToolbar(this, "Tambah Produk")
+
+        imagePickerHelper = ImagePickerHelper(this,this)
+        imageView = findViewById(R.id.imgFoto)
+
         val kategori = intent.getIntExtra("kategori", 0)
         progressDialog?.show()
         AndroidNetworking.post(MyConstant.UrlKategoriGetData)
@@ -199,57 +198,8 @@ class AddProdukActivity : AppCompatActivity() {
 
 
         btnLoadImage.setOnClickListener {
-            /*Membuka galeri*/
-//            pickImage(this, imgFoto,"Produk")
+            imagePickerHelper.showImagePickerDialog()
 
-            var folder = File(Environment.getExternalStorageDirectory(), "UmkmImage")
-            if (!folder.exists()) folder.mkdir()
-            file = File(folder.absolutePath, "Kategori")
-            See.log("file dir : ${file}")
-            /*Membuka galeri*/
-            Dexter.withActivity(this)
-                .withPermissions(
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    Manifest.permission.READ_EXTERNAL_STORAGE
-                )
-                .withListener(object : MultiplePermissionsListener {
-                    override fun onPermissionsChecked(p0: MultiplePermissionsReport?) {
-                        if (p0?.areAllPermissionsGranted()!!) {
-                            ImagePicker.with(this@AddProdukActivity)
-                                .galleryOnly()
-                                .cropSquare()
-                                .compress(1024)
-                                .saveDir(file!!)
-                                .maxResultSize(1080, 1080)
-                                .start { resultCode, data ->
-
-
-                                    if (resultCode == Activity.RESULT_OK) {
-                                        Glide.with(this@AddProdukActivity).load(data?.data)
-                                            .apply(RequestOptions.bitmapTransform(RoundedCorners(10F.toInt())))
-                                            .into(imgFoto)
-                                        fileName = File(data?.data?.path).name
-
-                                        See.log(" nama files : $fileName")
-                                    } else if (resultCode == ImagePicker.RESULT_ERROR) {
-                                        Toast.makeText(
-                                            this@AddProdukActivity,
-                                            ImagePicker.getError(data),
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                    }
-                                }
-                        }
-                    }
-
-                    override fun onPermissionRationaleShouldBeShown(
-                        p0: MutableList<PermissionRequest>?,
-                        p1: PermissionToken?
-                    ) {
-                        p1?.continuePermissionRequest()
-                    }
-
-                }).check()
         }
 
 
@@ -265,9 +215,16 @@ class AddProdukActivity : AppCompatActivity() {
         produkId = intent.getIntExtra("id", 0)
 
         if (produkId != 0) {
-            Glide.with(this).load(foto).fitCenter()
-                .placeholder(R.drawable.logo)
-                .into(imgFoto)
+            selectedImageUri.let { uri ->
+               if (uri.toString().isNullOrEmpty()) {
+                   Glide.with(this).load(foto).fitCenter()
+                       .placeholder(R.drawable.logo)
+                       .into(imgFoto)
+               } else {
+                   imageView.setImageURI(uri)
+               }
+            }
+
             textInputNamaProduk.editText?.setText(nama)
             textInputHargaProduk.editText?.setText(harga?.toInt().toString())
 //            spnKategoriProduk.selectedItem = adapterKategori.getView(kategori)
@@ -289,11 +246,15 @@ class AddProdukActivity : AppCompatActivity() {
         }
 
         btnSimpanProduk.setOnClickListener {
-            if (update) {
-                updateProdukId()
-            } else {
-                addProdukId()
+
+            selectedImageUri.let { uri ->
+                if (update) {
+                    updateProdukId(uri)
+                } else {
+                    addProdukId(uri)
+                }
             }
+
 
 //            val FilePath: String = "${file}/${fileName}"
 //            val NameFile = File(FilePath)
@@ -536,9 +497,9 @@ class AddProdukActivity : AppCompatActivity() {
         }
     }
 
-    private fun addProdukId() {
-        val FilePath: String = "${file}/${fileName}"
-        val NameFile = File(FilePath)
+    private fun addProdukId(uri: Uri?) {
+//        val FilePath: String = "${file}/${fileName}"
+        val NameFile = File(uri?.let { getRealPathFromURI(it) })
         val vSpn = spnKategoriProduk.selectedItem.toString()
         See.log("file upload : ${NameFile}  nilai sPnKt : ${vSpn}")
         val diskon = textInputDiskon.editText?.text.toString().trim()
@@ -547,7 +508,7 @@ class AddProdukActivity : AppCompatActivity() {
         progressDialog?.show()
         AndroidNetworking.upload(MyConstant.Urlprodukcreate)
             .addHeaders("Authorization", "Bearer$token")
-            .addMultipartFile("foto", if (fileName.isNullOrEmpty()) null else NameFile)
+            .addMultipartFile("foto", if (uri.toString().isNullOrEmpty()) null else NameFile)
             .addMultipartParameter("diskon", if (diskon.isNullOrEmpty()) 0.toString() else diskon)
             .addMultipartParameter(
                 "harga",
@@ -605,9 +566,11 @@ class AddProdukActivity : AppCompatActivity() {
 
     }
 
-    private fun updateProdukId() {
-        val FilePath: String = "${file}/${fileName}"
-        val NameFile = File(FilePath)
+    private fun updateProdukId(uri: Uri?) {
+
+
+
+        val NameFile = File(selectedImageUri?.let { getRealPathFromURI(it) })
         val vSpn = spnKategoriProduk.selectedItem.toString()
         See.log("file upload : ${NameFile}  nilai sPnKt : ${vSpn}")
 //        val diskon = textInputDiskon.editText?.text.toString().trim()
@@ -620,7 +583,7 @@ class AddProdukActivity : AppCompatActivity() {
                 MyConstant.DISKON,
                 if (diskon == 0) 0.toString() else textInputDiskon.editText?.text.toString()
             )
-            .addMultipartFile(MyConstant.FOTO, if (fileName.isNullOrEmpty()) null else NameFile)
+            .addMultipartFile(MyConstant.FOTO, if (uri.toString().isNullOrEmpty()) null else NameFile)
             .addMultipartParameter(MyConstant.HARGA, textInputHargaProduk.editText?.text.toString())
             .addMultipartParameter(MyConstant.KATEGORI,kategoriId)
             .addMultipartParameter(MyConstant.MINIMAL_PEMBELIAN, if (minimal_pembelian == 0) 0.toString() else textInputMinimalPembelian.editText?.text.toString())
@@ -754,6 +717,22 @@ class AddProdukActivity : AppCompatActivity() {
             hideSoftKeyboard()
         }
         return super.onTouchEvent(event)
+    }
+
+    override fun onImagePicked(imageUri: Uri) {
+        selectedImageUri = imageUri
+        imageView.setImageURI(imageUri)
+
+    }
+    private fun getRealPathFromURI(uri: Uri): String {
+        var result = ""
+        contentResolver.query(uri, null, null, null, null)?.apply {
+            moveToFirst()
+            val index = getColumnIndex(MediaStore.Images.ImageColumns.DATA)
+            result = getString(index)
+            close()
+        }
+        return result
     }
 }
 

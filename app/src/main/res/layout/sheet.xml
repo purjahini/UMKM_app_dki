@@ -54,7 +54,7 @@
         style="@style/Widget.MaterialComponents.Button.Icon"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="QRIS Bank Mandiri"
+        android:text="QRIS"
         android:textAlignment="textStart"
         android:textAllCaps="false"
         app:icon="@drawable/ic_baseline_credit_card_24" />

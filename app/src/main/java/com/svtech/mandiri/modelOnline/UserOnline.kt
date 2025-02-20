@@ -12,6 +12,7 @@ data class UserOnline(
         val password: String?,
         val role: String?,
         val roleid: Int?,
+        val email : String?,
         val username: String?,
         val id: Int?
     )

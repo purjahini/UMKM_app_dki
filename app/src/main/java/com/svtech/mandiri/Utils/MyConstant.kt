@@ -2,12 +2,17 @@ package com.svtech.mandiri.Utils
 
 object MyConstant{
 
+    const val password = "password"
+    const val kontak = "kontak"
+    const val kode = "kode"
+    const val EMAIL = "email"
     const val REQUEST_CONNECT_DEVICE = 1
     const val REQUEST_ENABLE_BT = 2
 
     const val DEVICE_ADDRESS = "DeviceAddress"
     const val DEVICE_NAME = "DeviceName"
     const val CURRENT_USER = "CurrentUser"
+    const val CURRENT_TOKO = "CurrentToko"
     const val FIRST_START = "FirstStart"
     const val REQUEST_OPEN_FILE = 9999
     const val SECRET = "350ac8234c7515318253b24fed7aaf5c"
@@ -26,8 +31,8 @@ object MyConstant{
     const val SUCCESS = "success"
     const val TIME = "time"
 //    const val url = "http://203.210.87.95:8014/umkm_core/public/api"
-    const val url = "http://202.150.155.88:61080/umkm_core/public/api"
-    const val url_image = "http://202.150.155.88:61080/umkm_core/public/"
+    const val url = "http://202.150.155.88:61080/umkm_dki/public/api"
+    const val url_image = "http://202.150.155.88:61080/umkm_dki/public/"
     const val url_payment = "http://118.99.71.123:8443/qrisspetmr-prod/v1/transaksi"
     const val url_payment_kaltim = "http://202.150.155.93:8443/qris-prod/index.php/v1/transaksi/createqr"
 
@@ -47,6 +52,7 @@ object MyConstant{
 
     const val NAMA_TOKO ="nama_toko"
     const val ALAMAT_TOKO = "alamat_toko"
+    const val LOGO_TOKO = "logo_toko"
 
     const val USERNAME ="username"
     const val KATEGORI ="kategori"
@@ -88,6 +94,25 @@ object MyConstant{
     const val Urlpegawaigetdata = "$url/pegawaigetdata"
     const val Urlpegawaihapus = "$url/pegawaihapus"
     const val Urlpegawaiupdate = "$url/pegawaiupdate"
+
+    const val Urlupdateprofil = "$url/updateprofil"
+    const val Urlgetusercurrent = "$url/getusercurrent"
+    const val Urlgetdatatoko = "$url/getdatatoko"
+    const val Urlupdatetoko = "$url/updatetoko"
+
+
+
+
+    const val Urlregister_new = "$url/register_new"
+    const val Urllogin_new = "$url/login_new"
+
+
+    const val Urltambahbank = "$url/tambahbank"
+    const val Urllistbank = "$url/listbank"
+
+
+
+
 
 
 

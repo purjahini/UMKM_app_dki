@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.androidnetworking.AndroidNetworking
 import com.androidnetworking.common.Priority
 import com.androidnetworking.error.ANError
@@ -15,6 +16,7 @@ import com.google.gson.Gson
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.qrcode.QRCodeWriter
 import com.orm.SugarRecord
+import com.svtech.mandiri.AdapterOnline.RclvListBank
 import com.svtech.mandiri.Models.ItemTransaksi
 import com.svtech.mandiri.Models.Transaksi
 import com.svtech.mandiri.R
@@ -24,12 +26,15 @@ import com.svtech.mandiri.Utils.See
 import com.svtech.mandiri.Utils.getToken
 import com.svtech.mandiri.Utils.numberToCurrency
 import com.svtech.mandiri.modelOnline.ItemTransaksiJsonOnline
+import com.svtech.mandiri.modelOnline.ResponseBank
 import com.svtech.mandiri.modelOnline.ResponseId
 import com.svtech.mandiri.modelOnline.ResponseQris
 import com.svtech.mandiri.modelOnline.ResponseQrisKaltim
+import kotlinx.android.synthetic.main.activity_qris_mock_up.RvBankQris
 import kotlinx.android.synthetic.main.activity_qris_mock_up.TvNominalQr
 import kotlinx.android.synthetic.main.activity_qris_mock_up.TvQrTanggalBerlaku
 import kotlinx.android.synthetic.main.activity_qris_mock_up.idIVQrcode
+import kotlinx.android.synthetic.main.activity_wallet.RvBank
 import kotlinx.android.synthetic.main.toolbar_with_back.btnBack
 import kotlinx.android.synthetic.main.toolbar_with_back.tvTitle
 import org.json.JSONObject
@@ -149,6 +154,7 @@ class QrisMockUp : AppCompatActivity() {
                             TvQrTanggalBerlaku.setText("Bayar Sebelum  " + "${data.data.qr_expired}" + "  WIB")
 
                             idIVQrcode.setImageBitmap(bitmap)
+                            Loaddatabank()
 
                             UploadToServer(data.data.bill_number,data.data.qr_string,data.data.nmid,data.data.acquirer_name)
 
@@ -184,6 +190,64 @@ class QrisMockUp : AppCompatActivity() {
         val intent  = Intent(this, DashboardActivity::class.java)
         startActivity(intent)
         finish()
+    }
+
+    private fun Loaddatabank() {
+        progressDialog?.show()
+
+        AndroidNetworking.post(MyConstant.Urllistbank)
+            .addHeaders(MyConstant.AUTHORIZATION, "Bearer$token")
+            .addBodyParameter(MyConstant.STATUS, "1")
+            .addBodyParameter(MyConstant.USERNAME, username.trim())
+            .setPriority(Priority.MEDIUM)
+            .build()
+            .getAsJSONObject(object : JSONObjectRequestListener {
+                override fun onResponse(response: JSONObject?) {
+                    progressDialog!!.dismiss()
+                    val respon = response?.toString()
+                    See.log("respon get bank Status : $respon")
+                    val json = JSONObject(respon)
+                    val apiStatus = json.getInt(MyConstant.API_STATUS)
+                    val apiMessage = json.getString(MyConstant.API_MESSAGE)
+                    if (apiStatus.equals(1)) {
+                        val data = Gson().fromJson(respon, ResponseBank::class.java)
+
+                        if (data != null) {
+                            val rclvadapter = RclvListBank(this@QrisMockUp, data.data)
+                            RvBankQris.apply {
+                                adapter = rclvadapter
+                                layoutManager = LinearLayoutManager(context)
+                                setHasFixedSize(true)
+                            }
+                        } else {
+                            See.toast(this@QrisMockUp, "Maaf . .Data bank Belum Ada.")
+                        }
+
+
+
+
+                    }
+
+                }
+
+                override fun onError(anError: ANError?) {
+
+                    progressDialog?.dismiss()
+                    val json = JSONObject(anError?.errorBody)
+                    val apiMessage = json.getString(MyConstant.API_MESSAGE)
+                    if (apiMessage != null) {
+                        if (apiMessage.equals(MyConstant.FORBIDDEN)) {
+                            getToken(this@QrisMockUp)
+                        }
+                    }
+
+                    See.log("onError getProduk errorCode : ${anError?.errorCode}")
+                    See.log("onError getProduk errorBody : ${anError?.errorBody}")
+                    See.log("onError getProduk errorDetail : ${anError?.errorDetail}")
+                }
+
+            })
+
     }
 
     private fun UploadToServer(billNumber: String, qrString: String, nmid: String, bank :String) {

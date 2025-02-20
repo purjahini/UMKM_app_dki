@@ -10,6 +10,7 @@ import com.androidnetworking.common.Priority
 import com.androidnetworking.error.ANError
 import com.androidnetworking.interfaces.JSONObjectRequestListener
 import com.bumptech.glide.Glide
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.gson.Gson
 import com.orm.SugarRecord
 import com.svtech.mandiri.Adapter.AdapterSliderSplash
@@ -26,6 +27,12 @@ import com.svtech.mandiri.modelOnline.SliderItem
 import org.json.JSONObject
 import com.svtech.mandiri.modelOnline.TokenModel
 import kotlinx.android.synthetic.main.activity_splash_screen.*
+import kotlinx.android.synthetic.main.sheet.view.btnCash
+import kotlinx.android.synthetic.main.sheet.view.btnCashless
+import kotlinx.android.synthetic.main.sheet.view.btnVa
+import kotlinx.android.synthetic.main.sheet.view.btnqr
+import kotlinx.android.synthetic.main.sheet_splash.view.btnDaftar
+import kotlinx.android.synthetic.main.sheet_splash.view.btnMasuk
 import org.json.JSONException
 import java.util.ArrayList
 import java.util.Timer
@@ -134,8 +141,29 @@ class SplashScreenActivity : AppCompatActivity() {
                                 Handler().postDelayed({
                                     if (username != null) {
                                         if (username.isEmpty()) {
-                                            startActivity(Intent(this@SplashScreenActivity, LoginActivity::class.java))
-                                            finish()
+
+                                            val btnSheet = layoutInflater.inflate(R.layout.sheet_splash, null)
+                                            val dialog = BottomSheetDialog(this@SplashScreenActivity)
+                                            val btnMasuk = btnSheet.btnMasuk
+                                            val btnDaftar = btnSheet.btnDaftar
+
+                                            btnMasuk.setOnClickListener {
+                                                startActivity(Intent(this@SplashScreenActivity,LoginNewActivity::class.java))
+
+                                            }
+
+                                            btnDaftar.setOnClickListener{
+                                                startActivity(Intent(this@SplashScreenActivity, RegisterNewActivity::class.java))
+                                            }
+
+
+
+                                            dialog.setContentView(btnSheet)
+                                            dialog.show()
+
+//                                             val
+//                                            startActivity(Intent(this@SplashScreenActivity, LoginActivity::class.java))
+//                                            finish()
                                         } else {
                                             startActivity(Intent(this@SplashScreenActivity, DashboardActivity::class.java))
                                             finish()

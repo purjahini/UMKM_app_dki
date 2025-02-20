@@ -75,6 +75,7 @@
                             android:textSize="@dimen/_12sdp" />
 
                         <LinearLayout
+                            android:visibility="gone"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/_50sdp"
                             android:layout_marginLeft="@dimen/_10sdp"
@@ -123,8 +124,8 @@
 
                         <ImageView
                             android:id="@+id/idIVQrcode"
-                            android:layout_width="@dimen/_200sdp"
-                            android:layout_height="@dimen/_200sdp"
+                            android:layout_width="@dimen/_150sdp"
+                            android:layout_height="@dimen/_150sdp"
                             android:layout_gravity="center"
                             android:layout_margin="@dimen/_5sdp"
                             android:contentDescription="QR Code"
@@ -134,9 +135,25 @@
                             android:id="@+id/TvQrTanggalBerlaku"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="@dimen/_20sdp"
-
+                            android:layout_marginBottom="@dimen/_10sdp"
                             android:gravity="center" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_1sdp"
+                            android:background="@color/colorAccent"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Atau Transfer Manual."
+                            android:layout_gravity="center"
+                            android:textStyle="bold"
+                            android:textColor="@color/black"/>
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/RvBankQris"/>
 
 
 
