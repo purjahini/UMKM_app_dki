@@ -113,7 +113,7 @@ class LoginNewActivity : AppCompatActivity() {
                             if (!list.kontak.toString().isNullOrEmpty()){
                                 savePreferences(
                                     applicationContext,
-                                    MyConstant.CURRENT_USER,
+                                    MyConstant.KONTAK,
                                     list.kontak.toString()
                                 )
                             }

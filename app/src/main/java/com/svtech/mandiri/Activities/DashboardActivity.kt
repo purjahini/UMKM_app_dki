@@ -74,6 +74,11 @@ class DashboardActivity : AppCompatActivity() {
         progressDialog!!.isIndeterminate = true
 
         showPopUpCheckAvail(username)
+        val user = SugarRecord.find(User::class.java, "USERNAME = ?", username)
+            .firstOrNull()
+        if (user != null) {
+            initMenu(user)
+        }
 
 
         LLSaldo.setOnClickListener {
@@ -133,11 +138,7 @@ class DashboardActivity : AppCompatActivity() {
                         val list = data.data
 
                         initProfile(list)
-                        val user = SugarRecord.find(User::class.java, "USERNAME = ?", username)
-                            .firstOrNull()
-                        if (user != null) {
-                            initMenu(user)
-                        }
+
                         LoadBilboardSaldo()
 
                         if (list != null) {

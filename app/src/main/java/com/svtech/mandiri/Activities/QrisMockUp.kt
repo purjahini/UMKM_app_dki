@@ -73,8 +73,9 @@ class QrisMockUp : AppCompatActivity() {
         progressDialog!!.isIndeterminate = true
 
         token = com.svtech.mandiri.Utils.getPreferences(this).getString(MyConstant.TOKEN, "").toString()
-        username = com.svtech.mandiri.Utils.getPreferences(this).getString(MyConstant.CURRENT_USER, "").toString()
-        nama = com.svtech.mandiri.Utils.getPreferences(this).getString(MyConstant.NAMA,"").toString()
+        username = com.svtech.mandiri.Utils.getPreferences(this).getString(MyConstant.CURRENT_TOKO, "").toString()
+        nama = com.svtech.mandiri.Utils.getPreferences(this).getString(MyConstant.KONTAK,"").toString()
+
         val currentYear: Int = now.get(Calendar.YEAR)
         val currentMonth: Int = now.get(Calendar.MONTH) + 1
         val currentDay: Int = now.get(Calendar.DAY_OF_MONTH)

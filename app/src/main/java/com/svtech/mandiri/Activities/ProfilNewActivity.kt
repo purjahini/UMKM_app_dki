@@ -35,7 +35,7 @@ class ProfilNewActivity : AppCompatActivity() {
     var token = ""
     var username = ""
     var kontak = ""
-    var id = 0
+    var id = ""
     var nama = ""
     var email = ""
     var foto = ""
@@ -79,7 +79,7 @@ class ProfilNewActivity : AppCompatActivity() {
                 .toString()
 
         kontak =
-            com.svtech.mandiri.Utils.getPreferences(this).getString(MyConstant.CURRENT_USER, "")
+            com.svtech.mandiri.Utils.getPreferences(this).getString(MyConstant.KONTAK, "")
                 .toString()
         progressDialog = ProgressDialog(this)
         progressDialog!!.setTitle("Proses")
@@ -123,7 +123,7 @@ class ProfilNewActivity : AppCompatActivity() {
 
         BtnKeluar.setOnClickListener {
             if (username != null) {
-                deletePreferences(this, username)
+                deletePreferences(this, MyConstant.CURRENT_TOKO)
                 See.log("username deletePref $username")
             }
 
@@ -133,7 +133,7 @@ class ProfilNewActivity : AppCompatActivity() {
             }
 
             if (kontak != null) {
-                deletePreferences(this, kontak)
+                deletePreferences(this, MyConstant.KONTAK)
                 See.log("kontak deletePref $kontak")
             }
 
@@ -176,12 +176,16 @@ class ProfilNewActivity : AppCompatActivity() {
                         val list = data.data
 
                         if (list != null) {
-                            Glide.with(this@ProfilNewActivity)
-                                .load(list.foto)
-                                .apply(RequestOptions.circleCropTransform())
-                                .into(imgLogo)
+                            if (list.foto != null) {
+                                Glide.with(this@ProfilNewActivity)
+                                    .load(list.foto)
+                                    .error(R.drawable.admin)
+                                    .apply(RequestOptions.circleCropTransform())
+                                    .into(imgFoto)
+                            }
 
-                            id = list.id!!
+
+                            id = list.id.toString()
                             nama = list.nama.toString()
                             email = list.email.toString()
                             foto = list.foto.toString()
@@ -223,5 +227,10 @@ class ProfilNewActivity : AppCompatActivity() {
 
             })
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        loadUser(username, token, kontak)
     }
 }

@@ -6,6 +6,7 @@ object MyConstant{
     const val kontak = "kontak"
     const val kode = "kode"
     const val EMAIL = "email"
+    const val FILTER = "filter"
     const val REQUEST_CONNECT_DEVICE = 1
     const val REQUEST_ENABLE_BT = 2
 
@@ -83,6 +84,7 @@ object MyConstant{
     const val UrlTOKENS = "$url/get-token"
     const val UrlLoginToko = "$url/tokologin"
     const val UrlLoginUser = "$url/userlogin"
+    const val Urlupdateuser = "$url/updateuser"
 
     const val Urlkategoricreate = "$url/kategoricreate"
     const val Urlkategorihapus = "$url/kategorihapus"
@@ -109,6 +111,7 @@ object MyConstant{
 
     const val Urltambahbank = "$url/tambahbank"
     const val Urllistbank = "$url/listbank"
+    const val Urlkeuangan = "$url/keuangan"
 
 
 
