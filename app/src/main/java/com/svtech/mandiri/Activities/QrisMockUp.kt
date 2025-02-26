@@ -166,6 +166,7 @@ class QrisMockUp : AppCompatActivity() {
 
                     } else {
                         See.toast(this@QrisMockUp, apiMessage)
+                        LoadCreateQr()
                     }
 
 
